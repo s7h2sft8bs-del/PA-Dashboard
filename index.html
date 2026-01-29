@@ -172,6 +172,7 @@
     .nav-card.sort::before { background: var(--amazon-teal); }
     .nav-card.pick::before { background: var(--purple); }
     .nav-card.preshift::before { background: var(--success); }
+    .nav-card.loadout::before { background: #EC4899; }
 
     .nav-card:hover {
       transform: translateY(-8px);
@@ -199,6 +200,11 @@
     .nav-card.preshift:hover {
       border-color: var(--success);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(63, 185, 80, 0.15);
+    }
+
+    .nav-card.loadout:hover {
+      border-color: #EC4899;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(236, 72, 153, 0.15);
     }
 
     .nav-card-icon {
@@ -230,6 +236,11 @@
     .nav-card.preshift .nav-card-icon {
       background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
       box-shadow: 0 8px 20px rgba(63, 185, 80, 0.3);
+    }
+
+    .nav-card.loadout .nav-card-icon {
+      background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+      box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
     }
 
     .nav-card-title {
@@ -287,6 +298,12 @@
       color: var(--success);
     }
 
+    .nav-card.loadout .feature-tag {
+      background: rgba(236, 72, 153, 0.15);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      color: #EC4899;
+    }
+
     .nav-card-arrow {
       position: absolute;
       bottom: 2rem;
@@ -309,6 +326,7 @@
     .nav-card.sort:hover .nav-card-arrow { background: var(--amazon-teal); }
     .nav-card.pick:hover .nav-card-arrow { background: var(--purple); }
     .nav-card.preshift:hover .nav-card-arrow { background: var(--success); }
+    .nav-card.loadout:hover .nav-card-arrow { background: #EC4899; }
 
     .nav-card-arrow svg {
       width: 24px;
@@ -457,6 +475,25 @@
           <span class="feature-tag">PvA Tracking</span>
           <span class="feature-tag">Compliance</span>
           <span class="feature-tag">Adapts</span>
+        </div>
+        <div class="nav-card-arrow">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Load Out Plan Card -->
+      <a href="amazon-pa-loadout.html" class="nav-card loadout">
+        <div class="nav-card-icon">🚚</div>
+        <h2 class="nav-card-title">Load Out Plan</h2>
+        <p class="nav-card-description">
+          Plan and track outbound load operations, trailer assignments, and departure schedules.
+        </p>
+        <div class="nav-card-features">
+          <span class="feature-tag">Trailer Tracking</span>
+          <span class="feature-tag">Departures</span>
+          <span class="feature-tag">Planning</span>
         </div>
         <div class="nav-card-arrow">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
