@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Load Out Plan - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+      --pink: #EC4899;
+      --input-bg: #0D1117;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--pink);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--pink);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .logo-text span {
+      color: var(--pink);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--pink);
+      color: white;
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-time {
+      text-align: right;
+    }
+
+    .current-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--pink);
+    }
+
+    .current-date {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(236, 72, 153, 0.2);
+      color: var(--pink);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .live-indicator::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--pink);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Placeholder Message */
+    .placeholder-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 3rem;
+      margin-bottom: 1.5rem;
+      border: 2px dashed var(--pink);
+      text-align: center;
+    }
+
+    .placeholder-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .placeholder-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--pink);
+      margin-bottom: 0.5rem;
+    }
+
+    .placeholder-text {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--pink);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--pink);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--pink);
+      border-radius: 2px;
+    }
+
+    /* Input Grid */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .input-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-item input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .input-item input:focus {
+      outline: none;
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    }
+
+    .input-item.large input {
+      font-size: 2.5rem;
+      padding: 1rem 1.25rem;
+      border-color: var(--pink);
+      color: var(--pink);
+      background: rgba(236, 72, 153, 0.1);
+    }
+
+    /* Time Grid */
+    .time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      align-items: end;
+    }
+
+    .result-box {
+      background: rgba(236, 72, 153, 0.15);
+      border: 2px solid var(--pink);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--pink);
+    }
+
+    .result-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Staffing Grid */
+    .highlight-section {
+      border-color: var(--amazon-orange);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(255, 153, 0, 0.05) 100%);
+    }
+
+    .highlight-section .section-header {
+      border-bottom-color: var(--amazon-orange);
+    }
+
+    .highlight-section .section-title {
+      color: var(--amazon-orange);
+    }
+
+    .highlight-section .section-title::before {
+      background: var(--amazon-orange);
+    }
+
+    .staffing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .staff-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .staff-card.total {
+      background: rgba(255, 153, 0, 0.15);
+      border-color: var(--amazon-orange);
+    }
+
+    .staff-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .staff-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .staff-card.total .staff-value {
+      color: var(--amazon-orange);
+    }
+
+    .staff-formula {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .staff-input {
+      width: 80px;
+      margin-top: 0.5rem;
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.4rem;
+      color: var(--amazon-teal);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .staff-input:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+    }
+
+    /* Summary Section */
+    .summary-section {
+      border-color: var(--amazon-teal);
+    }
+
+    .summary-section .section-header {
+      border-bottom-color: var(--amazon-teal);
+    }
+
+    .summary-section .section-title {
+      color: var(--amazon-teal);
+    }
+
+    .summary-section .section-title::before {
+      background: var(--amazon-teal);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .summary-card.subtract {
+      background: rgba(248, 81, 73, 0.1);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+    }
+
+    .summary-card.add {
+      background: rgba(63, 185, 80, 0.1);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+    }
+
+    .summary-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .summary-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .summary-card.subtract .summary-value {
+      color: var(--danger);
+    }
+
+    .summary-card.add .summary-value {
+      color: var(--success);
+    }
+
+    /* PvA Display */
+    .pva-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    .pva-box {
+      text-align: center;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+    }
+
+    .pva-box.needed {
+      background: rgba(255, 153, 0, 0.15);
+      border: 2px solid var(--amazon-orange);
+    }
+
+    .pva-box.actual {
+      background: rgba(0, 168, 168, 0.15);
+      border: 2px solid var(--amazon-teal);
+    }
+
+    .pva-box.status {
+      background: rgba(139, 148, 158, 0.15);
+      border: 2px solid var(--text-muted);
+      min-width: 150px;
+    }
+
+    .pva-box.status.good {
+      background: rgba(63, 185, 80, 0.15);
+      border-color: var(--success);
+    }
+
+    .pva-box.status.bad {
+      background: rgba(248, 81, 73, 0.15);
+      border-color: var(--danger);
+    }
+
+    .pva-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .pva-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+
+    .pva-box.needed .pva-value {
+      color: var(--amazon-orange);
+    }
+
+    .pva-box.actual .pva-value {
+      color: var(--amazon-teal);
+    }
+
+    .pva-box.status .pva-value {
+      color: var(--text-secondary);
+    }
+
+    .pva-box.status.good .pva-value {
+      color: var(--success);
+    }
+
+    .pva-box.status.bad .pva-value {
+      color: var(--danger);
+    }
+
+    .pva-vs {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Output Section */
+    .output-section {
+      border-color: var(--purple);
+    }
+
+    .output-section .section-header {
+      border-bottom-color: var(--purple);
+    }
+
+    .output-section .section-title {
+      color: var(--purple);
+    }
+
+    .output-section .section-title::before {
+      background: var(--purple);
+    }
+
+    .output-preview {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+      border: none;
+      border-radius: 8px;
+      padding: 0.875rem 1.75rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
+      color: white;
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, var(--danger) 0%, #da3633 100%);
+      color: white;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show {
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .time-grid {
+        grid-template-columns: 1fr;
+      }
+      .staffing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .summary-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .pva-display {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="index.html" class="back-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back
+      </a>
+      <div class="logo-icon">🚚</div>
+      <div class="logo-text">Load Out <span>Plan</span></div>
+    </div>
+    <div class="header-right">
+      <div class="header-time">
+        <div class="live-indicator">Live</div>
+        <div class="current-time" id="currentTime">--:--:--</div>
+        <div class="current-date" id="currentDate">Loading...</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Volume & Rate Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📦 Volume & Rate</h2>
+      </div>
+      <div class="input-grid">
+        <div class="input-item large">
+          <label>Planned Routed Volume</label>
+          <input type="number" id="plannedVolume" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Planned Rate (UPH)</label>
+          <input type="number" id="plannedRate" value="380" oninput="calculateAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Time Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">⏱️ Pick Time Window</h2>
+      </div>
+      <div class="time-grid">
+        <div class="input-item">
+          <label>Pick Start Time</label>
+          <input type="time" id="pickStart" value="09:00" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Pick End Time</label>
+          <input type="time" id="pickEnd" value="11:30" oninput="calculateAll()">
+        </div>
+        <div class="result-box">
+          <div class="result-label">Pick Duration</div>
+          <div class="result-value" id="pickDuration">2.5</div>
+          <div class="result-sub">hours</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Staffing Calculation Section -->
+    <div class="section highlight-section">
+      <div class="section-header">
+        <h2 class="section-title">👥 Staffing Needed</h2>
+      </div>
+      <div class="staffing-grid">
+        <div class="staff-card">
+          <div class="staff-label">Pickers</div>
+          <div class="staff-value" id="pickersNeeded">0</div>
+          <div class="staff-formula">Volume ÷ Rate ÷ Hours</div>
+        </div>
+        <div class="staff-card">
+          <div class="staff-label">Pick PS</div>
+          <div class="staff-value" id="pickPS">3</div>
+          <input type="number" id="pickPSInput" value="3" oninput="calculateAll()" class="staff-input">
+        </div>
+        <div class="staff-card">
+          <div class="staff-label">DA Assists / Traffic</div>
+          <div class="staff-value" id="daAssists">4</div>
+          <input type="number" id="daAssistsInput" value="4" oninput="calculateAll()" class="staff-input">
+        </div>
+        <div class="staff-card total">
+          <div class="staff-label">Total HC Needed</div>
+          <div class="staff-value" id="totalHCNeeded">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Staffing Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📊 Current Staffing Status</h2>
+      </div>
+      <div class="input-grid">
+        <div class="input-item">
+          <label>Current On Premise</label>
+          <input type="number" id="currentOnPremise" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Leaving After Sort</label>
+          <input type="number" id="leavingAfterSort" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Pick VTO</label>
+          <input type="number" id="pickVTO" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Mid Shift Attrition</label>
+          <input type="number" id="midShiftAttrition" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Incoming Ready's</label>
+          <input type="number" id="incomingReadys" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Incoming VET</label>
+          <input type="number" id="incomingVET" placeholder="0" oninput="calculateAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Expected HC Summary -->
+    <div class="section summary-section">
+      <div class="section-header">
+        <h2 class="section-title">📈 Expected Pick HC</h2>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-label">Current On Premise</div>
+          <div class="summary-value" id="summaryOnPremise">0</div>
+        </div>
+        <div class="summary-card subtract">
+          <div class="summary-label">- Leaving After Sort</div>
+          <div class="summary-value" id="summaryLeaving">0</div>
+        </div>
+        <div class="summary-card subtract">
+          <div class="summary-label">- Pick VTO</div>
+          <div class="summary-value" id="summaryVTO">0</div>
+        </div>
+        <div class="summary-card subtract">
+          <div class="summary-label">- Mid Shift Attrition</div>
+          <div class="summary-value" id="summaryAttrition">0</div>
+        </div>
+        <div class="summary-card add">
+          <div class="summary-label">+ Incoming Ready's</div>
+          <div class="summary-value" id="summaryReadys">0</div>
+        </div>
+        <div class="summary-card add">
+          <div class="summary-label">+ Incoming VET</div>
+          <div class="summary-value" id="summaryVET">0</div>
+        </div>
+      </div>
+      
+      <div class="pva-display">
+        <div class="pva-box needed">
+          <div class="pva-label">HC Needed</div>
+          <div class="pva-value" id="pvaNeeded">0</div>
+        </div>
+        <div class="pva-vs">vs</div>
+        <div class="pva-box actual">
+          <div class="pva-label">Expected HC</div>
+          <div class="pva-value" id="pvaActual">0</div>
+        </div>
+        <div class="pva-box status" id="pvaStatusBox">
+          <div class="pva-label">Status</div>
+          <div class="pva-value" id="pvaStatus">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="section output-section">
+      <div class="section-header">
+        <h2 class="section-title">📤 Copy & Paste Output</h2>
+      </div>
+      <div class="output-preview" id="outputPreview">Loading...</div>
+      <div class="action-bar">
+        <button class="btn btn-copy" onclick="copyOutput()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          Copy to Clipboard
+        </button>
+        <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
+        <span class="copy-confirm" id="copyConfirm">✓ Copied!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Update time
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Calculate all values
+    function calculateAll() {
+      // Get inputs
+      const plannedVolume = parseFloat(document.getElementById('plannedVolume').value) || 0;
+      const plannedRate = parseFloat(document.getElementById('plannedRate').value) || 380;
+      const pickStart = document.getElementById('pickStart').value || '09:00';
+      const pickEnd = document.getElementById('pickEnd').value || '11:30';
+      
+      // Calculate Pick Duration
+      const [startH, startM] = pickStart.split(':').map(Number);
+      const [endH, endM] = pickEnd.split(':').map(Number);
+      let durationMins = (endH * 60 + endM) - (startH * 60 + startM);
+      if (durationMins < 0) durationMins += 24 * 60;
+      const durationHours = durationMins / 60;
+      document.getElementById('pickDuration').textContent = durationHours.toFixed(1);
+
+      // Calculate Pickers Needed
+      const pickersNeeded = (plannedRate > 0 && durationHours > 0) 
+        ? Math.ceil(plannedVolume / plannedRate / durationHours) 
+        : 0;
+      document.getElementById('pickersNeeded').textContent = pickersNeeded;
+
+      // Get PS and DA inputs
+      const pickPS = parseInt(document.getElementById('pickPSInput').value) || 0;
+      const daAssists = parseInt(document.getElementById('daAssistsInput').value) || 0;
+      document.getElementById('pickPS').textContent = pickPS;
+      document.getElementById('daAssists').textContent = daAssists;
+
+      // Total HC Needed
+      const totalHCNeeded = pickersNeeded + pickPS + daAssists;
+      document.getElementById('totalHCNeeded').textContent = totalHCNeeded;
+
+      // Current Staffing Status
+      const currentOnPremise = parseInt(document.getElementById('currentOnPremise').value) || 0;
+      const leavingAfterSort = parseInt(document.getElementById('leavingAfterSort').value) || 0;
+      const pickVTO = parseInt(document.getElementById('pickVTO').value) || 0;
+      const midShiftAttrition = parseInt(document.getElementById('midShiftAttrition').value) || 0;
+      const incomingReadys = parseInt(document.getElementById('incomingReadys').value) || 0;
+      const incomingVET = parseInt(document.getElementById('incomingVET').value) || 0;
+
+      // Update summary cards
+      document.getElementById('summaryOnPremise').textContent = currentOnPremise;
+      document.getElementById('summaryLeaving').textContent = leavingAfterSort;
+      document.getElementById('summaryVTO').textContent = pickVTO;
+      document.getElementById('summaryAttrition').textContent = midShiftAttrition;
+      document.getElementById('summaryReadys').textContent = incomingReadys;
+      document.getElementById('summaryVET').textContent = incomingVET;
+
+      // Calculate Expected HC
+      const expectedHC = currentOnPremise - leavingAfterSort - pickVTO - midShiftAttrition + incomingReadys + incomingVET;
+
+      // Update PvA Display
+      document.getElementById('pvaNeeded').textContent = totalHCNeeded;
+      document.getElementById('pvaActual').textContent = expectedHC;
+
+      // Status
+      const statusBox = document.getElementById('pvaStatusBox');
+      const statusValue = document.getElementById('pvaStatus');
+      const diff = expectedHC - totalHCNeeded;
+
+      if (expectedHC >= totalHCNeeded) {
+        statusBox.className = 'pva-box status good';
+        statusValue.textContent = diff > 0 ? `+${diff} Over` : 'AT HC';
+      } else {
+        statusBox.className = 'pva-box status bad';
+        statusValue.textContent = `${diff} Short`;
+      }
+
+      // Update output
+      updateOutput();
+    }
+
+    // Format time for display
+    function formatTime(time24) {
+      const [h, m] = time24.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
+    }
+
+    // Update output preview
+    function updateOutput() {
+      const plannedVolume = document.getElementById('plannedVolume').value || '0';
+      const plannedRate = document.getElementById('plannedRate').value || '380';
+      const pickStart = document.getElementById('pickStart').value || '09:00';
+      const pickEnd = document.getElementById('pickEnd').value || '11:30';
+      const pickDuration = document.getElementById('pickDuration').textContent;
+      const pickersNeeded = document.getElementById('pickersNeeded').textContent;
+      const pickPS = document.getElementById('pickPS').textContent;
+      const daAssists = document.getElementById('daAssists').textContent;
+      const totalHCNeeded = document.getElementById('totalHCNeeded').textContent;
+      const currentOnPremise = document.getElementById('currentOnPremise').value || '0';
+      const leavingAfterSort = document.getElementById('leavingAfterSort').value || '0';
+      const pickVTO = document.getElementById('pickVTO').value || '0';
+      const midShiftAttrition = document.getElementById('midShiftAttrition').value || '0';
+      const incomingReadys = document.getElementById('incomingReadys').value || '0';
+      const incomingVET = document.getElementById('incomingVET').value || '0';
+      const pvaNeeded = document.getElementById('pvaNeeded').textContent;
+      const pvaActual = document.getElementById('pvaActual').textContent;
+
+      const output = `Planned Routed Volume: ${parseInt(plannedVolume).toLocaleString()}
+Planned Rate ${plannedRate}
+Pick Start Time ${formatTime(pickStart)}
+Pick End Time ${formatTime(pickEnd)}
+Pick Duration ${pickDuration}
+Pickers ${pickersNeeded}
+Pick PS ${pickPS}
+DA Assists/Traffic Controllers ${daAssists}
+Total HC needed : ${totalHCNeeded}
+Current On premise: ${currentOnPremise}
+Leaving after sort: ${leavingAfterSort}
+Pick VTO: ${pickVTO}
+Mid shift Attrition ${midShiftAttrition}
+Incoming Ready's ${incomingReadys}
+Incoming VET : ${incomingVET}
+Expected Pick HC PvA: ${pvaNeeded} v ${pvaActual}`;
+
+      document.getElementById('outputPreview').textContent = output;
+      window.currentOutput = output;
+    }
+
+    // Copy to clipboard
+    function copyOutput() {
+      const output = window.currentOutput || document.getElementById('outputPreview').textContent;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(output).then(() => {
+          showCopyConfirm();
+        }).catch(() => {
+          fallbackCopy(output);
+        });
+      } else {
+        fallbackCopy(output);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showCopyConfirm();
+    }
+
+    function showCopyConfirm() {
+      const confirm = document.getElementById('copyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
+    // Clear all
+    function clearAll() {
+      document.getElementById('plannedVolume').value = '';
+      document.getElementById('plannedRate').value = '380';
+      document.getElementById('pickStart').value = '09:00';
+      document.getElementById('pickEnd').value = '11:30';
+      document.getElementById('pickPSInput').value = '3';
+      document.getElementById('daAssistsInput').value = '4';
+      document.getElementById('currentOnPremise').value = '';
+      document.getElementById('leavingAfterSort').value = '';
+      document.getElementById('pickVTO').value = '';
+      document.getElementById('midShiftAttrition').value = '';
+      document.getElementById('incomingReadys').value = '';
+      document.getElementById('incomingVET').value = '';
+      calculateAll();
+    }
+
+    // Initialize
+    calculateAll();
+  </script>
+</body>
+</html>
