@@ -1406,6 +1406,286 @@
       margin-top: -0.25rem;
     }
 
+    /* Same Day Section */
+    .sameday-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--purple);
+    }
+
+    .sameday-section .section-header {
+      border-bottom-color: var(--purple);
+    }
+
+    .sameday-section .section-title {
+      color: var(--purple);
+    }
+
+    .sameday-section .section-title::before {
+      background: var(--purple);
+    }
+
+    .ssd-status {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--purple);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .ssd-status.active {
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+    }
+
+    .ssd-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .ssd-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .ssd-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .ssd-card.sunrise {
+      border-color: rgba(255, 183, 77, 0.5);
+    }
+
+    .ssd-card.sunrise h3 {
+      color: #FFB74D;
+    }
+
+    .ssd-card.sameday-am {
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+
+    .ssd-card.sameday-am h3 {
+      color: var(--purple);
+    }
+
+    .ssd-card.staffing-card {
+      border-color: var(--amazon-orange);
+      background: rgba(255, 153, 0, 0.1);
+    }
+
+    .ssd-card.staffing-card h3 {
+      color: var(--amazon-orange);
+    }
+
+    .ssd-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .ssd-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .ssd-input-group label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ssd-input-group input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .ssd-input-group input:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .ssd-results {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ssd-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    .ssd-result span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .ssd-result strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .ssd-result small {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+    }
+
+    .ssd-staffing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .ssd-staff-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    .ssd-staff-item span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .ssd-staff-item strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .ssd-staff-item.total {
+      grid-column: span 2;
+      background: rgba(255, 153, 0, 0.2);
+      border: 1px solid var(--amazon-orange);
+    }
+
+    .ssd-staff-item.total strong {
+      color: var(--amazon-orange);
+      font-size: 1.5rem;
+    }
+
+    .ssd-note {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: rgba(248, 81, 73, 0.15);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .ssd-note span {
+      color: var(--danger);
+    }
+
+    .ssd-note strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--danger);
+    }
+
+    /* C1 Adjusted Section */
+    .c1-adjusted {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .c1-adjusted h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--warning);
+      margin-bottom: 0.75rem;
+    }
+
+    .c1-adjusted-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .c1-adj-item {
+      text-align: center;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .c1-adj-item span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .c1-adj-item strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .c1-adj-item small {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .c1-adj-item.highlight {
+      background: rgba(210, 153, 34, 0.2);
+      border: 1px solid var(--warning);
+    }
+
+    .c1-adj-item.highlight strong {
+      color: var(--warning);
+    }
+
+    @media (max-width: 1000px) {
+      .ssd-grid {
+        grid-template-columns: 1fr;
+      }
+      .c1-adjusted-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 900px) {
       .summary-stats {
         grid-template-columns: repeat(2, 1fr);
@@ -1577,6 +1857,128 @@
           <div class="rec-item"><span>Induct HC</span><strong id="recInductHC">0</strong></div>
           <div class="rec-item"><span>Stow HC</span><strong id="recStowHC">0</strong></div>
           <div class="rec-item total highlight"><span>TOTAL HC</span><strong id="recTotalHC">0</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Same Day Operations Section -->
+    <section class="sameday-section">
+      <div class="section-header">
+        <h2 class="section-title">🌅 Same Day Operations</h2>
+        <span class="ssd-status" id="ssdStatus">Not Started</span>
+      </div>
+      
+      <div class="ssd-grid">
+        <!-- Sunrise -->
+        <div class="ssd-card sunrise">
+          <h3>☀️ Sunrise</h3>
+          <div class="ssd-inputs">
+            <div class="ssd-input-group">
+              <label>Volume</label>
+              <input type="number" id="sunriseVolume" placeholder="0" oninput="calculateSameDay()">
+            </div>
+            <div class="ssd-input-group">
+              <label>Must Finish By</label>
+              <input type="time" id="sunriseDeadline" value="03:30" onchange="calculateSameDay()">
+            </div>
+          </div>
+          <div class="ssd-results">
+            <div class="ssd-result">
+              <span>Time Window</span>
+              <strong id="sunriseWindow">2h 10m</strong>
+            </div>
+            <div class="ssd-result">
+              <span>Required Flow</span>
+              <strong id="sunriseFlow">0</strong>
+              <small>TPH</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Same Day AM -->
+        <div class="ssd-card sameday-am">
+          <h3>📦 Same Day AM</h3>
+          <div class="ssd-inputs">
+            <div class="ssd-input-group">
+              <label>Volume</label>
+              <input type="number" id="samedayVolume" placeholder="0" oninput="calculateSameDay()">
+            </div>
+            <div class="ssd-input-group">
+              <label>Must Start By</label>
+              <input type="time" id="samedayStart" value="03:00" onchange="calculateSameDay()">
+            </div>
+            <div class="ssd-input-group">
+              <label>Must Finish By</label>
+              <input type="time" id="samedayDeadline" value="03:30" onchange="calculateSameDay()">
+            </div>
+          </div>
+          <div class="ssd-results">
+            <div class="ssd-result">
+              <span>Time Window</span>
+              <strong id="samedayWindow">0h 30m</strong>
+            </div>
+            <div class="ssd-result">
+              <span>Required Flow</span>
+              <strong id="samedayFlow">0</strong>
+              <small>TPH</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Combined SSD Staffing -->
+        <div class="ssd-card staffing-card">
+          <h3>👥 SSD Staffing Needed</h3>
+          <div class="ssd-staffing-grid">
+            <div class="ssd-staff-item">
+              <span>Line Loaders</span>
+              <strong id="ssdLineLoaders">0</strong>
+            </div>
+            <div class="ssd-staff-item">
+              <span>Inductors</span>
+              <strong id="ssdInductors">0</strong>
+            </div>
+            <div class="ssd-staff-item">
+              <span>Pushers</span>
+              <strong id="ssdPushers">0</strong>
+            </div>
+            <div class="ssd-staff-item">
+              <span>Stowers</span>
+              <strong id="ssdStowers">0</strong>
+            </div>
+            <div class="ssd-staff-item total">
+              <span>Total SSD HC</span>
+              <strong id="ssdTotalHC">0</strong>
+            </div>
+          </div>
+          <div class="ssd-note">
+            <span>⚠️ Pull from C1:</span>
+            <strong id="pullFromC1">0</strong>
+            <span>people</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C1 Adjusted Flow -->
+      <div class="c1-adjusted">
+        <h4>📉 C1 Adjusted (After SSD Pull)</h4>
+        <div class="c1-adjusted-grid">
+          <div class="c1-adj-item">
+            <span>Original C1 HC</span>
+            <strong id="originalC1HC">0</strong>
+          </div>
+          <div class="c1-adj-item">
+            <span>Pulled for SSD</span>
+            <strong id="pulledForSSD">0</strong>
+          </div>
+          <div class="c1-adj-item">
+            <span>Remaining C1 HC</span>
+            <strong id="remainingC1HC">0</strong>
+          </div>
+          <div class="c1-adj-item highlight">
+            <span>Adjusted C1 Flow</span>
+            <strong id="adjustedC1Flow">0</strong>
+            <small>TPH</small>
+          </div>
         </div>
       </div>
     </section>
@@ -2597,6 +2999,115 @@
     // Initialize
     loadWeeklyRates(); // Load Sort Wash rates if available
     calculateRunTime();
+
+    // ==================== SAME DAY CALCULATIONS ====================
+    function calculateSameDay() {
+      const shiftStart = document.getElementById('shiftStart').value || '01:20';
+      const [startHour, startMin] = shiftStart.split(':').map(Number);
+      
+      // Sunrise calculation
+      const sunriseVolume = parseInt(document.getElementById('sunriseVolume').value) || 0;
+      const sunriseDeadline = document.getElementById('sunriseDeadline').value || '03:30';
+      const [sunriseEndHour, sunriseEndMin] = sunriseDeadline.split(':').map(Number);
+      
+      // Calculate sunrise time window (from shift start to deadline)
+      let sunriseMinutes = (sunriseEndHour * 60 + sunriseEndMin) - (startHour * 60 + startMin);
+      if (sunriseMinutes < 0) sunriseMinutes += 24 * 60; // Handle overnight
+      const sunriseHours = sunriseMinutes / 60;
+      
+      const sunriseWindowH = Math.floor(sunriseHours);
+      const sunriseWindowM = Math.round((sunriseHours - sunriseWindowH) * 60);
+      document.getElementById('sunriseWindow').textContent = `${sunriseWindowH}h ${sunriseWindowM}m`;
+      
+      const sunriseFlow = sunriseHours > 0 ? Math.round(sunriseVolume / sunriseHours) : 0;
+      document.getElementById('sunriseFlow').textContent = sunriseFlow.toLocaleString();
+      
+      // Same Day AM calculation
+      const samedayVolume = parseInt(document.getElementById('samedayVolume').value) || 0;
+      const samedayStart = document.getElementById('samedayStart').value || '03:00';
+      const samedayDeadline = document.getElementById('samedayDeadline').value || '03:30';
+      
+      const [sdStartHour, sdStartMin] = samedayStart.split(':').map(Number);
+      const [sdEndHour, sdEndMin] = samedayDeadline.split(':').map(Number);
+      
+      let samedayMinutes = (sdEndHour * 60 + sdEndMin) - (sdStartHour * 60 + sdStartMin);
+      if (samedayMinutes < 0) samedayMinutes += 24 * 60;
+      const samedayHours = samedayMinutes / 60;
+      
+      const samedayWindowH = Math.floor(samedayHours);
+      const samedayWindowM = Math.round((samedayHours - samedayWindowH) * 60);
+      document.getElementById('samedayWindow').textContent = `${samedayWindowH}h ${samedayWindowM}m`;
+      
+      const samedayFlow = samedayHours > 0 ? Math.round(samedayVolume / samedayHours) : 0;
+      document.getElementById('samedayFlow').textContent = samedayFlow.toLocaleString();
+      
+      // Combined SSD flow (use the higher requirement)
+      const totalSSDVolume = sunriseVolume + samedayVolume;
+      // Use sunrise window since that's the primary constraint
+      const ssdRequiredFlow = Math.max(sunriseFlow, samedayFlow);
+      
+      // Calculate SSD staffing using C1 rates
+      const ssdLineLoaders = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.lineLoader) : 0;
+      const ssdInductors = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.induct) : 0;
+      const ssdPushers = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.pusher) : 0;
+      
+      // Stowers using efficiency
+      const stowRatePPH = parseFloat(document.getElementById('stowRatePPH').value) || 260;
+      const efficiencyPercent = parseFloat(document.getElementById('efficiencyPercent').value) || 85;
+      const effectiveStowPPH = stowRatePPH * (efficiencyPercent / 100);
+      const ssdStowers = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / effectiveStowPPH) : 0;
+      
+      document.getElementById('ssdLineLoaders').textContent = ssdLineLoaders;
+      document.getElementById('ssdInductors').textContent = ssdInductors;
+      document.getElementById('ssdPushers').textContent = ssdPushers;
+      document.getElementById('ssdStowers').textContent = ssdStowers;
+      
+      const ssdTotalHC = ssdLineLoaders + ssdInductors + ssdPushers + ssdStowers;
+      document.getElementById('ssdTotalHC').textContent = ssdTotalHC;
+      document.getElementById('pullFromC1').textContent = ssdTotalHC;
+      
+      // Update status
+      const ssdStatus = document.getElementById('ssdStatus');
+      if (totalSSDVolume > 0) {
+        ssdStatus.textContent = 'Active';
+        ssdStatus.classList.add('active');
+      } else {
+        ssdStatus.textContent = 'Not Started';
+        ssdStatus.classList.remove('active');
+      }
+      
+      // Calculate C1 adjusted flow
+      updateC1Adjusted(ssdTotalHC);
+    }
+
+    function updateC1Adjusted(ssdHC) {
+      // Get original C1 HC from the staffing summary
+      const originalInductHC = parseInt(document.getElementById('recInductHC').textContent) || 0;
+      const originalStowHC = parseInt(document.getElementById('recStowHC').textContent) || 0;
+      const originalC1HC = originalInductHC + originalStowHC;
+      
+      document.getElementById('originalC1HC').textContent = originalC1HC;
+      document.getElementById('pulledForSSD').textContent = ssdHC;
+      
+      const remainingC1HC = Math.max(0, originalC1HC - ssdHC);
+      document.getElementById('remainingC1HC').textContent = remainingC1HC;
+      
+      // Calculate adjusted C1 flow based on remaining HC
+      // Simplified: assume proportional reduction
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const runTimeText = document.getElementById('totalRunTime').textContent;
+      const [hours, mins] = runTimeText.split(':').map(Number);
+      const runTimeHours = hours + (mins / 60);
+      
+      if (originalC1HC > 0 && runTimeHours > 0) {
+        const originalFlow = totalVolume / runTimeHours;
+        const flowRatio = remainingC1HC / originalC1HC;
+        const adjustedFlow = Math.round(originalFlow * flowRatio);
+        document.getElementById('adjustedC1Flow').textContent = adjustedFlow.toLocaleString();
+      } else {
+        document.getElementById('adjustedC1Flow').textContent = '0';
+      }
+    }
 
     // ==================== HOURLY REPORT ====================
     function openReportModal() {
