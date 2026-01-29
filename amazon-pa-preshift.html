@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Shift Planning - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+      --input-bg: #0D1117;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--success);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--success);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--bg-dark);
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .logo-text span {
+      color: var(--success);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--success);
+      color: var(--bg-dark);
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-time {
+      text-align: right;
+    }
+
+    .current-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .current-date {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .live-indicator::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--success);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--success);
+      border-radius: 2px;
+    }
+
+    /* Input Grid */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .input-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-item input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .input-item input:focus {
+      outline: none;
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.2);
+    }
+
+    .input-item input.highlight {
+      border-color: var(--amazon-orange);
+      background: rgba(255, 153, 0, 0.1);
+      color: var(--amazon-orange);
+    }
+
+    .input-item.large input {
+      font-size: 2rem;
+      padding: 1rem 1.25rem;
+      border-color: var(--amazon-orange);
+      color: var(--amazon-orange);
+    }
+
+    /* Calculated Results */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .result-card {
+      background: rgba(0, 168, 168, 0.1);
+      border: 1px solid var(--amazon-teal);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-card.highlight {
+      background: rgba(255, 153, 0, 0.15);
+      border-color: var(--amazon-orange);
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--amazon-teal);
+    }
+
+    .result-card.highlight .result-value {
+      color: var(--amazon-orange);
+    }
+
+    .result-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Output Preview */
+    .output-section {
+      border-color: var(--purple);
+    }
+
+    .output-section .section-header {
+      border-bottom-color: var(--purple);
+    }
+
+    .output-section .section-title {
+      color: var(--purple);
+    }
+
+    .output-section .section-title::before {
+      background: var(--purple);
+    }
+
+    .output-preview {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+      color: var(--text-primary);
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+      border: none;
+      border-radius: 8px;
+      padding: 0.875rem 1.75rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
+      color: white;
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, var(--danger) 0%, #da3633 100%);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show {
+      opacity: 1;
+    }
+
+    /* Model Settings */
+    .model-settings {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .setting-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .setting-item input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--amazon-teal);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 80px;
+      text-align: center;
+    }
+
+    .setting-item input:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .input-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .action-bar {
+        flex-direction: column;
+      }
+
+      .action-bar .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="index.html" class="back-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back
+      </a>
+      <div class="logo-icon">📋</div>
+      <div class="logo-text">Pre-Shift <span>Planning</span></div>
+    </div>
+    <div class="header-right">
+      <div class="header-time">
+        <div class="live-indicator">Live</div>
+        <div class="current-time" id="currentTime">--:--:--</div>
+        <div class="current-date" id="currentDate">Loading...</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Raw Data Entry -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📥 Enter Pre-Shift Data</h2>
+        <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-item large">
+          <label>C1 Volume</label>
+          <input type="number" id="c1Volume" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>RTS</label>
+          <input type="number" id="rts" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>MNR</label>
+          <input type="number" id="mnr" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Rolled</label>
+          <input type="number" id="rolled" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>SLAM</label>
+          <input type="number" id="slam" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Sideline</label>
+          <input type="number" id="sideline" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Schedule</label>
+          <input type="number" id="schedule" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Soft Cap</label>
+          <input type="number" id="softCap" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>LMCP</label>
+          <input type="number" id="lmcp" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>Cube</label>
+          <input type="number" id="cube" placeholder="0" step="0.01" oninput="calculateAll()">
+        </div>
+        <div class="input-item">
+          <label>FPH</label>
+          <input type="number" id="fph" placeholder="0" oninput="calculateAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Settings -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">⚙️ Planning Model Settings</h2>
+      </div>
+
+      <div class="model-settings">
+        <div class="setting-item">
+          <label>Target TPH:</label>
+          <input type="number" id="targetTPH" value="90" oninput="calculateAll()">
+        </div>
+        <div class="setting-item">
+          <label>Indirect Factor:</label>
+          <input type="number" id="indirectFactor" value="1.17" step="0.01" oninput="calculateAll()">
+        </div>
+        <div class="setting-item">
+          <label>Hours per AA:</label>
+          <input type="number" id="hoursPerAA" value="7.2" step="0.1" oninput="calculateAll()">
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-label">Direct Hours</div>
+          <div class="result-value" id="directHours">0</div>
+          <div class="result-sub">Volume ÷ TPH</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Planned Hours</div>
+          <div class="result-value" id="plannedHours">0</div>
+          <div class="result-sub">Direct × Indirect</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Projected Hours</div>
+          <div class="result-value" id="projectedHours">0</div>
+          <div class="result-sub">Planned × 1.13</div>
+        </div>
+        <div class="result-card highlight">
+          <div class="result-label">Planned HC</div>
+          <div class="result-value" id="plannedHC">0</div>
+          <div class="result-sub">@ <span id="tphDisplay">90</span> TPH</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Preview -->
+    <div class="section output-section">
+      <div class="section-header">
+        <h2 class="section-title">📤 Copy & Paste Output</h2>
+      </div>
+
+      <div class="output-preview" id="outputPreview">
+New Pre-shift:
+
+RTS: 0
+MNR: 0
+Rolled: 0
+SLAM: 0
+Sideline: 0
+Schedule: 0
+Soft Cap: 0
+LMCP: 0
+Cube: 0
+C1 Volume: 0
+FPH: 0
+Planned HC ( 90 TPH ): 0
+Pre-Shift Planned Hours = 0
+Pre-Shift Projected Hours = 0
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-copy" onclick="copyOutput()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          Copy to Clipboard
+        </button>
+        <span class="copy-confirm" id="copyConfirm">✓ Copied!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Update time
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Calculate all values
+    function calculateAll() {
+      const c1Volume = parseFloat(document.getElementById('c1Volume').value) || 0;
+      const targetTPH = parseFloat(document.getElementById('targetTPH').value) || 90;
+      const indirectFactor = parseFloat(document.getElementById('indirectFactor').value) || 1.17;
+      const hoursPerAA = parseFloat(document.getElementById('hoursPerAA').value) || 7.2;
+
+      // Calculate Direct Hours
+      const directHours = targetTPH > 0 ? c1Volume / targetTPH : 0;
+      document.getElementById('directHours').textContent = Math.round(directHours);
+
+      // Calculate Planned Hours
+      const plannedHours = directHours * indirectFactor;
+      document.getElementById('plannedHours').textContent = Math.round(plannedHours);
+
+      // Calculate Projected Hours (typically ~13% higher)
+      const projectedHours = plannedHours * 1.13;
+      document.getElementById('projectedHours').textContent = Math.round(projectedHours);
+
+      // Calculate Planned HC
+      const plannedHC = hoursPerAA > 0 ? Math.ceil(plannedHours / hoursPerAA) : 0;
+      document.getElementById('plannedHC').textContent = plannedHC;
+
+      // Update TPH display
+      document.getElementById('tphDisplay').textContent = targetTPH;
+
+      // Update output preview
+      updateOutput();
+    }
+
+    // Update output preview
+    function updateOutput() {
+      const rts = document.getElementById('rts').value || '0';
+      const mnr = document.getElementById('mnr').value || '0';
+      const rolled = document.getElementById('rolled').value || '0';
+      const slam = document.getElementById('slam').value || '0';
+      const sideline = document.getElementById('sideline').value || '0';
+      const schedule = document.getElementById('schedule').value || '0';
+      const softCap = document.getElementById('softCap').value || '0';
+      const lmcp = document.getElementById('lmcp').value || '0';
+      const cube = document.getElementById('cube').value || '0';
+      const c1Volume = document.getElementById('c1Volume').value || '0';
+      const fph = document.getElementById('fph').value || '0';
+      const targetTPH = document.getElementById('targetTPH').value || '90';
+      
+      const plannedHC = document.getElementById('plannedHC').textContent;
+      const plannedHours = document.getElementById('plannedHours').textContent;
+      const projectedHours = document.getElementById('projectedHours').textContent;
+
+      const output = `New Pre-shift:
+
+RTS: ${rts}
+MNR: ${mnr}
+Rolled: ${rolled}
+SLAM: ${slam}
+Sideline: ${sideline}
+Schedule: ${schedule}
+Soft Cap: ${softCap}
+LMCP: ${lmcp}
+Cube: ${cube}
+C1 Volume: ${c1Volume}
+FPH: ${fph}
+Planned HC ( ${targetTPH} TPH ): ${plannedHC}
+Pre-Shift Planned Hours = ${plannedHours}
+Pre-Shift Projected Hours = ${projectedHours}`;
+
+      document.getElementById('outputPreview').textContent = output;
+      
+      // Store for copying
+      window.currentOutput = output;
+    }
+
+    // Copy output to clipboard
+    function copyOutput() {
+      const output = window.currentOutput || document.getElementById('outputPreview').textContent;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(output).then(() => {
+          showCopyConfirm();
+        }).catch(() => {
+          fallbackCopy(output);
+        });
+      } else {
+        fallbackCopy(output);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showCopyConfirm();
+    }
+
+    function showCopyConfirm() {
+      const confirm = document.getElementById('copyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
+    // Clear all fields
+    function clearAll() {
+      const inputs = document.querySelectorAll('input[type="number"]:not(.setting-item input)');
+      inputs.forEach(input => {
+        if (input.id !== 'targetTPH' && input.id !== 'indirectFactor' && input.id !== 'hoursPerAA') {
+          input.value = '';
+        }
+      });
+      calculateAll();
+    }
+
+    // Initialize
+    calculateAll();
+  </script>
+</body>
+</html>
