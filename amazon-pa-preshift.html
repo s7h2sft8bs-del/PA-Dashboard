@@ -252,6 +252,39 @@
       color: var(--amazon-orange);
     }
 
+    /* C1 Volume Display */
+    .c1-volume-display {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(255, 153, 0, 0.15) 0%, rgba(255, 153, 0, 0.05) 100%);
+      border: 3px solid var(--amazon-orange);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .c1-label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--amazon-orange);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .c1-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--amazon-orange);
+      line-height: 1;
+    }
+
+    .c1-formula {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
     /* Calculated Results */
     .results-grid {
       display: grid;
@@ -481,10 +514,6 @@
       </div>
 
       <div class="input-grid">
-        <div class="input-item large">
-          <label>C1 Volume</label>
-          <input type="number" id="c1Volume" placeholder="0" oninput="calculateAll()">
-        </div>
         <div class="input-item">
           <label>RTS</label>
           <input type="number" id="rts" placeholder="0" oninput="calculateAll()">
@@ -525,6 +554,13 @@
           <label>FPH</label>
           <input type="number" id="fph" placeholder="0" oninput="calculateAll()">
         </div>
+      </div>
+
+      <!-- C1 Volume Auto-Calculated -->
+      <div class="c1-volume-display">
+        <div class="c1-label">C1 Volume (Auto-Calculated)</div>
+        <div class="c1-value" id="c1Volume">0</div>
+        <div class="c1-formula">RTS + MNR + Rolled + SLAM + Sideline</div>
       </div>
     </div>
 
@@ -632,7 +668,16 @@ Pre-Shift Projected Hours = 0
 
     // Calculate all values
     function calculateAll() {
-      const c1Volume = parseFloat(document.getElementById('c1Volume').value) || 0;
+      // Auto-calculate C1 Volume = RTS + MNR + Rolled + SLAM + Sideline
+      const rts = parseFloat(document.getElementById('rts').value) || 0;
+      const mnr = parseFloat(document.getElementById('mnr').value) || 0;
+      const rolled = parseFloat(document.getElementById('rolled').value) || 0;
+      const slam = parseFloat(document.getElementById('slam').value) || 0;
+      const sideline = parseFloat(document.getElementById('sideline').value) || 0;
+      
+      const c1Volume = rts + mnr + rolled + slam + sideline;
+      document.getElementById('c1Volume').textContent = c1Volume.toLocaleString();
+
       const targetTPH = parseFloat(document.getElementById('targetTPH').value) || 90;
       const indirectFactor = parseFloat(document.getElementById('indirectFactor').value) || 1.17;
       const hoursPerAA = parseFloat(document.getElementById('hoursPerAA').value) || 7.2;
@@ -671,9 +716,11 @@ Pre-Shift Projected Hours = 0
       const softCap = document.getElementById('softCap').value || '0';
       const lmcp = document.getElementById('lmcp').value || '0';
       const cube = document.getElementById('cube').value || '0';
-      const c1Volume = document.getElementById('c1Volume').value || '0';
       const fph = document.getElementById('fph').value || '0';
       const targetTPH = document.getElementById('targetTPH').value || '90';
+      
+      // Get calculated C1 Volume (remove commas for output)
+      const c1Volume = document.getElementById('c1Volume').textContent.replace(/,/g, '');
       
       const plannedHC = document.getElementById('plannedHC').textContent;
       const plannedHours = document.getElementById('plannedHours').textContent;
