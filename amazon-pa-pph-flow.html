@@ -259,7 +259,7 @@
     /* Volume Entry Section */
     .volume-section {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1fr;
       gap: 1.5rem;
       margin-bottom: 1.5rem;
     }
@@ -1224,6 +1224,54 @@
       color: var(--success);
     }
 
+    /* C1 Volume Entry */
+    .c1-volume-entry {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 153, 0, 0.3);
+    }
+
+    .c1-volume-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .c1-volume-group label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--amazon-orange);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .c1-volume-group input {
+      background: rgba(0, 0, 0, 0.4);
+      border: 3px solid var(--amazon-orange);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      color: var(--amazon-orange);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      text-align: center;
+      width: 280px;
+      transition: all 0.2s;
+    }
+
+    .c1-volume-group input:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.3);
+    }
+
+    .c1-volume-group input::placeholder {
+      color: var(--text-muted);
+      font-size: 2rem;
+    }
+
     .summary-stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1800,6 +1848,15 @@
         <h2 class="section-title">📋 Staffing Needed to Meet Rate</h2>
         <span class="rates-source" id="ratesSource">Using Default Rates</span>
       </div>
+      
+      <!-- C1 Volume Entry -->
+      <div class="c1-volume-entry">
+        <div class="c1-volume-group">
+          <label>C1 Volume (Total Night)</label>
+          <input type="number" id="totalVolume" placeholder="0" oninput="updateStats()">
+        </div>
+      </div>
+
       <div class="summary-stats">
         <div class="summary-stat">
           <div class="summary-stat-label">Volume</div>
@@ -2058,13 +2115,6 @@
 
     <!-- Volume Entry Section -->
     <div class="volume-section">
-      <div class="card total-volume-display">
-        <div class="total-volume-input-wrapper">
-          <input type="number" class="total-volume-input" id="totalVolume" placeholder="0" oninput="updateStats()">
-          <div class="total-volume-label">Enter Total Night Volume</div>
-        </div>
-      </div>
-      
       <div class="card">
         <div class="section-header">
           <h2 class="section-title">Stow Cluster Planned Volume</h2>
