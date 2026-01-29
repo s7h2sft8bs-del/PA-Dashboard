@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPH Flow Staffing - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-orange-dark: #E88B00;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --bg-card-hover: #1C2128;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --input-bg: #0D1117;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--amazon-orange);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--amazon-orange);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--amazon-blue);
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-text span {
+      color: var(--amazon-orange);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-time {
+      text-align: right;
+    }
+
+    .current-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--amazon-orange);
+    }
+
+    .current-date {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Belt Run Time Section */
+    .belt-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--amazon-orange);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--amazon-orange);
+      border-radius: 2px;
+    }
+
+    .belt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .time-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .time-input-group label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .time-input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .time-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+    }
+
+    .run-time-display {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      border: 2px solid var(--amazon-orange);
+    }
+
+    .run-time-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .run-time-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .run-time-subtext {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Break Adjustments */
+    .breaks-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .breaks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .break-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--input-bg);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .break-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--amazon-orange);
+      cursor: pointer;
+    }
+
+    .break-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .break-time {
+      margin-left: auto;
+      font-weight: 600;
+      color: var(--amazon-orange);
+    }
+
+    /* Volume Entry Section */
+    .volume-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .total-volume-display {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .total-volume-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .total-volume-input {
+      background: var(--input-bg);
+      border: 3px solid var(--amazon-orange);
+      border-radius: 12px;
+      padding: 1rem;
+      color: var(--amazon-orange);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      width: 250px;
+      transition: all 0.2s;
+    }
+
+    .total-volume-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.3);
+    }
+
+    .total-volume-input::placeholder {
+      color: var(--text-muted);
+      font-size: 2rem;
+    }
+
+    .total-volume-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+    }
+
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .cluster-input {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cluster-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--amazon-teal);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cluster-badge {
+      width: 32px;
+      height: 32px;
+      background: var(--amazon-teal);
+      color: var(--bg-dark);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .volume-input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: right;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .volume-input:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
+    }
+
+    .volume-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Progress Tracking Section */
+    .progress-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .progress-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .progress-input-group label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .progress-input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      width: 100%;
+    }
+
+    .progress-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+    }
+
+    /* Staffing Results */
+    .staffing-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .staffing-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .staffing-card-header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 1.5rem;
+      border-bottom: 3px solid var(--amazon-orange);
+    }
+
+    .staffing-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .staffing-card-body {
+      padding: 1rem;
+    }
+
+    .staffing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .staffing-table th,
+    .staffing-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .staffing-table th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .staffing-table td {
+      font-weight: 500;
+    }
+
+    .staffing-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .staffing-table .role-name {
+      color: var(--text-primary);
+    }
+
+    .staffing-table .staff-count {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+      text-align: center;
+    }
+
+    .staffing-table .actual-input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 60px;
+      text-align: center;
+    }
+
+    .staffing-table .actual-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+    }
+
+    .staffing-table .pph-value {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .staffing-total {
+      background: var(--amazon-blue);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .staffing-total-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .staffing-total-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    /* PPH Reference Section */
+    .pph-reference {
+      margin-top: 1.5rem;
+    }
+
+    .pph-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .pph-item {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pph-role {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .pph-value-display {
+      font-weight: 700;
+      color: var(--amazon-teal);
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--amazon-orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--amazon-blue);
+    }
+
+    .btn-break {
+      background: linear-gradient(135deg, #F85149 0%, #da3633 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-break:hover {
+      background: linear-gradient(135deg, #da3633 0%, #b62324 100%);
+      box-shadow: 0 4px 12px rgba(248, 81, 73, 0.4);
+    }
+
+    .btn-break svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .btn-voice {
+      background: linear-gradient(135deg, var(--amazon-teal) 0%, #008080 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-voice:hover {
+      background: linear-gradient(135deg, #008080 0%, #006666 100%);
+      box-shadow: 0 4px 12px rgba(0, 168, 168, 0.4);
+    }
+
+    .btn-voice svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .btn-voice.listening {
+      background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
+      animation: pulse-voice 1.5s infinite;
+    }
+
+    @keyframes pulse-voice {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4); }
+      50% { box-shadow: 0 0 0 15px rgba(63, 185, 80, 0); }
+    }
+
+    /* Voice Feedback Toast */
+    .voice-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 2px solid var(--amazon-teal);
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      display: none;
+      align-items: center;
+      gap: 1rem;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      max-width: 90%;
+    }
+
+    .voice-toast.active {
+      display: flex;
+    }
+
+    .voice-toast.success {
+      border-color: var(--success);
+    }
+
+    .voice-toast.error {
+      border-color: var(--danger);
+    }
+
+    .voice-toast-icon {
+      font-size: 1.5rem;
+    }
+
+    .voice-toast-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .voice-toast-text .heard {
+      color: var(--amazon-orange);
+      font-weight: 700;
+    }
+
+    .voice-toast-text .action {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    /* Voice Help Modal */
+    .voice-help {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-card);
+      border: 2px solid var(--amazon-teal);
+      border-radius: 16px;
+      padding: 2rem;
+      z-index: 1001;
+      max-width: 500px;
+      width: 90%;
+      display: none;
+    }
+
+    .voice-help.active {
+      display: block;
+    }
+
+    .voice-help h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      color: var(--amazon-teal);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .voice-help-commands {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .voice-cmd {
+      background: var(--input-bg);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .voice-cmd code {
+      color: var(--amazon-orange);
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    .voice-cmd span {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 2px solid var(--amazon-orange);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #F85149 0%, #da3633 100%);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .break-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .break-stat-card {
+      background: var(--input-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 2px solid var(--border-color);
+    }
+
+    .break-stat-card.highlight {
+      border-color: var(--amazon-orange);
+      background: linear-gradient(135deg, rgba(255, 153, 0, 0.1) 0%, rgba(255, 153, 0, 0.05) 100%);
+    }
+
+    .break-stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .break-stat-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .break-stat-value.orange {
+      color: var(--amazon-orange);
+    }
+
+    .break-stat-value.teal {
+      color: var(--amazon-teal);
+    }
+
+    .break-stat-value.danger {
+      color: var(--danger);
+    }
+
+    .break-stat-value.success {
+      color: var(--success);
+    }
+
+    .break-stat-unit {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .flow-required-section {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border: 2px solid var(--amazon-orange);
+    }
+
+    .flow-required-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      color: var(--amazon-orange);
+    }
+
+    .flow-required-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .flow-required-item {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .flow-required-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .flow-required-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .time-remaining {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .time-remaining-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .time-remaining-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .volume-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .progress-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .header-right {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-time {
+        text-align: center;
+      }
+
+      .staffing-section {
+        grid-template-columns: 1fr;
+      }
+
+      .break-stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-required-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .live-indicator::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Real Time Stats */
+    .real-time-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--amazon-orange);
+    }
+
+    .stat-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 1200px) {
+      .real-time-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .real-time-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="amazon-pa-dashboard.html" class="back-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back
+      </a>
+      <div class="logo-icon">PPH</div>
+      <div class="logo-text">PPH <span>Flow Staffing</span></div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-voice" id="voiceBtn" onclick="toggleVoice()">
+        <svg id="micIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+        </svg>
+        <span id="voiceBtnText">VOICE</span>
+      </button>
+      <button class="btn btn-break" onclick="openBreakModal()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        BREAK
+      </button>
+      <div class="header-time">
+        <div class="live-indicator">Live</div>
+        <div class="current-time" id="currentTime">--:--:--</div>
+        <div class="current-date" id="currentDate">Loading...</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Belt Run Time Section -->
+    <section class="belt-section">
+      <div class="section-header">
+        <h2 class="section-title">Belt Run Time</h2>
+        <button class="btn btn-secondary" onclick="resetToDefault()">Reset to Default</button>
+      </div>
+      
+      <div class="belt-grid">
+        <div class="time-input-group">
+          <label>Shift Start</label>
+          <input type="time" class="time-input" id="shiftStart" value="01:20" onchange="calculateRunTime()">
+        </div>
+        <div class="time-input-group">
+          <label>Shift End</label>
+          <input type="time" class="time-input" id="shiftEnd" value="08:30" onchange="calculateRunTime()">
+        </div>
+        <div class="time-input-group">
+          <label>Early End Adjustment</label>
+          <input type="time" class="time-input" id="earlyEnd" placeholder="--:--" onchange="calculateRunTime()">
+        </div>
+        <div class="run-time-display">
+          <div class="run-time-label">Total Run Time</div>
+          <div class="run-time-value" id="totalRunTime">6:10</div>
+          <div class="run-time-subtext">After breaks deducted</div>
+        </div>
+      </div>
+
+      <div class="breaks-section">
+        <h3 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Break Adjustments</h3>
+        <div class="breaks-grid">
+          <div class="break-item">
+            <input type="checkbox" class="break-checkbox" id="break1" checked onchange="calculateRunTime()">
+            <span class="break-label">1st Break (4:00-4:15)</span>
+            <span class="break-time">15 min</span>
+          </div>
+          <div class="break-item">
+            <input type="checkbox" class="break-checkbox" id="lunch" checked onchange="calculateRunTime()">
+            <span class="break-label">Lunch (6:00-6:30)</span>
+            <span class="break-time">30 min</span>
+          </div>
+          <div class="break-item">
+            <input type="checkbox" class="break-checkbox" id="break2" checked onchange="calculateRunTime()">
+            <span class="break-label">2nd Break (8:45-9:00)</span>
+            <span class="break-time">15 min</span>
+          </div>
+          <div class="break-item">
+            <input type="number" class="time-input" id="customBreak" value="0" min="0" style="width: 60px; padding: 0.5rem;" onchange="calculateRunTime()">
+            <span class="break-label">Custom (min)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real Time Stats -->
+    <div class="real-time-stats">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalVolume">0</div>
+        <div class="stat-label">Total Volume</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalStaff">0</div>
+        <div class="stat-label">Total Staff Needed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statRequiredTPH">0</div>
+        <div class="stat-label">Required TPH</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statRemainingVol">0</div>
+        <div class="stat-label">Remaining Volume</div>
+      </div>
+    </div>
+
+    <!-- Volume Entry Section -->
+    <div class="volume-section">
+      <div class="card total-volume-display">
+        <div class="total-volume-input-wrapper">
+          <input type="number" class="total-volume-input" id="totalVolume" placeholder="0" oninput="updateStats()">
+          <div class="total-volume-label">Enter Total Night Volume</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Stow Cluster Planned Volume</h2>
+        </div>
+        <div class="cluster-grid">
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">A</span> Cluster A</div>
+            <input type="number" class="volume-input" id="clusterA" placeholder="0" oninput="updateStats()">
+          </div>
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">B</span> Cluster B</div>
+            <input type="number" class="volume-input" id="clusterB" placeholder="0" oninput="updateStats()">
+          </div>
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">C</span> Cluster C</div>
+            <input type="number" class="volume-input" id="clusterC" placeholder="0" oninput="updateStats()">
+          </div>
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">D</span> Cluster D</div>
+            <input type="number" class="volume-input" id="clusterD" placeholder="0" oninput="updateStats()">
+          </div>
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">E</span> Cluster E</div>
+            <input type="number" class="volume-input" id="clusterE" placeholder="0" oninput="updateStats()">
+          </div>
+          <div class="cluster-input">
+            <div class="cluster-label"><span class="cluster-badge">G</span> Cluster G</div>
+            <input type="number" class="volume-input" id="clusterG" placeholder="0" oninput="updateStats()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Tracking Section -->
+    <div class="progress-section">
+      <div class="progress-card">
+        <div class="section-header">
+          <h2 class="section-title">Induct Progress</h2>
+        </div>
+        <div class="progress-input-row">
+          <div class="progress-input-group">
+            <label>Units Inducted So Far</label>
+            <input type="number" class="progress-input" id="inductedSoFar" placeholder="0" oninput="updateProgress()">
+          </div>
+          <div class="progress-input-group">
+            <label>Remaining to Induct</label>
+            <input type="number" class="progress-input" id="remainingInduct" readonly style="background: var(--amazon-blue); color: var(--amazon-orange);">
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-card">
+        <div class="section-header">
+          <h2 class="section-title">Stow Progress</h2>
+        </div>
+        <div class="progress-input-row">
+          <div class="progress-input-group">
+            <label>Units Stowed So Far</label>
+            <input type="number" class="progress-input" id="stowedSoFar" placeholder="0" oninput="updateProgress()">
+          </div>
+          <div class="progress-input-group">
+            <label>Remaining to Stow</label>
+            <input type="number" class="progress-input" id="remainingStow" readonly style="background: var(--amazon-blue); color: var(--amazon-orange);">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Staffing Results Section -->
+    <div class="staffing-section">
+      <!-- Cycle 1 Dock -->
+      <div class="staffing-card">
+        <div class="staffing-card-header">
+          <h3 class="staffing-card-title">Cycle 1 Dock</h3>
+        </div>
+        <div class="staffing-card-body">
+          <table class="staffing-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th style="text-align: center;">Planned HC</th>
+                <th style="text-align: center;">Actual HC</th>
+                <th>A. PPH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="role-name">Waterspider</td>
+                <td class="staff-count" id="c1WaterspiderPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1WaterspiderActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1WaterspiderPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Lineloader</td>
+                <td class="staff-count" id="c1LineloaderPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1LineloaderActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1LineloaderPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Inducters</td>
+                <td class="staff-count" id="c1InductersPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1InductersActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1InductersPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Pushers</td>
+                <td class="staff-count" id="c1PushersPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1PushersActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1PushersPPH">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="staffing-total">
+          <span class="staffing-total-label">Total C1 Dock</span>
+          <span class="staffing-total-value" id="c1DockTotal">0</span>
+        </div>
+      </div>
+
+      <!-- Cycle 1 Sort -->
+      <div class="staffing-card">
+        <div class="staffing-card-header">
+          <h3 class="staffing-card-title">Cycle 1 Sort (P2B by Cluster)</h3>
+        </div>
+        <div class="staffing-card-body">
+          <table class="staffing-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th style="text-align: center;">Planned HC</th>
+                <th style="text-align: center;">Actual HC</th>
+                <th>A. PPH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="role-name">Diverter</td>
+                <td class="staff-count" id="c1DiverterPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1DiverterActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1DiverterPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - A</td>
+                <td class="staff-count" id="c1P2BAPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BAActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BAPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - B</td>
+                <td class="staff-count" id="c1P2BBPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BBActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BBPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - C</td>
+                <td class="staff-count" id="c1P2BCPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BCActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BCPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - D</td>
+                <td class="staff-count" id="c1P2BDPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BDActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BDPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - E</td>
+                <td class="staff-count" id="c1P2BEPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BEActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BEPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">P2B - G</td>
+                <td class="staff-count" id="c1P2BGPlan">0</td>
+                <td><input type="number" class="actual-input" id="c1P2BGActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="c1P2BGPPH">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="staffing-total">
+          <span class="staffing-total-label">Total C1 Sort</span>
+          <span class="staffing-total-value" id="c1SortTotal">0</span>
+        </div>
+      </div>
+
+      <!-- Same Day Operations -->
+      <div class="staffing-card">
+        <div class="staffing-card-header">
+          <h3 class="staffing-card-title">Same Day (SSD) Operations</h3>
+        </div>
+        <div class="staffing-card-body">
+          <table class="staffing-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th style="text-align: center;">Planned HC</th>
+                <th style="text-align: center;">Actual HC</th>
+                <th>A. PPH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="role-name">SSD Waterspider</td>
+                <td class="staff-count" id="ssdWaterspiderPlan">0</td>
+                <td><input type="number" class="actual-input" id="ssdWaterspiderActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="ssdWaterspiderPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">SSD Lineloader</td>
+                <td class="staff-count" id="ssdLineloaderPlan">0</td>
+                <td><input type="number" class="actual-input" id="ssdLineloaderActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="ssdLineloaderPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">SSD Inducters</td>
+                <td class="staff-count" id="ssdInductersPlan">0</td>
+                <td><input type="number" class="actual-input" id="ssdInductersActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="ssdInductersPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">SSD Pushers</td>
+                <td class="staff-count" id="ssdPushersPlan">0</td>
+                <td><input type="number" class="actual-input" id="ssdPushersActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="ssdPushersPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">SSD P2B</td>
+                <td class="staff-count" id="ssdP2BPlan">0</td>
+                <td><input type="number" class="actual-input" id="ssdP2BActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="ssdP2BPPH">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="staffing-total">
+          <span class="staffing-total-label">Total SSD</span>
+          <span class="staffing-total-value" id="ssdTotal">0</span>
+        </div>
+      </div>
+
+      <!-- Other Indirects -->
+      <div class="staffing-card">
+        <div class="staffing-card-header">
+          <h3 class="staffing-card-title">Other Indirects</h3>
+        </div>
+        <div class="staffing-card-body">
+          <table class="staffing-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th style="text-align: center;">Actual HC</th>
+                <th>A. PPH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="role-name">Problem Solve</td>
+                <td><input type="number" class="actual-input" id="problemSolveActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="problemSolvePPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Hazmat</td>
+                <td><input type="number" class="actual-input" id="hazmatActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="hazmatPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Yard Assist</td>
+                <td><input type="number" class="actual-input" id="yardAssistActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="yardAssistPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Process Assistant</td>
+                <td><input type="number" class="actual-input" id="paActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="paPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">Safety</td>
+                <td><input type="number" class="actual-input" id="safetyActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="safetyPPH">0</td>
+              </tr>
+              <tr>
+                <td class="role-name">5S</td>
+                <td><input type="number" class="actual-input" id="fiveSActual" placeholder="0" oninput="calculateActualPPH()"></td>
+                <td class="pph-value" id="fiveSPPH">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="staffing-total">
+          <span class="staffing-total-label">Total Indirects</span>
+          <span class="staffing-total-value" id="indirectsTotal">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PPH Reference -->
+    <section class="card pph-reference">
+      <div class="section-header">
+        <h2 class="section-title">Sort Path PPH Reference</h2>
+      </div>
+      <div class="pph-grid">
+        <div class="pph-item">
+          <span class="pph-role">Container Building</span>
+          <span class="pph-value-display">180</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Pick To Buffer</span>
+          <span class="pph-value-display">400</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Induct</span>
+          <span class="pph-value-display">1,064</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Waterspider</span>
+          <span class="pph-value-display">1,685</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Pusher</span>
+          <span class="pph-value-display">1,382</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Diverter</span>
+          <span class="pph-value-display">4,480</span>
+        </div>
+        <div class="pph-item">
+          <span class="pph-role">Line Loader</span>
+          <span class="pph-value-display">1,368</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Voice Feedback Toast -->
+  <div class="voice-toast" id="voiceToast">
+    <span class="voice-toast-icon">🎤</span>
+    <div class="voice-toast-text">
+      <span id="voiceHeard"></span>
+      <span class="action" id="voiceAction"></span>
+    </div>
+  </div>
+
+  <!-- Break Modal -->
+  <div class="modal-overlay" id="breakModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Break Status Report
+        </h2>
+        <button class="modal-close" onclick="closeBreakModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="break-stats-grid">
+          <div class="break-stat-card">
+            <div class="break-stat-label">Remaining to Induct</div>
+            <div class="break-stat-value orange" id="modalRemainingInduct">0</div>
+            <div class="break-stat-unit">units</div>
+          </div>
+          <div class="break-stat-card">
+            <div class="break-stat-label">Remaining to Stow</div>
+            <div class="break-stat-value teal" id="modalRemainingStow">0</div>
+            <div class="break-stat-unit">units</div>
+          </div>
+          <div class="break-stat-card">
+            <div class="break-stat-label">Inducted So Far</div>
+            <div class="break-stat-value" id="modalInductedSoFar">0</div>
+            <div class="break-stat-unit">units</div>
+          </div>
+          <div class="break-stat-card">
+            <div class="break-stat-label">Stowed So Far</div>
+            <div class="break-stat-value" id="modalStowedSoFar">0</div>
+            <div class="break-stat-unit">units</div>
+          </div>
+        </div>
+
+        <div class="flow-required-section">
+          <div class="flow-required-title">⚡ Flow Required to Finish On Time</div>
+          <div class="flow-required-grid">
+            <div class="flow-required-item">
+              <div class="flow-required-label">Required Induct Flow (TPH)</div>
+              <div class="flow-required-value" id="modalInductFlow">0</div>
+            </div>
+            <div class="flow-required-item">
+              <div class="flow-required-label">Required Stow Flow (TPH)</div>
+              <div class="flow-required-value" id="modalStowFlow">0</div>
+            </div>
+            <div class="flow-required-item">
+              <div class="flow-required-label">Target Finish Time</div>
+              <div class="flow-required-value" id="modalTargetTime">--:--</div>
+            </div>
+            <div class="flow-required-item">
+              <div class="flow-required-label">Time Remaining</div>
+              <div class="flow-required-value" id="modalTimeRemaining">0:00</div>
+            </div>
+          </div>
+          <div class="time-remaining">
+            <div class="time-remaining-label">Status</div>
+            <div class="time-remaining-value" id="modalStatus">Enter data to calculate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PPH Constants from spreadsheet
+    const PPH = {
+      containerBuilding: 180,
+      pickToBuffer: 400,
+      induct: 1064,
+      waterspider: 1685,
+      pusher: 1382,
+      diverter: 4480,
+      lineLoader: 1368
+    };
+
+    // Update current time
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Calculate Belt Run Time
+    function calculateRunTime() {
+      const startTime = document.getElementById('shiftStart').value;
+      const endTime = document.getElementById('shiftEnd').value;
+      const earlyEnd = document.getElementById('earlyEnd').value;
+      
+      let start = timeToMinutes(startTime);
+      let end = timeToMinutes(earlyEnd || endTime);
+      
+      // Handle overnight shift (if end is less than start, add 24 hours)
+      if (end < start) {
+        end += 24 * 60;
+      }
+      
+      let totalMinutes = end - start;
+      
+      // Deduct breaks
+      if (document.getElementById('break1').checked) totalMinutes -= 15;
+      if (document.getElementById('lunch').checked) totalMinutes -= 30;
+      if (document.getElementById('break2').checked) totalMinutes -= 15;
+      totalMinutes -= parseInt(document.getElementById('customBreak').value) || 0;
+      
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      
+      document.getElementById('totalRunTime').textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
+      
+      updateStats();
+    }
+
+    function timeToMinutes(timeStr) {
+      if (!timeStr) return 0;
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    // Reset to default shift times
+    function resetToDefault() {
+      document.getElementById('shiftStart').value = '01:20';
+      document.getElementById('shiftEnd').value = '08:30';
+      document.getElementById('earlyEnd').value = '';
+      document.getElementById('break1').checked = true;
+      document.getElementById('lunch').checked = true;
+      document.getElementById('break2').checked = true;
+      document.getElementById('customBreak').value = 0;
+      calculateRunTime();
+    }
+
+    // Update all statistics
+    function updateStats() {
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      
+      document.getElementById('statTotalVolume').textContent = totalVolume.toLocaleString();
+      
+      // Calculate required TPH
+      const runTimeText = document.getElementById('totalRunTime').textContent;
+      const [hours, mins] = runTimeText.split(':').map(Number);
+      const runTimeHours = hours + (mins / 60);
+      
+      const requiredTPH = runTimeHours > 0 ? Math.round(totalVolume / runTimeHours) : 0;
+      document.getElementById('statRequiredTPH').textContent = requiredTPH.toLocaleString();
+      
+      // Calculate staffing based on volume and run time
+      calculateStaffing(totalVolume);
+      updateProgress();
+    }
+
+    // Update progress tracking
+    function updateProgress() {
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
+      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
+      
+      const remainingInduct = Math.max(0, totalVolume - inductedSoFar);
+      const remainingStow = Math.max(0, totalVolume - stowedSoFar);
+      
+      document.getElementById('remainingInduct').value = remainingInduct.toLocaleString();
+      document.getElementById('remainingStow').value = remainingStow.toLocaleString();
+      document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
+    }
+
+    // Calculate staffing requirements
+    function calculateStaffing(totalVolume) {
+      // Get run time in hours
+      const runTimeText = document.getElementById('totalRunTime').textContent;
+      const [hours, mins] = runTimeText.split(':').map(Number);
+      const runTimeHours = hours + (mins / 60);
+      
+      if (runTimeHours <= 0 || totalVolume <= 0) {
+        // Reset all planned values to 0
+        document.getElementById('c1WaterspiderPlan').textContent = '0';
+        document.getElementById('c1LineloaderPlan').textContent = '0';
+        document.getElementById('c1InductersPlan').textContent = '0';
+        document.getElementById('c1PushersPlan').textContent = '0';
+        document.getElementById('c1DockTotal').textContent = '0';
+        document.getElementById('c1DiverterPlan').textContent = '0';
+        document.getElementById('c1P2BAPlan').textContent = '0';
+        document.getElementById('c1P2BBPlan').textContent = '0';
+        document.getElementById('c1P2BCPlan').textContent = '0';
+        document.getElementById('c1P2BDPlan').textContent = '0';
+        document.getElementById('c1P2BEPlan').textContent = '0';
+        document.getElementById('c1P2BGPlan').textContent = '0';
+        document.getElementById('c1SortTotal').textContent = '0';
+        document.getElementById('statTotalStaff').textContent = '0';
+        return;
+      }
+      
+      // Calculate hourly rate needed
+      const hourlyRate = totalVolume / runTimeHours;
+      
+      // Calculate staff for each role based on PPH
+      // C1 Dock
+      const c1Waterspider = (hourlyRate / PPH.waterspider).toFixed(1);
+      const c1Lineloader = (hourlyRate / PPH.lineLoader).toFixed(1);
+      const c1Inducters = (hourlyRate / PPH.induct).toFixed(1);
+      const c1Pushers = (hourlyRate / PPH.pusher).toFixed(1);
+      
+      document.getElementById('c1WaterspiderPlan').textContent = c1Waterspider;
+      document.getElementById('c1LineloaderPlan').textContent = c1Lineloader;
+      document.getElementById('c1InductersPlan').textContent = c1Inducters;
+      document.getElementById('c1PushersPlan').textContent = c1Pushers;
+      
+      const c1DockTotal = (parseFloat(c1Waterspider) + parseFloat(c1Lineloader) + 
+                          parseFloat(c1Inducters) + parseFloat(c1Pushers)).toFixed(1);
+      document.getElementById('c1DockTotal').textContent = c1DockTotal;
+      
+      // C1 Sort - P2B by cluster
+      const clusterValues = {
+        A: parseInt(document.getElementById('clusterA').value) || 0,
+        B: parseInt(document.getElementById('clusterB').value) || 0,
+        C: parseInt(document.getElementById('clusterC').value) || 0,
+        D: parseInt(document.getElementById('clusterD').value) || 0,
+        E: parseInt(document.getElementById('clusterE').value) || 0,
+        G: parseInt(document.getElementById('clusterG').value) || 0
+      };
+      
+      const p2bA = (clusterValues.A / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      const p2bB = (clusterValues.B / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      const p2bC = (clusterValues.C / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      const p2bD = (clusterValues.D / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      const p2bE = (clusterValues.E / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      const p2bG = (clusterValues.G / runTimeHours / PPH.pickToBuffer).toFixed(1);
+      
+      const diverter = (hourlyRate / PPH.diverter).toFixed(1);
+      
+      document.getElementById('c1DiverterPlan').textContent = Math.max(2, Math.ceil(parseFloat(diverter)));
+      document.getElementById('c1P2BAPlan').textContent = p2bA;
+      document.getElementById('c1P2BBPlan').textContent = p2bB;
+      document.getElementById('c1P2BCPlan').textContent = p2bC;
+      document.getElementById('c1P2BDPlan').textContent = p2bD;
+      document.getElementById('c1P2BEPlan').textContent = p2bE;
+      document.getElementById('c1P2BGPlan').textContent = p2bG;
+      
+      const c1SortTotal = (2 + parseFloat(p2bA) + parseFloat(p2bB) + parseFloat(p2bC) + 
+                          parseFloat(p2bD) + parseFloat(p2bE) + parseFloat(p2bG)).toFixed(1);
+      document.getElementById('c1SortTotal').textContent = c1SortTotal;
+      
+      // Calculate total staff
+      const totalStaff = Math.ceil(parseFloat(c1DockTotal) + parseFloat(c1SortTotal));
+      document.getElementById('statTotalStaff').textContent = totalStaff;
+      
+      calculateActualPPH();
+    }
+
+    // Calculate actual PPH based on actual headcount
+    function calculateActualPPH() {
+      const runTimeText = document.getElementById('totalRunTime').textContent;
+      const [hours, mins] = runTimeText.split(':').map(Number);
+      const runTimeHours = hours + (mins / 60);
+      
+      // Get total volume
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      
+      // C1 Dock actual PPH calculations
+      const roles = [
+        { id: 'c1Waterspider', pph: PPH.waterspider },
+        { id: 'c1Lineloader', pph: PPH.lineLoader },
+        { id: 'c1Inducters', pph: PPH.induct },
+        { id: 'c1Pushers', pph: PPH.pusher },
+        { id: 'c1Diverter', pph: PPH.diverter },
+        { id: 'ssdWaterspider', pph: PPH.waterspider },
+        { id: 'ssdLineloader', pph: PPH.lineLoader },
+        { id: 'ssdInducters', pph: PPH.induct },
+        { id: 'ssdPushers', pph: PPH.pusher }
+      ];
+      
+      roles.forEach(role => {
+        const actual = parseInt(document.getElementById(`${role.id}Actual`).value) || 0;
+        const actualPPH = actual > 0 && runTimeHours > 0 ? Math.round(totalVolume / actual / runTimeHours) : 0;
+        document.getElementById(`${role.id}PPH`).textContent = actualPPH.toLocaleString();
+      });
+      
+      // P2B clusters
+      const clusters = ['A', 'B', 'C', 'D', 'E', 'G'];
+      clusters.forEach(cluster => {
+        const actual = parseInt(document.getElementById(`c1P2B${cluster}Actual`).value) || 0;
+        const clusterVol = parseInt(document.getElementById(`cluster${cluster}`).value) || 0;
+        const actualPPH = actual > 0 && runTimeHours > 0 ? Math.round(clusterVol / actual / runTimeHours) : 0;
+        document.getElementById(`c1P2B${cluster}PPH`).textContent = actualPPH.toLocaleString();
+      });
+      
+      // SSD P2B
+      const ssdP2BActual = parseInt(document.getElementById('ssdP2BActual').value) || 0;
+      const ssdP2BPPH = ssdP2BActual > 0 && runTimeHours > 0 ? Math.round(totalVolume / ssdP2BActual / runTimeHours) : 0;
+      document.getElementById('ssdP2BPPH').textContent = ssdP2BPPH.toLocaleString();
+      
+      // Calculate totals
+      updateTotals();
+    }
+
+    // Update section totals
+    function updateTotals() {
+      // SSD total actual
+      const ssdActuals = ['ssdWaterspider', 'ssdLineloader', 'ssdInducters', 'ssdPushers', 'ssdP2B'];
+      let ssdActualTotal = 0;
+      ssdActuals.forEach(id => {
+        ssdActualTotal += parseInt(document.getElementById(`${id}Actual`).value) || 0;
+      });
+      document.getElementById('ssdTotal').textContent = ssdActualTotal;
+      
+      // Indirects total
+      const indirectActuals = ['problemSolve', 'hazmat', 'yardAssist', 'pa', 'safety', 'fiveS'];
+      let indirectTotal = 0;
+      indirectActuals.forEach(id => {
+        indirectTotal += parseInt(document.getElementById(`${id}Actual`).value) || 0;
+      });
+      document.getElementById('indirectsTotal').textContent = indirectTotal;
+    }
+
+    // Break Modal Functions
+    function openBreakModal() {
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
+      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
+      
+      const remainingInduct = Math.max(0, totalVolume - inductedSoFar);
+      const remainingStow = Math.max(0, totalVolume - stowedSoFar);
+      
+      document.getElementById('modalRemainingInduct').textContent = remainingInduct.toLocaleString();
+      document.getElementById('modalRemainingStow').textContent = remainingStow.toLocaleString();
+      document.getElementById('modalInductedSoFar').textContent = inductedSoFar.toLocaleString();
+      document.getElementById('modalStowedSoFar').textContent = stowedSoFar.toLocaleString();
+      
+      // Calculate time remaining until shift end
+      const now = new Date();
+      const shiftEnd = document.getElementById('earlyEnd').value || document.getElementById('shiftEnd').value;
+      const [endHour, endMin] = shiftEnd.split(':').map(Number);
+      
+      let endDate = new Date();
+      endDate.setHours(endHour, endMin, 0, 0);
+      
+      // If end time is earlier than current time, it's the next day
+      if (endDate < now) {
+        endDate.setDate(endDate.getDate() + 1);
+      }
+      
+      const msRemaining = endDate - now;
+      const hoursRemaining = msRemaining / (1000 * 60 * 60);
+      
+      // Calculate remaining break time to deduct based on actual break schedule
+      let breakMinsRemaining = 0;
+      const currentHour = now.getHours();
+      const currentMin = now.getMinutes();
+      const currentTimeValue = currentHour + (currentMin / 60);
+      
+      // 1st Break: 4:00-4:15 AM - if before 4:15, break still counts
+      if (currentTimeValue < 4.25 && document.getElementById('break1').checked) breakMinsRemaining += 15;
+      // Lunch: 6:00-6:30 AM - if before 6:30, lunch still counts
+      if (currentTimeValue < 6.5 && document.getElementById('lunch').checked) breakMinsRemaining += 30;
+      // 2nd Break: 8:45-9:00 AM - if before 9:00, break still counts
+      if (currentTimeValue < 9 && document.getElementById('break2').checked) breakMinsRemaining += 15;
+      
+      const effectiveHoursRemaining = Math.max(0, hoursRemaining - (breakMinsRemaining / 60));
+      
+      // Calculate required flow rates
+      const requiredInductFlow = effectiveHoursRemaining > 0 ? Math.round(remainingInduct / effectiveHoursRemaining) : 0;
+      const requiredStowFlow = effectiveHoursRemaining > 0 ? Math.round(remainingStow / effectiveHoursRemaining) : 0;
+      
+      document.getElementById('modalInductFlow').textContent = requiredInductFlow.toLocaleString();
+      document.getElementById('modalStowFlow').textContent = requiredStowFlow.toLocaleString();
+      
+      // Format target time
+      const targetTime = new Date();
+      targetTime.setHours(endHour, endMin, 0, 0);
+      document.getElementById('modalTargetTime').textContent = targetTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      // Format time remaining
+      const hoursLeft = Math.floor(effectiveHoursRemaining);
+      const minsLeft = Math.round((effectiveHoursRemaining - hoursLeft) * 60);
+      document.getElementById('modalTimeRemaining').textContent = `${hoursLeft}:${minsLeft.toString().padStart(2, '0')}`;
+      
+      // Status message
+      let statusMsg = '';
+      let statusColor = '';
+      
+      if (totalVolume === 0) {
+        statusMsg = 'Enter total volume to calculate';
+        statusColor = 'var(--text-muted)';
+      } else if (remainingInduct === 0 && remainingStow === 0) {
+        statusMsg = '✓ All volume completed!';
+        statusColor = 'var(--success)';
+      } else if (effectiveHoursRemaining <= 0) {
+        statusMsg = '⚠ Shift time has ended';
+        statusColor = 'var(--danger)';
+      } else {
+        const percentComplete = Math.round(((inductedSoFar + stowedSoFar) / (totalVolume * 2)) * 100);
+        statusMsg = `${percentComplete}% Complete - On Track`;
+        statusColor = percentComplete >= 50 ? 'var(--success)' : 'var(--warning)';
+      }
+      
+      document.getElementById('modalStatus').textContent = statusMsg;
+      document.getElementById('modalStatus').style.color = statusColor;
+      
+      document.getElementById('breakModal').classList.add('active');
+    }
+
+    function closeBreakModal() {
+      document.getElementById('breakModal').classList.remove('active');
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeBreakModal();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('breakModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('breakModal')) closeBreakModal();
+    });
+
+    // Initialize
+    calculateRunTime();
+
+    // ==================== VOICE RECOGNITION ====================
+    let recognition = null;
+    let isListening = false;
+
+    // Check if browser supports speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = function() {
+        isListening = true;
+        document.getElementById('voiceBtn').classList.add('listening');
+        document.getElementById('voiceBtnText').textContent = 'LISTENING...';
+        showVoiceToast('🎤', 'Listening...', 'Say a command like "Waterspider 5"');
+      };
+
+      recognition.onend = function() {
+        if (isListening) {
+          // Restart if still supposed to be listening
+          recognition.start();
+        }
+      };
+
+      recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        if (event.error === 'not-allowed') {
+          showVoiceToast('❌', 'Microphone access denied', 'Please allow microphone access in your browser', 'error');
+          stopVoice();
+        }
+      };
+
+      recognition.onresult = function(event) {
+        const last = event.results.length - 1;
+        const transcript = event.results[last][0].transcript.trim().toLowerCase();
+        console.log('Heard:', transcript);
+        processVoiceCommand(transcript);
+      };
+    }
+
+    function toggleVoice() {
+      if (!SpeechRecognition) {
+        showVoiceToast('❌', 'Voice not supported', 'Please use Chrome for voice commands', 'error');
+        return;
+      }
+
+      if (isListening) {
+        stopVoice();
+      } else {
+        startVoice();
+      }
+    }
+
+    function startVoice() {
+      if (recognition) {
+        isListening = true;
+        recognition.start();
+      }
+    }
+
+    function stopVoice() {
+      isListening = false;
+      if (recognition) {
+        recognition.stop();
+      }
+      document.getElementById('voiceBtn').classList.remove('listening');
+      document.getElementById('voiceBtnText').textContent = 'VOICE';
+      hideVoiceToast();
+    }
+
+    function showVoiceToast(icon, text, action, type = '') {
+      const toast = document.getElementById('voiceToast');
+      toast.querySelector('.voice-toast-icon').textContent = icon;
+      document.getElementById('voiceHeard').innerHTML = text;
+      document.getElementById('voiceAction').textContent = action || '';
+      toast.className = 'voice-toast active ' + type;
+      
+      // Auto-hide after 3 seconds for success/error
+      if (type) {
+        setTimeout(hideVoiceToast, 3000);
+      }
+    }
+
+    function hideVoiceToast() {
+      if (!isListening) {
+        document.getElementById('voiceToast').classList.remove('active');
+      }
+    }
+
+    // Voice command mappings
+    const voiceCommands = {
+      // Staffing - C1 Dock
+      'waterspider': 'c1WaterspiderActual',
+      'water spider': 'c1WaterspiderActual',
+      'line loader': 'c1LineloaderActual',
+      'lineloader': 'c1LineloaderActual',
+      'inductor': 'c1InductersActual',
+      'inductors': 'c1InductersActual',
+      'inducters': 'c1InductersActual',
+      'induct': 'c1InductersActual',
+      'pusher': 'c1PushersActual',
+      'pushers': 'c1PushersActual',
+      
+      // Staffing - C1 Sort
+      'diverter': 'c1DiverterActual',
+      'diverters': 'c1DiverterActual',
+      'p2b a': 'c1P2BAActual',
+      'p2b alpha': 'c1P2BAActual',
+      'p2b b': 'c1P2BBActual',
+      'p2b bravo': 'c1P2BBActual',
+      'p2b c': 'c1P2BCActual',
+      'p2b charlie': 'c1P2BCActual',
+      'p2b d': 'c1P2BDActual',
+      'p2b delta': 'c1P2BDActual',
+      'p2b e': 'c1P2BEActual',
+      'p2b echo': 'c1P2BEActual',
+      'p2b g': 'c1P2BGActual',
+      'p2b golf': 'c1P2BGActual',
+      
+      // SSD
+      'ssd waterspider': 'ssdWaterspiderActual',
+      'ssd water spider': 'ssdWaterspiderActual',
+      'ssd lineloader': 'ssdLineloaderActual',
+      'ssd line loader': 'ssdLineloaderActual',
+      'ssd inducters': 'ssdInductersActual',
+      'ssd inductors': 'ssdInductersActual',
+      'ssd pushers': 'ssdPushersActual',
+      'ssd pusher': 'ssdPushersActual',
+      'ssd p2b': 'ssdP2BActual',
+      
+      // Indirects
+      'problem solve': 'problemSolveActual',
+      'problem solver': 'problemSolveActual',
+      'hazmat': 'hazmatActual',
+      'yard assist': 'yardAssistActual',
+      'yard': 'yardAssistActual',
+      'process assistant': 'paActual',
+      'pa': 'paActual',
+      'safety': 'safetyActual',
+      '5s': 'fiveSActual',
+      'five s': 'fiveSActual',
+      
+      // Volumes
+      'total volume': 'totalVolume',
+      'volume': 'totalVolume',
+      'cluster a': 'clusterA',
+      'cluster alpha': 'clusterA',
+      'cluster b': 'clusterB',
+      'cluster bravo': 'clusterB',
+      'cluster c': 'clusterC',
+      'cluster charlie': 'clusterC',
+      'cluster d': 'clusterD',
+      'cluster delta': 'clusterD',
+      'cluster e': 'clusterE',
+      'cluster echo': 'clusterE',
+      'cluster g': 'clusterG',
+      'cluster golf': 'clusterG',
+      
+      // Progress
+      'inducted': 'inductedSoFar',
+      'inducted so far': 'inductedSoFar',
+      'stowed': 'stowedSoFar',
+      'stowed so far': 'stowedSoFar',
+      
+      // Pre-shift
+      'c1 volume': 'c1Volume',
+      'cycle 1 volume': 'c1Volume',
+      'fph': 'fph',
+      'flow per hour': 'fph',
+      'target tph': 'targetTPH',
+      'planned hc': 'plannedHC',
+      'planned headcount': 'plannedHC',
+      'planned hours': 'plannedHours',
+      'projected hours': 'projectedHours'
+    };
+
+    function processVoiceCommand(transcript) {
+      // Extract number from transcript
+      const numberMatch = transcript.match(/\d+/);
+      if (!numberMatch) {
+        showVoiceToast('❓', `"${transcript}"`, 'No number detected - say something like "Waterspider 5"');
+        return;
+      }
+      
+      const number = parseInt(numberMatch[0]);
+      
+      // Remove the number to get the command
+      const commandText = transcript.replace(/\d+/g, '').trim();
+      
+      // Find matching command
+      let matchedField = null;
+      let matchedCommand = null;
+      
+      for (const [command, fieldId] of Object.entries(voiceCommands)) {
+        if (commandText.includes(command) || command.includes(commandText)) {
+          matchedField = fieldId;
+          matchedCommand = command;
+          break;
+        }
+      }
+      
+      if (matchedField) {
+        const input = document.getElementById(matchedField);
+        if (input) {
+          input.value = number;
+          // Trigger the input event to update calculations
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          
+          showVoiceToast('✅', `<span class="heard">${matchedCommand}: ${number}</span>`, 'Value updated!', 'success');
+          
+          // Keep listening indicator
+          setTimeout(() => {
+            if (isListening) {
+              showVoiceToast('🎤', 'Listening...', 'Say another command');
+            }
+          }, 2000);
+        }
+      } else {
+        showVoiceToast('❓', `"${transcript}"`, 'Command not recognized - try "Waterspider 5"');
+      }
+    }
+  </script>
+</body>
+</html>
