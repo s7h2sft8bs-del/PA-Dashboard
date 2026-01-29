@@ -627,6 +627,26 @@
       height: 24px;
     }
 
+    .btn-report {
+      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-report:hover {
+      background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-report svg {
+      width: 24px;
+      height: 24px;
+    }
+
     .btn-voice {
       background: linear-gradient(135deg, var(--amazon-teal) 0%, #008080 100%);
       color: white;
@@ -966,6 +986,104 @@
       color: var(--success);
     }
 
+    /* Report Modal Styles */
+    .report-modal {
+      max-width: 600px;
+    }
+
+    .report-preview {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .report-preview .report-header {
+      color: var(--amazon-orange);
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .report-preview .report-section {
+      margin: 1rem 0;
+      padding: 0.75rem;
+      background: rgba(255, 153, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .report-preview .report-section-title {
+      color: var(--amazon-teal);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .report-preview .report-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+    }
+
+    .report-preview .report-label {
+      color: var(--text-secondary);
+    }
+
+    .report-preview .report-value {
+      color: var(--text-primary);
+      font-weight: bold;
+    }
+
+    .report-preview .report-value.highlight {
+      color: var(--amazon-orange);
+    }
+
+    .report-preview .report-value.success {
+      color: var(--success);
+    }
+
+    .report-preview .report-value.warning {
+      color: var(--warning);
+    }
+
+    .report-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-copy:hover {
+      background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    }
+
+    .copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show {
+      opacity: 1;
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .volume-section {
@@ -1137,6 +1255,12 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
         </svg>
         <span id="voiceBtnText">VOICE</span>
+      </button>
+      <button class="btn btn-report" onclick="openReportModal()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        HOURLY
       </button>
       <button class="btn btn-break" onclick="openBreakModal()">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1567,6 +1691,35 @@
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- Hourly Report Modal -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal report-modal">
+      <div class="modal-header" style="background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);">
+        <h2 class="modal-title">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Hourly Update Report
+        </h2>
+        <button class="modal-close" onclick="closeReportModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="report-preview" id="reportPreview">
+          <!-- Report content will be generated here -->
+        </div>
+        <div class="report-actions">
+          <button class="btn btn-copy" onclick="copyReport()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            Copy to Clipboard
+          </button>
+          <span class="copy-confirm" id="copyConfirm">✓ Copied!</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Voice Feedback Toast -->
@@ -2010,6 +2163,151 @@
 
     // Initialize
     calculateRunTime();
+
+    // ==================== HOURLY REPORT ====================
+    function openReportModal() {
+      generateReport();
+      document.getElementById('reportModal').classList.add('active');
+    }
+
+    function closeReportModal() {
+      document.getElementById('reportModal').classList.remove('active');
+    }
+
+    function generateReport() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+      
+      // Get all the values
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
+      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
+      const remainingInduct = Math.max(0, totalVolume - inductedSoFar);
+      const remainingStow = Math.max(0, totalVolume - stowedSoFar);
+      
+      // Calculate time remaining
+      const shiftEnd = document.getElementById('earlyEnd').value || document.getElementById('shiftEnd').value;
+      const [endHour, endMin] = shiftEnd.split(':').map(Number);
+      let endDate = new Date();
+      endDate.setHours(endHour, endMin, 0, 0);
+      if (endDate < now) endDate.setDate(endDate.getDate() + 1);
+      
+      const msRemaining = endDate - now;
+      const hoursRemaining = msRemaining / (1000 * 60 * 60);
+      
+      // Calculate remaining breaks
+      let breakMinsRemaining = 0;
+      const currentHour = now.getHours();
+      const currentMin = now.getMinutes();
+      const currentTimeValue = currentHour + (currentMin / 60);
+      
+      if (currentTimeValue < 4.25 && document.getElementById('break1').checked) breakMinsRemaining += 15;
+      if (currentTimeValue < 6.5 && document.getElementById('lunch').checked) breakMinsRemaining += 30;
+      if (currentTimeValue < 9 && document.getElementById('break2').checked) breakMinsRemaining += 15;
+      
+      const effectiveHoursRemaining = Math.max(0, hoursRemaining - (breakMinsRemaining / 60));
+      
+      // Calculate required flow rates
+      const requiredInductFlow = effectiveHoursRemaining > 0 ? Math.round(remainingInduct / effectiveHoursRemaining) : 0;
+      const requiredStowFlow = effectiveHoursRemaining > 0 ? Math.round(remainingStow / effectiveHoursRemaining) : 0;
+      
+      // Get actual headcount
+      const actualHC = getTotalActualHC();
+      const plannedHC = parseInt(document.getElementById('plannedHC').value) || 0;
+      const hcDiff = actualHC - plannedHC;
+      let hcStatus = 'AT HC';
+      if (hcDiff < 0) hcStatus = `UNDER HC (${hcDiff})`;
+      if (hcDiff > 0) hcStatus = `OVER HC (+${hcDiff})`;
+      
+      // Calculate percent complete
+      const inductPercent = totalVolume > 0 ? Math.round((inductedSoFar / totalVolume) * 100) : 0;
+      const stowPercent = totalVolume > 0 ? Math.round((stowedSoFar / totalVolume) * 100) : 0;
+      
+      // Format time remaining
+      const hoursLeft = Math.floor(effectiveHoursRemaining);
+      const minsLeft = Math.round((effectiveHoursRemaining - hoursLeft) * 60);
+      const timeRemaining = `${hoursLeft}h ${minsLeft}m`;
+
+      // Build the report text (plain text for copy/paste)
+      const reportText = `📊 HOURLY UPDATE - ${timeStr}
+${dateStr}
+━━━━━━━━━━━━━━━━━━━━━
+
+📦 INDUCT
+• Volume Inducted: ${inductedSoFar.toLocaleString()} (${inductPercent}%)
+• Remaining: ${remainingInduct.toLocaleString()}
+• Flow Needed: ${requiredInductFlow.toLocaleString()} TPH
+
+📦 STOW
+• Volume Stowed: ${stowedSoFar.toLocaleString()} (${stowPercent}%)
+• Remaining: ${remainingStow.toLocaleString()}
+• Flow Needed: ${requiredStowFlow.toLocaleString()} TPH
+
+👥 HEADCOUNT
+• Planned: ${plannedHC}
+• Actual: ${actualHC}
+• Status: ${hcStatus}
+
+⏱️ TIME
+• Remaining: ${timeRemaining}
+• Target End: ${document.getElementById('shiftEnd').value}
+
+━━━━━━━━━━━━━━━━━━━━━`;
+
+      // Display in modal
+      document.getElementById('reportPreview').textContent = reportText;
+      
+      // Store for copying
+      window.currentReportText = reportText;
+    }
+
+    function copyReport() {
+      const reportText = window.currentReportText;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(reportText).then(() => {
+          showCopyConfirm();
+        }).catch(err => {
+          fallbackCopy(reportText);
+        });
+      } else {
+        fallbackCopy(reportText);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showCopyConfirm();
+    }
+
+    function showCopyConfirm() {
+      const confirm = document.getElementById('copyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => {
+        confirm.classList.remove('show');
+      }, 2000);
+    }
+
+    // Close report modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeReportModal();
+        closeBreakModal();
+      }
+    });
+
+    // Close report modal on overlay click
+    document.getElementById('reportModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('reportModal')) closeReportModal();
+    });
 
     // ==================== VOICE RECOGNITION ====================
     let recognition = null;
