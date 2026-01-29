@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sort Wash - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-orange-dark: #E88B00;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+      --input-bg: #0D1117;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--amazon-teal);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--amazon-teal);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--bg-dark);
+      box-shadow: 0 4px 15px rgba(0, 168, 168, 0.4);
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .logo-text span {
+      color: var(--amazon-teal);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amazon-blue-light);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--amazon-teal);
+      color: var(--bg-dark);
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-time {
+      text-align: right;
+    }
+
+    .current-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--amazon-teal);
+    }
+
+    .current-date {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--amazon-teal) 0%, #008080 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-copy:hover {
+      box-shadow: 0 4px 12px rgba(0, 168, 168, 0.4);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, var(--danger) 0%, #da3633 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Week Info Bar */
+    .week-info {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .week-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--amazon-teal);
+    }
+
+    .week-info-note {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .week-info-note strong {
+      color: var(--amazon-orange);
+    }
+
+    /* Section */
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--amazon-teal);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--amazon-teal);
+      border-radius: 2px;
+    }
+
+    /* PvA Table */
+    .pva-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pva-table th,
+    .pva-table td {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pva-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--amazon-teal);
+      background: rgba(0, 168, 168, 0.1);
+    }
+
+    .pva-table th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .pva-table th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .pva-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .pva-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .pva-table .metric-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .pva-table input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 120px;
+      text-align: right;
+      transition: all 0.2s;
+    }
+
+    .pva-table input:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
+    }
+
+    .pva-table input.planned {
+      background: rgba(255, 153, 0, 0.1);
+      border-color: rgba(255, 153, 0, 0.3);
+      color: var(--amazon-orange);
+    }
+
+    .pva-table input.planned:focus {
+      border-color: var(--amazon-orange);
+      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+    }
+
+    .pva-table input.actual {
+      background: rgba(0, 168, 168, 0.1);
+      border-color: rgba(0, 168, 168, 0.3);
+      color: var(--amazon-teal);
+    }
+
+    .pva-table input.actual:focus {
+      border-color: var(--amazon-teal);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
+    }
+
+    .pva-status {
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .pva-status.good {
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+    }
+
+    .pva-status.bad {
+      background: rgba(248, 81, 73, 0.2);
+      color: var(--danger);
+    }
+
+    .pva-status.neutral {
+      background: rgba(139, 148, 158, 0.2);
+      color: var(--text-secondary);
+    }
+
+    /* Additional Metrics */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-item input,
+    .metric-item select {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .metric-item input:focus,
+    .metric-item select:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
+    }
+
+    .metric-item select {
+      cursor: pointer;
+    }
+
+    .metric-item select option {
+      background: var(--bg-card);
+    }
+
+    /* Checkbox Items */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--input-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .checkbox-item:hover {
+      border-color: var(--amazon-teal);
+    }
+
+    .checkbox-item.checked {
+      background: rgba(0, 168, 168, 0.1);
+      border-color: var(--amazon-teal);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      accent-color: var(--amazon-teal);
+      cursor: pointer;
+    }
+
+    .checkbox-item label {
+      font-weight: 500;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    /* Text Area */
+    .textarea-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .textarea-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .textarea-item textarea {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .textarea-item textarea:focus {
+      outline: none;
+      border-color: var(--amazon-teal);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
+    }
+
+    /* Bridge Section */
+    .bridge-section {
+      background: rgba(139, 92, 246, 0.1);
+      border: 2px solid rgba(139, 92, 246, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .bridge-label {
+      font-size: 0.9rem;
+      color: var(--purple);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .bridge-section textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .bridge-section textarea:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Action Bar */
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show {
+      opacity: 1;
+    }
+
+    .save-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-confirm.show {
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .pva-table input {
+        width: 80px;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.5rem;
+      }
+
+      .action-bar {
+        flex-direction: column;
+      }
+
+      .action-bar .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Live indicator */
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .live-indicator::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="index.html" class="back-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back
+      </a>
+      <div class="logo-icon">SW</div>
+      <div class="logo-text">Sort <span>Wash</span></div>
+    </div>
+    <div class="header-right">
+      <div class="header-time">
+        <div class="live-indicator">Live</div>
+        <div class="current-time" id="currentTime">--:--:--</div>
+        <div class="current-date" id="currentDate">Loading...</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Week Info Bar -->
+    <div class="week-info">
+      <div>
+        <span class="week-label" id="weekLabel">Week of January 26, 2026</span>
+      </div>
+      <div class="week-info-note">
+        <strong>Planned values</strong> (left) set on Sunday • <strong>Actual values</strong> (right) updated daily
+      </div>
+    </div>
+
+    <!-- PvA Metrics Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Performance vs Actual (PvA)</h2>
+      </div>
+      
+      <table class="pva-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Planned</th>
+            <th>Actual</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-name">Volume</td>
+            <td><input type="number" class="planned" id="volumePlanned" placeholder="0" oninput="updateStatus('volume')"></td>
+            <td><input type="number" class="actual" id="volumeActual" placeholder="0" oninput="updateStatus('volume')"></td>
+            <td><span class="pva-status neutral" id="volumeStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">TPH</td>
+            <td><input type="number" step="0.01" class="planned" id="tphPlanned" placeholder="0" oninput="updateStatus('tph')"></td>
+            <td><input type="number" step="0.01" class="actual" id="tphActual" placeholder="0" oninput="updateStatus('tph')"></td>
+            <td><span class="pva-status neutral" id="tphStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Hours</td>
+            <td><input type="number" step="0.01" class="planned" id="hoursPlanned" placeholder="0" oninput="updateStatus('hours')"></td>
+            <td><input type="number" step="0.01" class="actual" id="hoursActual" placeholder="0" oninput="updateStatus('hours')"></td>
+            <td><span class="pva-status neutral" id="hoursStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Container Building</td>
+            <td><input type="number" step="0.01" class="planned" id="containerPlanned" placeholder="0" oninput="updateStatus('container')"></td>
+            <td><input type="number" step="0.01" class="actual" id="containerActual" placeholder="0" oninput="updateStatus('container')"></td>
+            <td><span class="pva-status neutral" id="containerStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Pick to Buffer</td>
+            <td><input type="number" step="0.01" class="planned" id="p2bPlanned" placeholder="0" oninput="updateStatus('p2b')"></td>
+            <td><input type="number" step="0.01" class="actual" id="p2bActual" placeholder="0" oninput="updateStatus('p2b')"></td>
+            <td><span class="pva-status neutral" id="p2bStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Induct</td>
+            <td><input type="number" step="0.01" class="planned" id="inductPlanned" placeholder="0" oninput="updateStatus('induct')"></td>
+            <td><input type="number" step="0.01" class="actual" id="inductActual" placeholder="0" oninput="updateStatus('induct')"></td>
+            <td><span class="pva-status neutral" id="inductStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">W/S (Waterspider)</td>
+            <td><input type="number" step="0.01" class="planned" id="wsPlanned" placeholder="0" oninput="updateStatus('ws')"></td>
+            <td><input type="number" step="0.01" class="actual" id="wsActual" placeholder="0" oninput="updateStatus('ws')"></td>
+            <td><span class="pva-status neutral" id="wsStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Pusher</td>
+            <td><input type="number" step="0.01" class="planned" id="pusherPlanned" placeholder="0" oninput="updateStatus('pusher')"></td>
+            <td><input type="number" step="0.01" class="actual" id="pusherActual" placeholder="0" oninput="updateStatus('pusher')"></td>
+            <td><span class="pva-status neutral" id="pusherStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Diverter</td>
+            <td><input type="number" step="0.01" class="planned" id="diverterPlanned" placeholder="0" oninput="updateStatus('diverter')"></td>
+            <td><input type="number" step="0.01" class="actual" id="diverterActual" placeholder="0" oninput="updateStatus('diverter')"></td>
+            <td><span class="pva-status neutral" id="diverterStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">Line Loader</td>
+            <td><input type="number" step="0.01" class="planned" id="lineloaderPlanned" placeholder="0" oninput="updateStatus('lineloader')"></td>
+            <td><input type="number" step="0.01" class="actual" id="lineloaderActual" placeholder="0" oninput="updateStatus('lineloader')"></td>
+            <td><span class="pva-status neutral" id="lineloaderStatus">--</span></td>
+          </tr>
+          <tr>
+            <td class="metric-name">BRT (Belt Run Time)</td>
+            <td><input type="number" step="0.1" class="planned" id="brtPlanned" placeholder="0" oninput="updateStatus('brt')"></td>
+            <td><input type="number" step="0.1" class="actual" id="brtActual" placeholder="0" oninput="updateStatus('brt')"></td>
+            <td><span class="pva-status neutral" id="brtStatus">--</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Additional Metrics Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Additional Metrics</h2>
+      </div>
+      
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <label>MNR</label>
+          <input type="number" id="mnr" placeholder="0">
+        </div>
+        <div class="metric-item">
+          <label>5S Bridge</label>
+          <input type="text" id="fiveSBridge" placeholder="e.g., VTO Fatigue">
+        </div>
+        <div class="metric-item">
+          <label>Yard Audit</label>
+          <input type="text" id="yardAudit" placeholder="e.g., 3/3">
+        </div>
+        <div class="metric-item">
+          <label>LQ360</label>
+          <input type="number" id="lq360" placeholder="0">
+        </div>
+        <div class="metric-item">
+          <label>ATV Alerts (Plan/Actual)</label>
+          <input type="text" id="atvAlerts" placeholder="e.g., 3/0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Compliance Checkboxes Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Compliance & Completion</h2>
+      </div>
+      
+      <div class="checkbox-grid">
+        <div class="checkbox-item" onclick="toggleCheckbox('pilesWalk')">
+          <input type="checkbox" id="pilesWalk">
+          <label for="pilesWalk">PILES WALK Completed</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheckbox('engagesComplete')">
+          <input type="checkbox" id="engagesComplete">
+          <label for="engagesComplete">All Engages Complete</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheckbox('adaptsDelivered')">
+          <input type="checkbox" id="adaptsDelivered">
+          <label for="adaptsDelivered">All Adapts Delivered</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheckbox('cartCompliance')">
+          <input type="checkbox" id="cartCompliance">
+          <label for="cartCompliance">5/5 Cart Compliance</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adapts Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Adapts</h2>
+      </div>
+      
+      <div class="metrics-grid" style="margin-bottom: 1rem;">
+        <div class="metric-item">
+          <label>Sort Inactive Time Adapts</label>
+          <input type="text" id="inactiveAdapts" placeholder="e.g., 0/3">
+        </div>
+        <div class="metric-item">
+          <label>Safety Adapts</label>
+          <input type="text" id="safetyAdapts" placeholder="e.g., 0/3">
+        </div>
+      </div>
+
+      <div class="bridge-section">
+        <div class="bridge-label">🌉 Bridge: Why didn't we submit any Inactive Time Adapts?</div>
+        <textarea id="inactiveBridge" placeholder="Enter explanation or N/A..."></textarea>
+      </div>
+
+      <div class="bridge-section" style="margin-top: 1rem;">
+        <div class="bridge-label">🌉 Bridge: Why didn't we submit any Safety Adapts?</div>
+        <textarea id="safetyBridge" placeholder="Enter explanation or N/A..."></textarea>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="btn btn-save" onclick="savePlannedValues()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+        </svg>
+        Save Planned (Sunday)
+      </button>
+      <button class="btn btn-copy" onclick="copyReport()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        Copy Report
+      </button>
+      <button class="btn btn-clear" onclick="clearActuals()">
+        Clear Actuals
+      </button>
+      <span class="save-confirm" id="saveConfirm">✓ Planned values saved!</span>
+      <span class="copy-confirm" id="copyConfirm">✓ Copied!</span>
+    </div>
+  </div>
+
+  <script>
+    // Update current time
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Update week label
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      document.getElementById('weekLabel').textContent = 'Week of ' + startOfWeek.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Toggle checkbox styling
+    function toggleCheckbox(id) {
+      const checkbox = document.getElementById(id);
+      checkbox.checked = !checkbox.checked;
+      const item = checkbox.closest('.checkbox-item');
+      if (checkbox.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    }
+
+    // Update status indicator
+    function updateStatus(metric) {
+      const planned = parseFloat(document.getElementById(metric + 'Planned').value) || 0;
+      const actual = parseFloat(document.getElementById(metric + 'Actual').value) || 0;
+      const statusEl = document.getElementById(metric + 'Status');
+
+      if (planned === 0 || actual === 0) {
+        statusEl.textContent = '--';
+        statusEl.className = 'pva-status neutral';
+        return;
+      }
+
+      const diff = actual - planned;
+      const percentDiff = ((actual - planned) / planned * 100).toFixed(1);
+
+      // For hours, lower actual is better
+      // For rates (TPH, PPH metrics), higher actual is better
+      // For volume, meeting or exceeding is good
+      const lowerIsBetter = ['hours'];
+      const isGood = lowerIsBetter.includes(metric) ? actual <= planned : actual >= planned;
+
+      if (isGood) {
+        statusEl.textContent = percentDiff >= 0 ? `+${percentDiff}%` : `${percentDiff}%`;
+        statusEl.className = 'pva-status good';
+      } else {
+        statusEl.textContent = `${percentDiff}%`;
+        statusEl.className = 'pva-status bad';
+      }
+    }
+
+    // Save planned values to localStorage
+    function savePlannedValues() {
+      const plannedFields = [
+        'volumePlanned', 'tphPlanned', 'hoursPlanned', 'containerPlanned',
+        'p2bPlanned', 'inductPlanned', 'wsPlanned', 'pusherPlanned',
+        'diverterPlanned', 'lineloaderPlanned', 'brtPlanned'
+      ];
+
+      const plannedData = {};
+      plannedFields.forEach(field => {
+        plannedData[field] = document.getElementById(field).value;
+      });
+
+      // Save with week identifier
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      const weekKey = 'sortWash_planned_' + startOfWeek.toISOString().split('T')[0];
+
+      localStorage.setItem(weekKey, JSON.stringify(plannedData));
+      localStorage.setItem('sortWash_currentWeek', weekKey);
+
+      // Show confirmation
+      const confirm = document.getElementById('saveConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
+    // Load planned values from localStorage
+    function loadPlannedValues() {
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      const weekKey = 'sortWash_planned_' + startOfWeek.toISOString().split('T')[0];
+
+      const savedData = localStorage.getItem(weekKey);
+      if (savedData) {
+        const plannedData = JSON.parse(savedData);
+        Object.keys(plannedData).forEach(field => {
+          const el = document.getElementById(field);
+          if (el && plannedData[field]) {
+            el.value = plannedData[field];
+          }
+        });
+      }
+    }
+
+    // Clear actual values
+    function clearActuals() {
+      if (!confirm('Clear all actual values?')) return;
+
+      const actualFields = [
+        'volumeActual', 'tphActual', 'hoursActual', 'containerActual',
+        'p2bActual', 'inductActual', 'wsActual', 'pusherActual',
+        'diverterActual', 'lineloaderActual', 'brtActual'
+      ];
+
+      actualFields.forEach(field => {
+        document.getElementById(field).value = '';
+      });
+
+      // Reset statuses
+      const metrics = ['volume', 'tph', 'hours', 'container', 'p2b', 'induct', 'ws', 'pusher', 'diverter', 'lineloader', 'brt'];
+      metrics.forEach(m => updateStatus(m));
+    }
+
+    // Generate and copy report
+    function copyReport() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+      // Gather all values
+      const getValue = (id) => document.getElementById(id).value || 'N/A';
+      const getChecked = (id) => document.getElementById(id).checked ? 'Yes' : 'No';
+
+      const report = `📊 SORT WASH REPORT - ${dateStr}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 PERFORMANCE vs ACTUAL (PvA)
+Volume PvA: ${getValue('volumePlanned')} vs ${getValue('volumeActual')}
+TPH PvA: ${getValue('tphPlanned')} vs ${getValue('tphActual')}
+Hours PvA: ${getValue('hoursPlanned')} vs ${getValue('hoursActual')}
+Container Building PvA: ${getValue('containerPlanned')} vs ${getValue('containerActual')}
+Pick to Buffer PvA: ${getValue('p2bPlanned')} vs ${getValue('p2bActual')}
+Induct PvA: ${getValue('inductPlanned')} vs ${getValue('inductActual')}
+W/S PvA: ${getValue('wsPlanned')} vs ${getValue('wsActual')}
+Pusher PvA: ${getValue('pusherPlanned')} vs ${getValue('pusherActual')}
+Diverter PvA: ${getValue('diverterPlanned')} vs ${getValue('diverterActual')}
+Line Loader PvA: ${getValue('lineloaderPlanned')} vs ${getValue('lineloaderActual')}
+BRT PvA: ${getValue('brtPlanned')} vs ${getValue('brtActual')}
+
+📋 ADDITIONAL METRICS
+MNR: ${getValue('mnr')}
+5S Bridge: ${getValue('fiveSBridge')}
+Yard Audit: ${getValue('yardAudit')}
+LQ360: ${getValue('lq360')}
+ATV Alerts: ${getValue('atvAlerts')}
+
+✅ COMPLIANCE
+PILES WALK Completed: ${getChecked('pilesWalk')}
+All Engages Complete: ${getChecked('engagesComplete')}
+All Adapts Delivered: ${getChecked('adaptsDelivered')}
+5/5 Cart Compliance: ${getChecked('cartCompliance')}
+
+📝 ADAPTS
+Sort Inactive Time Adapts: ${getValue('inactiveAdapts')}
+Bridge: ${getValue('inactiveBridge') || 'N/A'}
+
+Safety Adapts: ${getValue('safetyAdapts')}
+Bridge: ${getValue('safetyBridge') || 'N/A'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+      // Copy to clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(report).then(() => {
+          showCopyConfirm();
+        }).catch(() => {
+          fallbackCopy(report);
+        });
+      } else {
+        fallbackCopy(report);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showCopyConfirm();
+    }
+
+    function showCopyConfirm() {
+      const confirm = document.getElementById('copyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
+    // Initialize - load saved planned values
+    loadPlannedValues();
+  </script>
+</body>
+</html>
