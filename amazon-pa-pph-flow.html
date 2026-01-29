@@ -1181,6 +1181,264 @@
       height: 18px;
     }
 
+    /* Pre-Shift Planner Section */
+    .preshift-planner {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--success);
+    }
+
+    .preshift-planner .section-header {
+      border-bottom-color: var(--success);
+    }
+
+    .preshift-planner .section-title {
+      color: var(--success);
+    }
+
+    .preshift-planner .section-title::before {
+      background: var(--success);
+    }
+
+    .preshift-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .preshift-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .preshift-card h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .preshift-card.calculated {
+      border-color: var(--amazon-teal);
+      background: rgba(0, 168, 168, 0.1);
+    }
+
+    .preshift-card.calculated h4 {
+      color: var(--amazon-teal);
+    }
+
+    .preshift-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .preshift-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .preshift-input-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .preshift-input-item label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .preshift-input-item input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .preshift-input-item input:focus {
+      outline: none;
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.2);
+    }
+
+    .model-results {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .model-item {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .model-item span {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .model-item strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--amazon-teal);
+    }
+
+    .model-item small {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Same Day Addition */
+    .sameday-addition {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .sameday-addition h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 1rem;
+    }
+
+    .sameday-add-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .sameday-add-input {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sameday-add-input label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .sameday-add-input input {
+      background: var(--input-bg);
+      border: 2px solid var(--purple);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--purple);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      width: 150px;
+      text-align: center;
+    }
+
+    .sameday-add-input input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .sameday-add-result {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .add-result-item {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .add-result-item span {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .add-result-item strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .add-result-item.highlight {
+      background: rgba(255, 153, 0, 0.2);
+      border: 1px solid var(--amazon-orange);
+    }
+
+    .add-result-item.highlight strong {
+      color: var(--amazon-orange);
+    }
+
+    .add-result-item.extra {
+      background: rgba(63, 185, 80, 0.2);
+      border: 1px solid var(--success);
+    }
+
+    .add-result-item.extra strong {
+      color: var(--success);
+      font-size: 1.75rem;
+    }
+
+    .apply-preshift {
+      display: flex;
+      justify-content: center;
+    }
+
+    .apply-preshift .btn {
+      background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
+      color: white;
+      padding: 0.75rem 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .preshift-grid {
+        grid-template-columns: 1fr;
+      }
+      .preshift-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .sameday-add-row {
+        flex-direction: column;
+      }
+      .sameday-add-result {
+        width: 100%;
+      }
+    }
+
     /* Staffing Summary Panel */
     .staffing-summary {
       background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
@@ -1842,6 +2100,112 @@
   </header>
 
   <div class="container">
+    <!-- Pre-Shift Planner Section -->
+    <section class="preshift-planner">
+      <div class="section-header">
+        <h2 class="section-title">📋 Pre-Shift Planner</h2>
+        <button class="btn btn-secondary" onclick="clearPreshift()" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Clear</button>
+      </div>
+      
+      <div class="preshift-grid">
+        <div class="preshift-card">
+          <h4>📥 Pre-Shift Data (Paste from Slack)</h4>
+          <div class="preshift-inputs">
+            <div class="preshift-row">
+              <div class="preshift-input-item">
+                <label>C1 Volume</label>
+                <input type="number" id="preshiftVolume" placeholder="0" oninput="calculatePreshift()">
+              </div>
+              <div class="preshift-input-item">
+                <label>FPH</label>
+                <input type="number" id="preshiftFPH" placeholder="0" oninput="calculatePreshift()">
+              </div>
+              <div class="preshift-input-item">
+                <label>Planned HC</label>
+                <input type="number" id="preshiftPlannedHC" placeholder="0" oninput="calculatePreshift()">
+              </div>
+            </div>
+            <div class="preshift-row">
+              <div class="preshift-input-item">
+                <label>Planned Hours</label>
+                <input type="number" id="preshiftPlannedHours" placeholder="0" oninput="calculatePreshift()">
+              </div>
+              <div class="preshift-input-item">
+                <label>Projected Hours</label>
+                <input type="number" id="preshiftProjectedHours" placeholder="0" oninput="calculatePreshift()">
+              </div>
+              <div class="preshift-input-item">
+                <label>Target TPH</label>
+                <input type="number" id="preshiftTPH" value="90" oninput="calculatePreshift()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preshift-card calculated">
+          <h4>🧮 Calculated Model</h4>
+          <div class="model-results">
+            <div class="model-item">
+              <span>Direct Hours</span>
+              <strong id="modelDirectHours">0</strong>
+              <small>(Volume ÷ TPH)</small>
+            </div>
+            <div class="model-item">
+              <span>Indirect Factor</span>
+              <strong id="modelIndirectFactor">1.17</strong>
+              <small>(Planned ÷ Direct)</small>
+            </div>
+            <div class="model-item">
+              <span>Hours per AA</span>
+              <strong id="modelHoursPerAA">7.2</strong>
+              <small>(Planned Hrs ÷ HC)</small>
+            </div>
+            <div class="model-item">
+              <span>Hours Gap</span>
+              <strong id="modelHoursGap">0</strong>
+              <small>(Projected - Planned)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Same Day Addition -->
+      <div class="sameday-addition">
+        <h4>➕ Add Same Day Volume</h4>
+        <div class="sameday-add-row">
+          <div class="sameday-add-input">
+            <label>Same Day Volume</label>
+            <input type="number" id="addSamedayVolume" placeholder="0" oninput="calculateWithSameday()">
+          </div>
+          <div class="sameday-add-result">
+            <div class="add-result-item">
+              <span>New Total Volume</span>
+              <strong id="newTotalVolume">0</strong>
+            </div>
+            <div class="add-result-item">
+              <span>New Planned Hours</span>
+              <strong id="newPlannedHours">0</strong>
+            </div>
+            <div class="add-result-item highlight">
+              <span>New Planned HC</span>
+              <strong id="newPlannedHC">0</strong>
+            </div>
+            <div class="add-result-item extra">
+              <span>Extra HC Needed</span>
+              <strong id="extraHCNeeded">+0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apply to Staffing -->
+      <div class="apply-preshift">
+        <button class="btn" onclick="applyPreshiftToStaffing()">
+          Apply C1 Volume to Staffing Calculator →
+        </button>
+      </div>
+    </section>
+
     <!-- Staffing Recommendation Summary -->
     <section class="staffing-summary" id="staffingSummary">
       <div class="section-header">
@@ -3049,6 +3413,107 @@
     // Initialize
     loadWeeklyRates(); // Load Sort Wash rates if available
     calculateRunTime();
+    calculatePreshift(); // Initialize preshift calculations
+
+    // ==================== PRE-SHIFT PLANNER ====================
+    function calculatePreshift() {
+      const volume = parseFloat(document.getElementById('preshiftVolume').value) || 0;
+      const plannedHC = parseFloat(document.getElementById('preshiftPlannedHC').value) || 0;
+      const plannedHours = parseFloat(document.getElementById('preshiftPlannedHours').value) || 0;
+      const projectedHours = parseFloat(document.getElementById('preshiftProjectedHours').value) || 0;
+      const tph = parseFloat(document.getElementById('preshiftTPH').value) || 90;
+
+      // Calculate Direct Hours
+      const directHours = volume > 0 && tph > 0 ? (volume / tph) : 0;
+      document.getElementById('modelDirectHours').textContent = directHours.toFixed(1);
+
+      // Calculate Indirect Factor
+      const indirectFactor = directHours > 0 && plannedHours > 0 ? (plannedHours / directHours) : 1.17;
+      document.getElementById('modelIndirectFactor').textContent = indirectFactor.toFixed(2);
+
+      // Calculate Hours per AA
+      const hoursPerAA = plannedHC > 0 && plannedHours > 0 ? (plannedHours / plannedHC) : 7.2;
+      document.getElementById('modelHoursPerAA').textContent = hoursPerAA.toFixed(2);
+
+      // Calculate Hours Gap
+      const hoursGap = projectedHours - plannedHours;
+      document.getElementById('modelHoursGap').textContent = hoursGap > 0 ? `+${hoursGap.toFixed(0)}` : hoursGap.toFixed(0);
+
+      // Store values for Same Day calculation
+      window.preshiftModel = {
+        volume,
+        plannedHC,
+        plannedHours,
+        tph,
+        indirectFactor,
+        hoursPerAA
+      };
+
+      // Recalculate with Same Day if there's a value
+      calculateWithSameday();
+    }
+
+    function calculateWithSameday() {
+      const model = window.preshiftModel || {
+        volume: 0,
+        plannedHC: 0,
+        plannedHours: 0,
+        tph: 90,
+        indirectFactor: 1.17,
+        hoursPerAA: 7.2
+      };
+
+      const samedayVolume = parseFloat(document.getElementById('addSamedayVolume').value) || 0;
+
+      // New Total Volume
+      const newTotalVolume = model.volume + samedayVolume;
+      document.getElementById('newTotalVolume').textContent = newTotalVolume.toLocaleString();
+
+      // New Planned Hours = (New Volume ÷ TPH) × Indirect Factor
+      const newPlannedHours = model.tph > 0 ? (newTotalVolume / model.tph) * model.indirectFactor : 0;
+      document.getElementById('newPlannedHours').textContent = Math.round(newPlannedHours).toLocaleString();
+
+      // New Planned HC = New Planned Hours ÷ Hours per AA
+      const newPlannedHC = model.hoursPerAA > 0 ? Math.ceil(newPlannedHours / model.hoursPerAA) : 0;
+      document.getElementById('newPlannedHC').textContent = newPlannedHC;
+
+      // Extra HC Needed
+      const extraHC = newPlannedHC - model.plannedHC;
+      document.getElementById('extraHCNeeded').textContent = extraHC > 0 ? `+${extraHC}` : extraHC.toString();
+    }
+
+    function clearPreshift() {
+      document.getElementById('preshiftVolume').value = '';
+      document.getElementById('preshiftFPH').value = '';
+      document.getElementById('preshiftPlannedHC').value = '';
+      document.getElementById('preshiftPlannedHours').value = '';
+      document.getElementById('preshiftProjectedHours').value = '';
+      document.getElementById('preshiftTPH').value = '90';
+      document.getElementById('addSamedayVolume').value = '';
+      calculatePreshift();
+    }
+
+    function applyPreshiftToStaffing() {
+      const volume = parseFloat(document.getElementById('preshiftVolume').value) || 0;
+      const samedayVolume = parseFloat(document.getElementById('addSamedayVolume').value) || 0;
+      
+      // Set C1 Volume in staffing calculator
+      document.getElementById('totalVolume').value = volume;
+      
+      // Set Same Day volume if entered
+      if (samedayVolume > 0) {
+        // Split between sunrise and sameday (can adjust ratio)
+        document.getElementById('sunriseVolume').value = Math.round(samedayVolume * 0.6);
+        document.getElementById('samedayVolume').value = Math.round(samedayVolume * 0.4);
+        calculateSameDay();
+      }
+      
+      // Trigger recalculation
+      updateStats();
+      
+      // Scroll to staffing section
+      document.getElementById('staffingSummary').scrollIntoView({ behavior: 'smooth' });
+    }
 
     // ==================== SAME DAY CALCULATIONS ====================
     function calculateSameDay() {
