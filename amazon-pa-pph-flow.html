@@ -2161,16 +2161,27 @@
       'volume': 'totalVolume',
       'cluster a': 'clusterA',
       'cluster alpha': 'clusterA',
+      'cluster ay': 'clusterA',
       'cluster b': 'clusterB',
       'cluster bravo': 'clusterB',
+      'cluster be': 'clusterB',
+      'cluster bee': 'clusterB',
       'cluster c': 'clusterC',
       'cluster charlie': 'clusterC',
+      'cluster see': 'clusterC',
+      'cluster sea': 'clusterC',
       'cluster d': 'clusterD',
       'cluster delta': 'clusterD',
+      'cluster de': 'clusterD',
+      'cluster dee': 'clusterD',
+      'cluster the': 'clusterD',
       'cluster e': 'clusterE',
       'cluster echo': 'clusterE',
+      'cluster ee': 'clusterE',
       'cluster g': 'clusterG',
       'cluster golf': 'clusterG',
+      'cluster gee': 'clusterG',
+      'cluster ji': 'clusterG',
       
       // Progress
       'inducted': 'inductedSoFar',
@@ -2191,17 +2202,96 @@
     };
 
     function processVoiceCommand(transcript) {
-      // Extract number from transcript
-      const numberMatch = transcript.match(/\d+/);
-      if (!numberMatch) {
+      console.log('Raw transcript:', transcript);
+      
+      // Convert spoken numbers to digits
+      let processed = transcript.toLowerCase()
+        // Handle "X thousand" patterns first
+        .replace(/one thousand/g, '1000')
+        .replace(/two thousand/g, '2000')
+        .replace(/three thousand/g, '3000')
+        .replace(/four thousand/g, '4000')
+        .replace(/five thousand/g, '5000')
+        .replace(/six thousand/g, '6000')
+        .replace(/seven thousand/g, '7000')
+        .replace(/eight thousand/g, '8000')
+        .replace(/nine thousand/g, '9000')
+        .replace(/ten thousand/g, '10000')
+        .replace(/eleven thousand/g, '11000')
+        .replace(/twelve thousand/g, '12000')
+        .replace(/thirteen thousand/g, '13000')
+        .replace(/fourteen thousand/g, '14000')
+        .replace(/fifteen thousand/g, '15000')
+        .replace(/sixteen thousand/g, '16000')
+        .replace(/seventeen thousand/g, '17000')
+        .replace(/eighteen thousand/g, '18000')
+        .replace(/nineteen thousand/g, '19000')
+        .replace(/twenty thousand/g, '20000')
+        .replace(/thirty thousand/g, '30000')
+        .replace(/forty thousand/g, '40000')
+        .replace(/fifty thousand/g, '50000')
+        .replace(/sixty thousand/g, '60000')
+        .replace(/seventy thousand/g, '70000')
+        .replace(/eighty thousand/g, '80000')
+        .replace(/ninety thousand/g, '90000')
+        // Handle "X hundred" patterns
+        .replace(/one hundred/g, '100')
+        .replace(/two hundred/g, '200')
+        .replace(/three hundred/g, '300')
+        .replace(/four hundred/g, '400')
+        .replace(/five hundred/g, '500')
+        .replace(/six hundred/g, '600')
+        .replace(/seven hundred/g, '700')
+        .replace(/eight hundred/g, '800')
+        .replace(/nine hundred/g, '900')
+        // Handle remaining single numbers
+        .replace(/\bone\b/g, '1')
+        .replace(/\btwo\b/g, '2')
+        .replace(/\bthree\b/g, '3')
+        .replace(/\bfour\b/g, '4')
+        .replace(/\bfive\b/g, '5')
+        .replace(/\bsix\b/g, '6')
+        .replace(/\bseven\b/g, '7')
+        .replace(/\beight\b/g, '8')
+        .replace(/\bnine\b/g, '9')
+        .replace(/\bten\b/g, '10')
+        .replace(/\beleven\b/g, '11')
+        .replace(/\btwelve\b/g, '12')
+        .replace(/\bthirteen\b/g, '13')
+        .replace(/\bfourteen\b/g, '14')
+        .replace(/\bfifteen\b/g, '15')
+        // Handle "thousand" after a number (e.g., "9 thousand" or "48 thousand")
+        .replace(/(\d+)\s*thousand/g, function(match, num) { return parseInt(num) * 1000; })
+        .replace(/(\d+)\s*hundred/g, function(match, num) { return parseInt(num) * 100; })
+        // Remove commas
+        .replace(/,/g, '');
+      
+      console.log('Processed transcript:', processed);
+      
+      // Extract ALL numbers and combine them (for cases like "forty eight thousand" -> "40" "8" "000")
+      const numbers = processed.match(/\d+/g);
+      if (!numbers) {
         showVoiceToast('❓', `"${transcript}"`, 'No number detected - say something like "Waterspider 5"');
         return;
       }
       
-      const number = parseInt(numberMatch[0]);
+      // Sum up numbers if multiple found close together, or take the largest
+      let number;
+      if (numbers.length === 1) {
+        number = parseInt(numbers[0]);
+      } else {
+        // Check if we should add them (like 40 + 8 + 1000 for "forty eight thousand")
+        // Or just take the largest one
+        const sum = numbers.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+        const max = Math.max(...numbers.map(n => parseInt(n)));
+        // If max is 1000+, it's probably the intended number
+        number = max >= 1000 ? max : sum;
+      }
       
-      // Remove the number to get the command
-      const commandText = transcript.replace(/\d+/g, '').trim();
+      console.log('Extracted number:', number);
+      
+      // Remove all numbers to get the command
+      const commandText = processed.replace(/\d+/g, '').trim();
       
       // Find matching command
       let matchedField = null;
@@ -2222,7 +2312,7 @@
           // Trigger the input event to update calculations
           input.dispatchEvent(new Event('input', { bubbles: true }));
           
-          showVoiceToast('✅', `<span class="heard">${matchedCommand}: ${number}</span>`, 'Value updated!', 'success');
+          showVoiceToast('✅', `<span class="heard">${matchedCommand}: ${number.toLocaleString()}</span>`, 'Value updated!', 'success');
           
           // Keep listening indicator
           setTimeout(() => {
