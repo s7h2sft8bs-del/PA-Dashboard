@@ -171,6 +171,7 @@
     .nav-card.pph::before { background: var(--amazon-orange); }
     .nav-card.sort::before { background: var(--amazon-teal); }
     .nav-card.pick::before { background: var(--purple); }
+    .nav-card.preshift::before { background: var(--success); }
 
     .nav-card:hover {
       transform: translateY(-8px);
@@ -193,6 +194,11 @@
     .nav-card.pick:hover {
       border-color: var(--purple);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(139, 92, 246, 0.15);
+    }
+
+    .nav-card.preshift:hover {
+      border-color: var(--success);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(63, 185, 80, 0.15);
     }
 
     .nav-card-icon {
@@ -219,6 +225,11 @@
     .nav-card.pick .nav-card-icon {
       background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
       box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .nav-card.preshift .nav-card-icon {
+      background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
+      box-shadow: 0 8px 20px rgba(63, 185, 80, 0.3);
     }
 
     .nav-card-title {
@@ -270,6 +281,12 @@
       color: var(--purple);
     }
 
+    .nav-card.preshift .feature-tag {
+      background: rgba(63, 185, 80, 0.15);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+      color: var(--success);
+    }
+
     .nav-card-arrow {
       position: absolute;
       bottom: 2rem;
@@ -291,6 +308,7 @@
     .nav-card.pph:hover .nav-card-arrow { background: var(--amazon-orange); }
     .nav-card.sort:hover .nav-card-arrow { background: var(--amazon-teal); }
     .nav-card.pick:hover .nav-card-arrow { background: var(--purple); }
+    .nav-card.preshift:hover .nav-card-arrow { background: var(--success); }
 
     .nav-card-arrow svg {
       width: 24px;
@@ -401,6 +419,25 @@
           <span class="feature-tag">HC Tracking</span>
           <span class="feature-tag">Flow Rates</span>
           <span class="feature-tag">Break Status</span>
+        </div>
+        <div class="nav-card-arrow">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Pre-Shift Planning Card -->
+      <a href="amazon-pa-preshift.html" class="nav-card preshift">
+        <div class="nav-card-icon">📋</div>
+        <h2 class="nav-card-title">Pre-Shift Planning</h2>
+        <p class="nav-card-description">
+          Enter pre-shift data, auto-calculate planned HC and hours, generate copy-paste output for Slack.
+        </p>
+        <div class="nav-card-features">
+          <span class="feature-tag">HC Calculator</span>
+          <span class="feature-tag">Hours Planning</span>
+          <span class="feature-tag">Copy & Paste</span>
         </div>
         <div class="nav-card-arrow">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
