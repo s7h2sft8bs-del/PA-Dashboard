@@ -114,6 +114,27 @@
       gap: 1.5rem;
     }
 
+    .btn-reset {
+      background: linear-gradient(135deg, #6e7681 0%, #484f58 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: linear-gradient(135deg, #484f58 0%, #30363d 100%);
+      box-shadow: 0 4px 12px rgba(110, 118, 129, 0.4);
+    }
+
     .header-time {
       text-align: right;
     }
@@ -656,12 +677,18 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back
+        Home
       </a>
       <div class="logo-icon">🚚</div>
       <div class="logo-text">Load Out <span>Plan</span></div>
     </div>
     <div class="header-right">
+      <button class="btn btn-reset" onclick="resetAllData()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        RESET
+      </button>
       <div class="header-time">
         <div class="live-indicator">Live</div>
         <div class="current-time" id="currentTime">--:--:--</div>
@@ -1032,6 +1059,228 @@ Expected Pick HC PvA: ${pvaNeeded} v ${pvaActual}`;
 
     // Initialize
     calculateAll();
+    loadFromPPHFlow();
+    
+    // Poll for updates every 2 seconds (real-time sync with PPH Flow)
+    setInterval(checkForUpdates, 2000);
+    
+    // Also listen for storage changes (when PPH Flow updates in another tab)
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'flowStaffingData') {
+        loadFromPPHFlow();
+      }
+    });
+
+    let lastFlowData = null;
+
+    // Check for updates from PPH Flow
+    function checkForUpdates() {
+      const flowData = localStorage.getItem('flowStaffingData');
+      
+      if (flowData && flowData !== lastFlowData) {
+        lastFlowData = flowData;
+        const flow = JSON.parse(flowData);
+        
+        // Check if data is recent (within 24 hours)
+        const savedTime = new Date(flow.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+        
+        if (hoursDiff < 24 && flow.c1Volume > 0) {
+          // Update Planned Routed Volume
+          const currentVolume = parseInt(document.getElementById('plannedVolume').value) || 0;
+          if (currentVolume !== flow.c1Volume) {
+            document.getElementById('plannedVolume').value = flow.c1Volume;
+          }
+          
+          // Update Current On Premise (Total HC)
+          const currentHC = parseInt(document.getElementById('currentOnPremise').value) || 0;
+          if (currentHC !== flow.totalHC && flow.totalHC > 0) {
+            document.getElementById('currentOnPremise').value = flow.totalHC;
+            showUpdatePulse('currentOnPremise');
+          }
+          
+          // Recalculate
+          calculateAll();
+        }
+      }
+    }
+
+    // Load data from PPH Flow Staffing
+    function loadFromPPHFlow() {
+      const flowData = localStorage.getItem('flowStaffingData');
+      
+      if (flowData) {
+        lastFlowData = flowData;
+        const flow = JSON.parse(flowData);
+        
+        // Check if data is recent (within 24 hours)
+        const savedTime = new Date(flow.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+        
+        if (hoursDiff < 24 && flow.c1Volume > 0) {
+          // Set Planned Routed Volume from C1 Volume
+          document.getElementById('plannedVolume').value = flow.c1Volume;
+          
+          // Set Current On Premise from Total HC (everyone at the warehouse)
+          if (flow.totalHC > 0) {
+            document.getElementById('currentOnPremise').value = flow.totalHC;
+          }
+          
+          // Show notification
+          showLoadedNotification(flow);
+          
+          // Recalculate
+          calculateAll();
+          return;
+        }
+      }
+      
+      // Fallback: try pre-shift data if no flow staffing data
+      const preshiftData = localStorage.getItem('preshiftData');
+      if (preshiftData) {
+        const preshift = JSON.parse(preshiftData);
+        
+        const savedTime = new Date(preshift.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+        
+        if (hoursDiff < 24 && preshift.c1Volume > 0) {
+          document.getElementById('plannedVolume').value = preshift.c1Volume;
+          
+          if (preshift.plannedHC > 0) {
+            document.getElementById('currentOnPremise').value = preshift.plannedHC;
+          }
+          
+          showLoadedNotification({ c1Volume: preshift.c1Volume, totalHC: preshift.plannedHC, source: 'Pre-Shift' });
+          calculateAll();
+        }
+      }
+    }
+
+    function showLoadedNotification(data) {
+      const source = data.source || 'Flow Staffing';
+      const toast = document.createElement('div');
+      toast.innerHTML = `✅ Synced from ${source}: Volume ${data.c1Volume.toLocaleString()} | On Premise HC ${data.totalHC}`;
+      toast.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #3FB950 0%, #2da44e 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        text-align: center;
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function showUpdatePulse(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.style.transition = 'box-shadow 0.3s';
+        el.style.boxShadow = '0 0 15px rgba(63, 185, 80, 0.8)';
+        setTimeout(() => {
+          el.style.boxShadow = '';
+        }, 1000);
+      }
+    }
+
+    // ==================== DATA PERSISTENCE ====================
+    const STORAGE_KEY = 'loadOutPlanData';
+
+    function saveData() {
+      const data = {
+        plannedVolume: document.getElementById('plannedVolume').value,
+        plannedRate: document.getElementById('plannedRate').value,
+        pickStart: document.getElementById('pickStart').value,
+        pickEnd: document.getElementById('pickEnd').value,
+        pickPSInput: document.getElementById('pickPSInput').value,
+        daAssistsInput: document.getElementById('daAssistsInput').value,
+        currentOnPremise: document.getElementById('currentOnPremise').value,
+        leavingAfterSort: document.getElementById('leavingAfterSort').value,
+        pickVTO: document.getElementById('pickVTO').value,
+        midShiftAttrition: document.getElementById('midShiftAttrition').value,
+        incomingReadys: document.getElementById('incomingReadys').value,
+        incomingVET: document.getElementById('incomingVET').value,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return false;
+      
+      try {
+        const data = JSON.parse(saved);
+        
+        if (data.timestamp) {
+          const savedTime = new Date(data.timestamp);
+          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
+          if (hoursDiff > 24) return false;
+        }
+        
+        if (data.plannedVolume) document.getElementById('plannedVolume').value = data.plannedVolume;
+        if (data.plannedRate) document.getElementById('plannedRate').value = data.plannedRate;
+        if (data.pickStart) document.getElementById('pickStart').value = data.pickStart;
+        if (data.pickEnd) document.getElementById('pickEnd').value = data.pickEnd;
+        if (data.pickPSInput) document.getElementById('pickPSInput').value = data.pickPSInput;
+        if (data.daAssistsInput) document.getElementById('daAssistsInput').value = data.daAssistsInput;
+        if (data.currentOnPremise) document.getElementById('currentOnPremise').value = data.currentOnPremise;
+        if (data.leavingAfterSort) document.getElementById('leavingAfterSort').value = data.leavingAfterSort;
+        if (data.pickVTO) document.getElementById('pickVTO').value = data.pickVTO;
+        if (data.midShiftAttrition) document.getElementById('midShiftAttrition').value = data.midShiftAttrition;
+        if (data.incomingReadys) document.getElementById('incomingReadys').value = data.incomingReadys;
+        if (data.incomingVET) document.getElementById('incomingVET').value = data.incomingVET;
+        
+        calculateAll();
+        return true;
+      } catch (e) {
+        console.error('Error loading data:', e);
+        return false;
+      }
+    }
+
+    // Auto-save on input
+    document.addEventListener('input', saveData);
+
+    // Load saved data first, then check PPH Flow
+    if (!loadData()) {
+      loadFromPPHFlow();
+    }
+
+    function resetAllData() {
+      if (!confirm('Are you sure you want to reset all data?')) return;
+      
+      localStorage.removeItem(STORAGE_KEY);
+      
+      document.getElementById('plannedVolume').value = '';
+      document.getElementById('plannedRate').value = '380';
+      document.getElementById('pickStart').value = '09:00';
+      document.getElementById('pickEnd').value = '11:30';
+      document.getElementById('pickPSInput').value = '3';
+      document.getElementById('daAssistsInput').value = '4';
+      document.getElementById('currentOnPremise').value = '';
+      document.getElementById('leavingAfterSort').value = '';
+      document.getElementById('pickVTO').value = '';
+      document.getElementById('midShiftAttrition').value = '';
+      document.getElementById('incomingReadys').value = '';
+      document.getElementById('incomingVET').value = '';
+      
+      calculateAll();
+    }
   </script>
 </body>
 </html>
