@@ -2787,7 +2787,7 @@
         </div>
         <div class="time-input-group">
           <label>Shift End</label>
-          <input type="time" class="time-input" id="shiftEnd" value="08:30" onchange="calculateRunTime()">
+          <input type="time" class="time-input" id="shiftEnd" value="09:32" onchange="calculateRunTime()">
         </div>
         <div class="time-input-group">
           <label>Early End Adjustment</label>
@@ -3442,7 +3442,7 @@
     // Reset to default shift times
     function resetToDefault() {
       document.getElementById('shiftStart').value = '01:20';
-      document.getElementById('shiftEnd').value = '08:30';
+      document.getElementById('shiftEnd').value = '09:32';
       document.getElementById('earlyEnd').value = '';
       document.getElementById('break1').checked = true;
       document.getElementById('lunch').checked = true;
@@ -3616,6 +3616,17 @@
       document.getElementById('recInductHC').textContent = inductTotal;
       document.getElementById('recStowHC').textContent = stowersNeeded;
       document.getElementById('recTotalHC').textContent = totalHC;
+      
+      // ===== SAVE TO LOCALSTORAGE FOR LOAD OUT PLAN =====
+      const flowStaffingData = {
+        c1Volume: totalVolume,
+        totalHC: totalHC,
+        dockHC: inductTotal,
+        sortHC: stowersNeeded,
+        requiredTPH: Math.round(hourlyRate),
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('flowStaffingData', JSON.stringify(flowStaffingData));
       
       calculateActualPPH();
     }
