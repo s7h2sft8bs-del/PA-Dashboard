@@ -2543,11 +2543,11 @@
       <div class="stow-settings">
         <div class="stow-setting">
           <label>Stow Rate (PPH)</label>
-          <input type="number" id="stowRatePPH" value="260" oninput="updateAllCalculations()">
+          <input type="number" id="stowRatePPH" value="260" oninput="updateStats()">
         </div>
         <div class="stow-setting">
           <label>Efficiency %</label>
-          <input type="number" id="efficiencyPercent" value="85" min="1" max="100" oninput="updateAllCalculations()">
+          <input type="number" id="efficiencyPercent" value="85" min="1" max="100" oninput="updateStats()">
         </div>
         <div class="stow-setting result">
           <label>Effective Stow PPH</label>
@@ -3540,15 +3540,18 @@
       document.getElementById('effectiveStowPPH').textContent = Math.round(effectiveStowPPH);
       
       const requiredStowFlow = hourlyRate;
-      const sortRolesRaw = requiredStowFlow / effectiveStowPPH;
       
-      // Calculate ratio and split total HC
-      const totalRolesRaw = dockRolesRaw + sortRolesRaw;
-      const dockRatio = dockRolesRaw / totalRolesRaw;
-      const sortRatio = sortRolesRaw / totalRolesRaw;
+      // ===== STOWERS NEEDED - DIRECTLY FROM STOW RATE =====
+      // Stowers = Required Flow / Effective Stow PPH
+      const stowersNeeded = Math.ceil(requiredStowFlow / effectiveStowPPH);
       
-      const dockHC = Math.round(totalHC * dockRatio);
-      const sortHC = totalHC - dockHC;  // Remainder goes to sort
+      // Dock HC = Total HC from Pre-Shift formula minus Stowers
+      // Or calculate Dock roles separately
+      const dockHC = Math.ceil(dockRolesRaw);
+      const sortHC = stowersNeeded;
+      
+      // Recalculate Total HC = Dock + Stowers
+      const totalHCActual = dockHC + sortHC;
       
       // Display individual dock role calculations (for reference)
       document.getElementById('c1WaterspiderPlan').textContent = c1Waterspider;
@@ -3593,7 +3596,7 @@
       document.getElementById('summaryTPH').textContent = Math.round(hourlyRate).toLocaleString();
       document.getElementById('summaryTotalHC').textContent = totalHC;
       
-      // Dock side breakdown (using Pre-Shift formula total, split by ratio)
+      // Dock side breakdown
       document.getElementById('recWaterspider').textContent = Math.ceil(parseFloat(c1Waterspider));
       document.getElementById('recLineloader').textContent = Math.ceil(parseFloat(c1Lineloader));
       document.getElementById('recInducters').textContent = Math.ceil(parseFloat(c1Inducters));
@@ -3601,12 +3604,12 @@
       document.getElementById('recDiverter').textContent = Math.max(2, Math.ceil(parseFloat(diverter)));
       document.getElementById('recInductTotal').textContent = dockHC;
       
-      // Sort side breakdown
+      // Sort side breakdown - STOWERS FROM STOW RATE
       document.getElementById('recStowFlow').textContent = Math.round(requiredStowFlow).toLocaleString();
       document.getElementById('recEffectiveRate').textContent = Math.round(effectiveStowPPH);
-      document.getElementById('recStowers').textContent = sortHC;
+      document.getElementById('recStowers').textContent = stowersNeeded;
       
-      // Total HC breakdown (using Pre-Shift formula)
+      // Total HC breakdown
       document.getElementById('recInductHC').textContent = dockHC;
       document.getElementById('recStowHC').textContent = sortHC;
       document.getElementById('recTotalHC').textContent = totalHC;
