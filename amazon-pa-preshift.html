@@ -491,7 +491,7 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back
+        Home
       </a>
       <div class="logo-icon">📋</div>
       <div class="logo-text">Pre-Shift <span>Planning</span></div>
@@ -701,6 +701,18 @@ Pre-Shift Projected Hours = 0
       // Update TPH display
       document.getElementById('tphDisplay').textContent = targetTPH;
 
+      // Save to localStorage for PPH Flow to use
+      const preshiftData = {
+        c1Volume: c1Volume,
+        fph: parseFloat(document.getElementById('fph').value) || 0,
+        targetTPH: targetTPH,
+        plannedHC: plannedHC,
+        plannedHours: Math.round(plannedHours),
+        projectedHours: Math.round(projectedHours),
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('preshiftData', JSON.stringify(preshiftData));
+
       // Update output preview
       updateOutput();
     }
@@ -782,8 +794,13 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       setTimeout(() => confirm.classList.remove('show'), 2000);
     }
 
-    // Clear all fields
+    // Clear all fields (now acts as Reset)
     function clearAll() {
+      if (!confirm('Are you sure you want to reset all data?')) return;
+      
+      localStorage.removeItem('preshiftPageData');
+      localStorage.removeItem('preshiftData');
+      
       const inputs = document.querySelectorAll('input[type="number"]:not(.setting-item input)');
       inputs.forEach(input => {
         if (input.id !== 'targetTPH' && input.id !== 'indirectFactor' && input.id !== 'hoursPerAA') {
@@ -793,7 +810,67 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       calculateAll();
     }
 
+    // Save data to localStorage
+    function saveData() {
+      const data = {
+        rts: document.getElementById('rts').value,
+        mnr: document.getElementById('mnr').value,
+        rolled: document.getElementById('rolled').value,
+        slam: document.getElementById('slam').value,
+        sideline: document.getElementById('sideline').value,
+        schedule: document.getElementById('schedule').value,
+        softCap: document.getElementById('softCap').value,
+        lmcp: document.getElementById('lmcp').value,
+        cube: document.getElementById('cube').value,
+        fph: document.getElementById('fph').value,
+        targetTPH: document.getElementById('targetTPH').value,
+        indirectFactor: document.getElementById('indirectFactor').value,
+        hoursPerAA: document.getElementById('hoursPerAA').value,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('preshiftPageData', JSON.stringify(data));
+    }
+
+    // Load data from localStorage
+    function loadData() {
+      const saved = localStorage.getItem('preshiftPageData');
+      if (!saved) return;
+      
+      try {
+        const data = JSON.parse(saved);
+        
+        // Check if data is recent (within 24 hours)
+        if (data.timestamp) {
+          const savedTime = new Date(data.timestamp);
+          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
+          if (hoursDiff > 24) return;
+        }
+        
+        if (data.rts) document.getElementById('rts').value = data.rts;
+        if (data.mnr) document.getElementById('mnr').value = data.mnr;
+        if (data.rolled) document.getElementById('rolled').value = data.rolled;
+        if (data.slam) document.getElementById('slam').value = data.slam;
+        if (data.sideline) document.getElementById('sideline').value = data.sideline;
+        if (data.schedule) document.getElementById('schedule').value = data.schedule;
+        if (data.softCap) document.getElementById('softCap').value = data.softCap;
+        if (data.lmcp) document.getElementById('lmcp').value = data.lmcp;
+        if (data.cube) document.getElementById('cube').value = data.cube;
+        if (data.fph) document.getElementById('fph').value = data.fph;
+        if (data.targetTPH) document.getElementById('targetTPH').value = data.targetTPH;
+        if (data.indirectFactor) document.getElementById('indirectFactor').value = data.indirectFactor;
+        if (data.hoursPerAA) document.getElementById('hoursPerAA').value = data.hoursPerAA;
+        
+        calculateAll();
+      } catch (e) {
+        console.error('Error loading data:', e);
+      }
+    }
+
+    // Auto-save on input
+    document.addEventListener('input', saveData);
+
     // Initialize
+    loadData();
     calculateAll();
   </script>
 </body>
