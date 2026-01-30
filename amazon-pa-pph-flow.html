@@ -4796,8 +4796,12 @@ Stow Flow Needed: ${stowFlow} TPH
       const requiredInductFlow = effectiveHoursRemaining > 0 ? Math.round(remainingInduct / effectiveHoursRemaining) : 0;
       const requiredStowFlow = effectiveHoursRemaining > 0 ? Math.round(remainingStow / effectiveHoursRemaining) : 0;
       
-      // Get actual headcount
-      const actualHC = getTotalActualHC();
+      // Get actual headcount - sum up all actual HC inputs
+      let actualHC = 0;
+      const actualInputs = document.querySelectorAll('.actual-input');
+      actualInputs.forEach(input => {
+        actualHC += parseInt(input.value) || 0;
+      });
       const plannedHC = parseInt(document.getElementById('recTotalHC')?.textContent) || 0;
       const hcDiff = actualHC - plannedHC;
       let hcStatus = 'AT HC';
