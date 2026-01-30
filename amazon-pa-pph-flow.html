@@ -3510,24 +3510,59 @@
         return;
       }
       
-      // Calculate hourly rate needed
+      // ===== PRE-SHIFT FORMULA FOR TOTAL HC =====
+      // Planned HC = [(Volume ÷ TPH) × Indirect Factor] ÷ Hours per AA
+      const targetTPH = 90;  // Site's planning rate
+      const indirectFactor = 1.17;  // 17% overhead
+      const hoursPerAA = 7.2;  // Paid hours per person
+      
+      const directHours = totalVolume / targetTPH;
+      const plannedHours = directHours * indirectFactor;
+      const totalHC = Math.ceil(plannedHours / hoursPerAA);
+      
+      // Calculate hourly rate needed (for display and role breakdown)
       const hourlyRate = totalVolume / runTimeHours;
       
-      // Calculate staff for each role based on PPH
-      // C1 Dock
+      // ===== SPLIT HC BETWEEN DOCK AND SORT =====
+      // Use ratio based on typical split (approximately 40% Dock, 60% Sort)
+      // Or calculate based on role requirements
+      
+      // Calculate individual role needs for ratio purposes
       const c1Waterspider = (hourlyRate / PPH.waterspider).toFixed(1);
       const c1Lineloader = (hourlyRate / PPH.lineLoader).toFixed(1);
       const c1Inducters = (hourlyRate / PPH.induct).toFixed(1);
       const c1Pushers = (hourlyRate / PPH.pusher).toFixed(1);
+      const diverter = (hourlyRate / PPH.diverter).toFixed(1);
       
+      // Dock roles total (for ratio calculation)
+      const dockRolesRaw = parseFloat(c1Waterspider) + parseFloat(c1Lineloader) + 
+                          parseFloat(c1Inducters) + parseFloat(c1Pushers) + 
+                          Math.max(2, parseFloat(diverter));
+      
+      // Get stow rate and efficiency for sort calculation
+      const stowRatePPH = parseFloat(document.getElementById('stowRatePPH').value) || 260;
+      const efficiencyPercent = parseFloat(document.getElementById('efficiencyPercent').value) || 85;
+      const efficiency = efficiencyPercent / 100;
+      const effectiveStowPPH = stowRatePPH * efficiency;
+      document.getElementById('effectiveStowPPH').textContent = Math.round(effectiveStowPPH);
+      
+      const requiredStowFlow = hourlyRate;
+      const sortRolesRaw = requiredStowFlow / effectiveStowPPH;
+      
+      // Calculate ratio and split total HC
+      const totalRolesRaw = dockRolesRaw + sortRolesRaw;
+      const dockRatio = dockRolesRaw / totalRolesRaw;
+      const sortRatio = sortRolesRaw / totalRolesRaw;
+      
+      const dockHC = Math.round(totalHC * dockRatio);
+      const sortHC = totalHC - dockHC;  // Remainder goes to sort
+      
+      // Display individual dock role calculations (for reference)
       document.getElementById('c1WaterspiderPlan').textContent = c1Waterspider;
       document.getElementById('c1LineloaderPlan').textContent = c1Lineloader;
       document.getElementById('c1InductersPlan').textContent = c1Inducters;
       document.getElementById('c1PushersPlan').textContent = c1Pushers;
-      
-      const c1DockTotal = (parseFloat(c1Waterspider) + parseFloat(c1Lineloader) + 
-                          parseFloat(c1Inducters) + parseFloat(c1Pushers)).toFixed(1);
-      document.getElementById('c1DockTotal').textContent = c1DockTotal;
+      document.getElementById('c1DockTotal').textContent = dockHC;
       
       // C1 Sort - P2B by cluster
       const clusterValues = {
@@ -3546,8 +3581,6 @@
       const p2bE = (clusterValues.E / runTimeHours / PPH.pickToBuffer).toFixed(1);
       const p2bG = (clusterValues.G / runTimeHours / PPH.pickToBuffer).toFixed(1);
       
-      const diverter = (hourlyRate / PPH.diverter).toFixed(1);
-      
       document.getElementById('c1DiverterPlan').textContent = Math.max(2, Math.ceil(parseFloat(diverter)));
       document.getElementById('c1P2BAPlan').textContent = p2bA;
       document.getElementById('c1P2BBPlan').textContent = p2bB;
@@ -3556,39 +3589,7 @@
       document.getElementById('c1P2BEPlan').textContent = p2bE;
       document.getElementById('c1P2BGPlan').textContent = p2bG;
       
-      const c1SortTotal = (2 + parseFloat(p2bA) + parseFloat(p2bB) + parseFloat(p2bC) + 
-                          parseFloat(p2bD) + parseFloat(p2bE) + parseFloat(p2bG)).toFixed(1);
-      document.getElementById('c1SortTotal').textContent = c1SortTotal;
-      
-      // Calculate container building and pick to buffer staff
-      const containerBuilders = (hourlyRate / PPH.containerBuilding).toFixed(1);
-      const pickBufferStaff = (hourlyRate / PPH.pickToBuffer).toFixed(1);
-      
-      // ===== STOW STAFFING CALCULATION =====
-      // Get stow rate and efficiency
-      const stowRatePPH = parseFloat(document.getElementById('stowRatePPH').value) || 260;
-      const efficiencyPercent = parseFloat(document.getElementById('efficiencyPercent').value) || 85;
-      const efficiency = efficiencyPercent / 100;
-      
-      // Effective stow PPH = Stow Rate × Efficiency
-      const effectiveStowPPH = stowRatePPH * efficiency;
-      document.getElementById('effectiveStowPPH').textContent = Math.round(effectiveStowPPH);
-      
-      // Required Stow Flow = same as hourly rate (volume / time)
-      const requiredStowFlow = hourlyRate;
-      
-      // Stowers needed = Required Flow / Effective Stow PPH
-      const stowersNeeded = Math.ceil(requiredStowFlow / effectiveStowPPH);
-      
-      // ===== INDUCT STAFFING TOTAL =====
-      const inductTotal = Math.ceil(parseFloat(c1Waterspider)) + 
-                          Math.ceil(parseFloat(c1Lineloader)) + 
-                          Math.ceil(parseFloat(c1Inducters)) + 
-                          Math.ceil(parseFloat(c1Pushers)) + 
-                          Math.max(2, Math.ceil(parseFloat(diverter)));
-      
-      // ===== TOTAL HC =====
-      const totalHC = inductTotal + stowersNeeded;
+      document.getElementById('c1SortTotal').textContent = sortHC;
       
       // Update old total staff display
       document.getElementById('statTotalStaff').textContent = totalHC;
@@ -3599,31 +3600,33 @@
       document.getElementById('summaryTPH').textContent = Math.round(hourlyRate).toLocaleString();
       document.getElementById('summaryTotalHC').textContent = totalHC;
       
-      // Induct side breakdown
+      // Dock side breakdown (using Pre-Shift formula total, split by ratio)
       document.getElementById('recWaterspider').textContent = Math.ceil(parseFloat(c1Waterspider));
       document.getElementById('recLineloader').textContent = Math.ceil(parseFloat(c1Lineloader));
       document.getElementById('recInducters').textContent = Math.ceil(parseFloat(c1Inducters));
       document.getElementById('recPushers').textContent = Math.ceil(parseFloat(c1Pushers));
       document.getElementById('recDiverter').textContent = Math.max(2, Math.ceil(parseFloat(diverter)));
-      document.getElementById('recInductTotal').textContent = inductTotal;
+      document.getElementById('recInductTotal').textContent = dockHC;
       
-      // Stow side breakdown
+      // Sort side breakdown
       document.getElementById('recStowFlow').textContent = Math.round(requiredStowFlow).toLocaleString();
       document.getElementById('recEffectiveRate').textContent = Math.round(effectiveStowPPH);
-      document.getElementById('recStowers').textContent = stowersNeeded;
+      document.getElementById('recStowers').textContent = sortHC;
       
-      // Total HC breakdown
-      document.getElementById('recInductHC').textContent = inductTotal;
-      document.getElementById('recStowHC').textContent = stowersNeeded;
+      // Total HC breakdown (using Pre-Shift formula)
+      document.getElementById('recInductHC').textContent = dockHC;
+      document.getElementById('recStowHC').textContent = sortHC;
       document.getElementById('recTotalHC').textContent = totalHC;
       
       // ===== SAVE TO LOCALSTORAGE FOR LOAD OUT PLAN =====
       const flowStaffingData = {
         c1Volume: totalVolume,
         totalHC: totalHC,
-        dockHC: inductTotal,
-        sortHC: stowersNeeded,
+        dockHC: dockHC,
+        sortHC: sortHC,
         requiredTPH: Math.round(hourlyRate),
+        directHours: Math.round(directHours),
+        plannedHours: Math.round(plannedHours),
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('flowStaffingData', JSON.stringify(flowStaffingData));
