@@ -1034,6 +1034,107 @@
       opacity: 1;
     }
 
+    /* Hourly Update Section */
+    .hourly-update-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--success);
+    }
+
+    .hourly-update-section .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--success);
+      flex-wrap: wrap;
+    }
+
+    .hourly-update-section .section-title {
+      color: var(--success);
+      flex: 1;
+    }
+
+    .hourly-update-section .section-title::before {
+      background: var(--success);
+    }
+
+    .btn-copy-hourly {
+      background: linear-gradient(135deg, var(--success) 0%, #2da44e 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-hourly:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(63, 185, 80, 0.4);
+    }
+
+    .hourly-copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .hourly-copy-confirm.show {
+      opacity: 1;
+    }
+
+    .hourly-update-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+    }
+
+    .hourly-stat {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .hourly-label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .hourly-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    @media (max-width: 900px) {
+      .hourly-update-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hourly-update-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     /* Report Modal Styles */
     .report-modal {
       max-width: 600px;
@@ -2887,7 +2988,7 @@
           </div>
           <div class="progress-input-group">
             <label>Remaining to Induct</label>
-            <input type="number" class="progress-input" id="remainingInduct" readonly style="background: var(--amazon-blue); color: var(--amazon-orange);">
+            <input type="number" class="progress-input" id="remainingInduct" placeholder="0" oninput="updateFromRemaining()" style="background: var(--amazon-blue); color: var(--amazon-orange);">
           </div>
         </div>
       </div>
@@ -2903,8 +3004,48 @@
           </div>
           <div class="progress-input-group">
             <label>Remaining to Stow</label>
-            <input type="number" class="progress-input" id="remainingStow" readonly style="background: var(--amazon-blue); color: var(--amazon-orange);">
+            <input type="number" class="progress-input" id="remainingStow" placeholder="0" oninput="updateFromRemaining()" style="background: var(--amazon-blue); color: var(--amazon-orange);">
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hourly Update Copy Section -->
+    <div class="hourly-update-section">
+      <div class="section-header">
+        <h2 class="section-title">📋 Hourly Update</h2>
+        <button class="btn btn-copy-hourly" onclick="copyHourlyUpdate()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          Copy Update
+        </button>
+        <span class="hourly-copy-confirm" id="hourlyCopyConfirm">✓ Copied!</span>
+      </div>
+      <div class="hourly-update-grid">
+        <div class="hourly-stat">
+          <span class="hourly-label">Remaining Induct</span>
+          <span class="hourly-value" id="hourlyRemInduct">0</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Remaining Stow</span>
+          <span class="hourly-value" id="hourlyRemStow">0</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Required Flow</span>
+          <span class="hourly-value" id="hourlyReqFlow">0</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Time Left</span>
+          <span class="hourly-value" id="hourlyTimeLeft">0:00</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Dock HC</span>
+          <span class="hourly-value" id="hourlyDockHC">0</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Sort HC</span>
+          <span class="hourly-value" id="hourlySortHC">0</span>
         </div>
       </div>
     </div>
@@ -3472,9 +3613,110 @@
       const remainingInduct = Math.max(0, totalVolume - inductedSoFar);
       const remainingStow = Math.max(0, totalVolume - stowedSoFar);
       
-      document.getElementById('remainingInduct').value = remainingInduct.toLocaleString();
-      document.getElementById('remainingStow').value = remainingStow.toLocaleString();
+      document.getElementById('remainingInduct').value = remainingInduct;
+      document.getElementById('remainingStow').value = remainingStow;
       document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
+      
+      // Update hourly display
+      updateHourlyDisplay();
+    }
+
+    // Update when user directly enters Remaining values
+    function updateFromRemaining() {
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const remainingInduct = parseInt(document.getElementById('remainingInduct').value) || 0;
+      const remainingStow = parseInt(document.getElementById('remainingStow').value) || 0;
+      
+      // Calculate inducted/stowed so far based on remaining
+      const inductedSoFar = Math.max(0, totalVolume - remainingInduct);
+      const stowedSoFar = Math.max(0, totalVolume - remainingStow);
+      
+      document.getElementById('inductedSoFar').value = inductedSoFar;
+      document.getElementById('stowedSoFar').value = stowedSoFar;
+      document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
+      
+      // Update hourly display
+      updateHourlyDisplay();
+    }
+
+    // Update hourly display section
+    function updateHourlyDisplay() {
+      const remainingInduct = parseInt(document.getElementById('remainingInduct').value) || 0;
+      const remainingStow = parseInt(document.getElementById('remainingStow').value) || 0;
+      const dockHC = parseInt(document.getElementById('recInductHC').textContent) || 0;
+      const sortHC = parseInt(document.getElementById('recStowHC').textContent) || 0;
+      
+      // Calculate time remaining
+      const shiftEnd = document.getElementById('earlyEnd').value || document.getElementById('shiftEnd').value;
+      const now = new Date();
+      const [endHour, endMin] = shiftEnd.split(':').map(Number);
+      let endTime = new Date(now);
+      endTime.setHours(endHour, endMin, 0);
+      if (endTime < now) endTime.setDate(endTime.getDate() + 1);
+      
+      const msRemaining = endTime - now;
+      const hoursRemaining = Math.max(0, msRemaining / (1000 * 60 * 60));
+      const timeLeftStr = `${Math.floor(hoursRemaining)}:${String(Math.floor((hoursRemaining % 1) * 60)).padStart(2, '0')}`;
+      
+      // Calculate required flow
+      const requiredFlow = hoursRemaining > 0 ? Math.round(remainingStow / hoursRemaining) : 0;
+      
+      document.getElementById('hourlyRemInduct').textContent = remainingInduct.toLocaleString();
+      document.getElementById('hourlyRemStow').textContent = remainingStow.toLocaleString();
+      document.getElementById('hourlyReqFlow').textContent = requiredFlow.toLocaleString();
+      document.getElementById('hourlyTimeLeft').textContent = timeLeftStr;
+      document.getElementById('hourlyDockHC').textContent = dockHC;
+      document.getElementById('hourlySortHC').textContent = sortHC;
+    }
+
+    // Copy hourly update to clipboard
+    function copyHourlyUpdate() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      
+      const remainingInduct = document.getElementById('hourlyRemInduct').textContent;
+      const remainingStow = document.getElementById('hourlyRemStow').textContent;
+      const requiredFlow = document.getElementById('hourlyReqFlow').textContent;
+      const timeLeft = document.getElementById('hourlyTimeLeft').textContent;
+      const dockHC = document.getElementById('hourlyDockHC').textContent;
+      const sortHC = document.getElementById('hourlySortHC').textContent;
+      
+      const output = `📊 HOURLY UPDATE - ${timeStr}
+
+📦 Remaining to Induct: ${remainingInduct}
+📦 Remaining to Stow: ${remainingStow}
+⚡ Required Flow: ${requiredFlow} TPH
+⏱️ Time Left: ${timeLeft}
+👥 Dock HC: ${dockHC}
+👥 Sort HC: ${sortHC}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(output).then(() => {
+          showHourlyCopyConfirm();
+        }).catch(() => {
+          fallbackHourlyCopy(output);
+        });
+      } else {
+        fallbackHourlyCopy(output);
+      }
+    }
+
+    function fallbackHourlyCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showHourlyCopyConfirm();
+    }
+
+    function showHourlyCopyConfirm() {
+      const confirm = document.getElementById('hourlyCopyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
     }
 
     // Calculate staffing requirements
