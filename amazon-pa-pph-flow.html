@@ -2569,7 +2569,7 @@
           <h4>📦 Sort Side</h4>
           <div class="rec-item"><span>Required Stow Flow</span><strong id="recStowFlow">0</strong><small>PPH</small></div>
           <div class="rec-item"><span>Effective Rate/Person</span><strong id="recEffectiveRate">0</strong><small>PPH</small></div>
-          <div class="rec-item total highlight"><span>Sorters Needed</span><strong id="recStowers">0</strong></div>
+          <div class="rec-item total highlight"><span>Stowers Needed</span><strong id="recStowers">0</strong></div>
         </div>
         <div class="rec-group total-group">
           <h4>📊 Total Headcount</h4>
@@ -2649,19 +2649,12 @@
           <h3>👥 SSD Staffing Needed</h3>
           <div class="ssd-staffing-grid">
             <div class="ssd-staff-item">
-              <span>Line Loaders</span>
-              <strong id="ssdLineLoaders">0</strong>
+              <span>Pick to Buffer</span>
+              <strong id="ssdP2B">6</strong>
+              <small>(min 6)</small>
             </div>
             <div class="ssd-staff-item">
-              <span>Inductors</span>
-              <strong id="ssdInductors">0</strong>
-            </div>
-            <div class="ssd-staff-item">
-              <span>Pushers</span>
-              <strong id="ssdPushers">0</strong>
-            </div>
-            <div class="ssd-staff-item">
-              <span>Sorters</span>
+              <span>Stowers</span>
               <strong id="ssdStowers">0</strong>
             </div>
             <div class="ssd-staff-item total">
@@ -2670,7 +2663,7 @@
             </div>
           </div>
           <div class="ssd-note">
-            <span>⚠️ Pull from C1:</span>
+            <span>⚠️ Pulled from C1 Sort Side:</span>
             <strong id="pullFromC1">0</strong>
             <span>people</span>
           </div>
@@ -2682,7 +2675,7 @@
         <h4>📉 C1 Adjusted (After SSD Pull)</h4>
         <div class="c1-adjusted-grid">
           <div class="c1-adj-item">
-            <span>Original C1 HC</span>
+            <span>Original C1 Sort Side</span>
             <strong id="originalC1HC">0</strong>
           </div>
           <div class="c1-adj-item">
@@ -2690,7 +2683,7 @@
             <strong id="pulledForSSD">0</strong>
           </div>
           <div class="c1-adj-item">
-            <span>Remaining C1 HC</span>
+            <span>Remaining C1 Sort Side</span>
             <strong id="remainingC1HC">0</strong>
           </div>
           <div class="c1-adj-item highlight">
@@ -4149,10 +4142,10 @@ Stow Flow Needed: ${stowFlow} TPH
       // Use sunrise window since that's the primary constraint
       const ssdRequiredFlow = Math.max(sunriseFlow, samedayFlow);
       
-      // Calculate SSD staffing using C1 rates
-      const ssdLineLoaders = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.lineLoader) : 0;
-      const ssdInductors = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.induct) : 0;
-      const ssdPushers = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.pusher) : 0;
+      // Calculate SSD staffing - P2B and Stowers only (pulled from Sort Side)
+      // P2B minimum is 6
+      const ssdP2BCalc = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.pickToBuffer) : 0;
+      const ssdP2B = Math.max(6, ssdP2BCalc); // Minimum 6 P2B
       
       // Stowers using efficiency
       const stowRatePPH = parseFloat(document.getElementById('stowRatePPH').value) || 260;
@@ -4160,12 +4153,10 @@ Stow Flow Needed: ${stowFlow} TPH
       const effectiveStowPPH = stowRatePPH * (efficiencyPercent / 100);
       const ssdStowers = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / effectiveStowPPH) : 0;
       
-      document.getElementById('ssdLineLoaders').textContent = ssdLineLoaders;
-      document.getElementById('ssdInductors').textContent = ssdInductors;
-      document.getElementById('ssdPushers').textContent = ssdPushers;
+      document.getElementById('ssdP2B').textContent = ssdP2B;
       document.getElementById('ssdStowers').textContent = ssdStowers;
       
-      const ssdTotalHC = ssdLineLoaders + ssdInductors + ssdPushers + ssdStowers;
+      const ssdTotalHC = ssdP2B + ssdStowers;
       document.getElementById('ssdTotalHC').textContent = ssdTotalHC;
       document.getElementById('pullFromC1').textContent = ssdTotalHC;
       
@@ -4179,32 +4170,29 @@ Stow Flow Needed: ${stowFlow} TPH
         ssdStatus.classList.remove('active');
       }
       
-      // Calculate C1 adjusted flow
+      // Calculate C1 adjusted flow (pull from Sort Side only)
       updateC1Adjusted(ssdTotalHC);
     }
 
     function updateC1Adjusted(ssdHC) {
-      // Get original C1 HC from the staffing summary
-      const originalInductHC = parseInt(document.getElementById('recInductHC').textContent) || 0;
-      const originalStowHC = parseInt(document.getElementById('recStowHC').textContent) || 0;
-      const originalC1HC = originalInductHC + originalStowHC;
+      // Get original C1 Sort Side HC only (not Dock)
+      const originalSortHC = parseInt(document.getElementById('recStowHC').textContent) || 0;
       
-      document.getElementById('originalC1HC').textContent = originalC1HC;
+      document.getElementById('originalC1HC').textContent = originalSortHC;
       document.getElementById('pulledForSSD').textContent = ssdHC;
       
-      const remainingC1HC = Math.max(0, originalC1HC - ssdHC);
-      document.getElementById('remainingC1HC').textContent = remainingC1HC;
+      const remainingSortHC = Math.max(0, originalSortHC - ssdHC);
+      document.getElementById('remainingC1HC').textContent = remainingSortHC;
       
-      // Calculate adjusted C1 flow based on remaining HC
-      // Simplified: assume proportional reduction
+      // Calculate adjusted C1 flow based on remaining Sort Side HC
       const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
       const runTimeText = document.getElementById('totalRunTime').textContent;
       const [hours, mins] = runTimeText.split(':').map(Number);
       const runTimeHours = hours + (mins / 60);
       
-      if (originalC1HC > 0 && runTimeHours > 0) {
+      if (originalSortHC > 0 && runTimeHours > 0) {
         const originalFlow = totalVolume / runTimeHours;
-        const flowRatio = remainingC1HC / originalC1HC;
+        const flowRatio = remainingSortHC / originalSortHC;
         const adjustedFlow = Math.round(originalFlow * flowRatio);
         document.getElementById('adjustedC1Flow').textContent = adjustedFlow.toLocaleString();
       } else {
