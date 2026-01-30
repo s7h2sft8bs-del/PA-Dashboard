@@ -627,6 +627,26 @@
       height: 24px;
     }
 
+    .btn-reset {
+      background: linear-gradient(135deg, #6e7681 0%, #484f58 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-reset:hover {
+      background: linear-gradient(135deg, #484f58 0%, #30363d 100%);
+      box-shadow: 0 4px 12px rgba(110, 118, 129, 0.4);
+    }
+
+    .btn-reset svg {
+      width: 20px;
+      height: 20px;
+    }
+
     .btn-report {
       background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
       color: white;
@@ -2595,6 +2615,12 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         BREAK
+      </button>
+      <button class="btn btn-reset" onclick="resetAllData()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        RESET
       </button>
       <div class="header-time">
         <div class="live-indicator">Live</div>
@@ -5211,6 +5237,198 @@ ${dateStr}
         showVoiceToast('❓', `"${transcript}"`, 'Command not recognized - try "Waterspider 5"');
       }
     }
+
+    // ==================== DATA PERSISTENCE ====================
+    const STORAGE_KEY = 'pphFlowStaffingData';
+
+    // Save all form data to localStorage
+    function saveAllData() {
+      const data = {
+        // Main volume
+        totalVolume: document.getElementById('totalVolume').value,
+        // Belt run time
+        shiftStart: document.getElementById('shiftStart').value,
+        shiftEnd: document.getElementById('shiftEnd').value,
+        earlyEnd: document.getElementById('earlyEnd').value,
+        break1: document.getElementById('break1').checked,
+        lunch: document.getElementById('lunch').checked,
+        break2: document.getElementById('break2').checked,
+        customBreak: document.getElementById('customBreak').value,
+        // Stow settings
+        stowRatePPH: document.getElementById('stowRatePPH').value,
+        efficiencyPercent: document.getElementById('efficiencyPercent').value,
+        // Progress
+        inductedSoFar: document.getElementById('inductedSoFar').value,
+        stowedSoFar: document.getElementById('stowedSoFar').value,
+        remainingInduct: document.getElementById('remainingInduct').value,
+        remainingStow: document.getElementById('remainingStow').value,
+        // Hourly update
+        targetFinishTime: document.getElementById('targetFinishTime').value,
+        // Clusters
+        clusterA: document.getElementById('clusterA').value,
+        clusterB: document.getElementById('clusterB').value,
+        clusterC: document.getElementById('clusterC').value,
+        clusterD: document.getElementById('clusterD').value,
+        clusterE: document.getElementById('clusterE').value,
+        clusterG: document.getElementById('clusterG').value,
+        // Same Day
+        sunriseVolume: document.getElementById('sunriseVolume').value,
+        sunriseDeadline: document.getElementById('sunriseDeadline').value,
+        sunriseInducted: document.getElementById('sunriseInducted').value,
+        sunriseStowed: document.getElementById('sunriseStowed').value,
+        samedayVolume: document.getElementById('samedayVolume').value,
+        samedayStart: document.getElementById('samedayStart').value,
+        samedayDeadline: document.getElementById('samedayDeadline').value,
+        samedayInducted: document.getElementById('samedayInducted').value,
+        samedayStowed: document.getElementById('samedayStowed').value,
+        // WIP
+        wipUnits: document.getElementById('wipUnits').value,
+        wipStowRate: document.getElementById('wipStowRate').value,
+        wipTargetMin: document.getElementById('wipTargetMin').value,
+        wipTargetMax: document.getElementById('wipTargetMax').value,
+        // Timestamp
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    // Load all form data from localStorage
+    function loadAllData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      
+      try {
+        const data = JSON.parse(saved);
+        
+        // Check if data is recent (within 24 hours)
+        if (data.timestamp) {
+          const savedTime = new Date(data.timestamp);
+          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
+          if (hoursDiff > 24) return; // Data too old
+        }
+        
+        // Restore all values
+        if (data.totalVolume) document.getElementById('totalVolume').value = data.totalVolume;
+        if (data.shiftStart) document.getElementById('shiftStart').value = data.shiftStart;
+        if (data.shiftEnd) document.getElementById('shiftEnd').value = data.shiftEnd;
+        if (data.earlyEnd) document.getElementById('earlyEnd').value = data.earlyEnd;
+        if (data.break1 !== undefined) document.getElementById('break1').checked = data.break1;
+        if (data.lunch !== undefined) document.getElementById('lunch').checked = data.lunch;
+        if (data.break2 !== undefined) document.getElementById('break2').checked = data.break2;
+        if (data.customBreak) document.getElementById('customBreak').value = data.customBreak;
+        if (data.stowRatePPH) document.getElementById('stowRatePPH').value = data.stowRatePPH;
+        if (data.efficiencyPercent) document.getElementById('efficiencyPercent').value = data.efficiencyPercent;
+        if (data.inductedSoFar) document.getElementById('inductedSoFar').value = data.inductedSoFar;
+        if (data.stowedSoFar) document.getElementById('stowedSoFar').value = data.stowedSoFar;
+        if (data.remainingInduct) document.getElementById('remainingInduct').value = data.remainingInduct;
+        if (data.remainingStow) document.getElementById('remainingStow').value = data.remainingStow;
+        if (data.targetFinishTime) document.getElementById('targetFinishTime').value = data.targetFinishTime;
+        if (data.clusterA) document.getElementById('clusterA').value = data.clusterA;
+        if (data.clusterB) document.getElementById('clusterB').value = data.clusterB;
+        if (data.clusterC) document.getElementById('clusterC').value = data.clusterC;
+        if (data.clusterD) document.getElementById('clusterD').value = data.clusterD;
+        if (data.clusterE) document.getElementById('clusterE').value = data.clusterE;
+        if (data.clusterG) document.getElementById('clusterG').value = data.clusterG;
+        if (data.sunriseVolume) document.getElementById('sunriseVolume').value = data.sunriseVolume;
+        if (data.sunriseDeadline) document.getElementById('sunriseDeadline').value = data.sunriseDeadline;
+        if (data.sunriseInducted) document.getElementById('sunriseInducted').value = data.sunriseInducted;
+        if (data.sunriseStowed) document.getElementById('sunriseStowed').value = data.sunriseStowed;
+        if (data.samedayVolume) document.getElementById('samedayVolume').value = data.samedayVolume;
+        if (data.samedayStart) document.getElementById('samedayStart').value = data.samedayStart;
+        if (data.samedayDeadline) document.getElementById('samedayDeadline').value = data.samedayDeadline;
+        if (data.samedayInducted) document.getElementById('samedayInducted').value = data.samedayInducted;
+        if (data.samedayStowed) document.getElementById('samedayStowed').value = data.samedayStowed;
+        if (data.wipUnits) document.getElementById('wipUnits').value = data.wipUnits;
+        if (data.wipStowRate) document.getElementById('wipStowRate').value = data.wipStowRate;
+        if (data.wipTargetMin) document.getElementById('wipTargetMin').value = data.wipTargetMin;
+        if (data.wipTargetMax) document.getElementById('wipTargetMax').value = data.wipTargetMax;
+        
+        // Trigger all calculations
+        calculateRunTime();
+        updateStats();
+        updateProgress();
+        calculateSameDay();
+        updateSunriseProgress();
+        updateSamedayProgress();
+        calculateWIP();
+        updateHourlyDisplay();
+        
+        console.log('Loaded saved PPH Flow data');
+      } catch (e) {
+        console.error('Error loading saved data:', e);
+      }
+    }
+
+    // Reset all data
+    function resetAllData() {
+      if (!confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+        return;
+      }
+      
+      // Clear localStorage
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('flowStaffingData');
+      
+      // Reset all inputs to defaults
+      document.getElementById('totalVolume').value = '';
+      document.getElementById('shiftStart').value = '01:20';
+      document.getElementById('shiftEnd').value = '09:32';
+      document.getElementById('earlyEnd').value = '';
+      document.getElementById('break1').checked = true;
+      document.getElementById('lunch').checked = true;
+      document.getElementById('break2').checked = true;
+      document.getElementById('customBreak').value = '0';
+      document.getElementById('stowRatePPH').value = '260';
+      document.getElementById('efficiencyPercent').value = '85';
+      document.getElementById('inductedSoFar').value = '';
+      document.getElementById('stowedSoFar').value = '';
+      document.getElementById('remainingInduct').value = '';
+      document.getElementById('remainingStow').value = '';
+      document.getElementById('targetFinishTime').value = '08:00';
+      document.getElementById('clusterA').value = '';
+      document.getElementById('clusterB').value = '';
+      document.getElementById('clusterC').value = '';
+      document.getElementById('clusterD').value = '';
+      document.getElementById('clusterE').value = '';
+      document.getElementById('clusterG').value = '';
+      document.getElementById('sunriseVolume').value = '';
+      document.getElementById('sunriseDeadline').value = '03:30';
+      document.getElementById('sunriseInducted').value = '';
+      document.getElementById('sunriseStowed').value = '';
+      document.getElementById('samedayVolume').value = '';
+      document.getElementById('samedayStart').value = '03:00';
+      document.getElementById('samedayDeadline').value = '03:30';
+      document.getElementById('samedayInducted').value = '';
+      document.getElementById('samedayStowed').value = '';
+      document.getElementById('wipUnits').value = '';
+      document.getElementById('wipStowRate').value = '';
+      document.getElementById('wipTargetMin').value = '10';
+      document.getElementById('wipTargetMax').value = '20';
+      
+      // Clear all actual HC inputs
+      document.querySelectorAll('.actual-input').forEach(input => input.value = '');
+      
+      // Trigger all calculations
+      calculateRunTime();
+      updateStats();
+      updateProgress();
+      calculateSameDay();
+      calculateWIP();
+      updateHourlyDisplay();
+      
+      // Show confirmation
+      alert('All data has been reset.');
+    }
+
+    // Auto-save on any input change
+    document.addEventListener('input', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+        saveAllData();
+      }
+    });
+
+    // Load saved data on page load
+    loadAllData();
   </script>
 </body>
 </html>
