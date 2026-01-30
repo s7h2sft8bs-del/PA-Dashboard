@@ -1108,6 +1108,11 @@
       text-align: center;
     }
 
+    .hourly-stat.highlight {
+      background: rgba(255, 153, 0, 0.15);
+      border: 2px solid var(--amazon-orange);
+    }
+
     .hourly-label {
       display: block;
       font-size: 0.7rem;
@@ -1123,9 +1128,56 @@
       color: var(--success);
     }
 
+    .hourly-value.orange {
+      color: var(--amazon-orange);
+    }
+
+    .hourly-stat.highlight .hourly-value {
+      color: var(--amazon-orange);
+      font-size: 1.75rem;
+    }
+
+    .hourly-sub {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .finish-time-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .finish-time-input label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .finish-time-input input {
+      background: var(--input-bg);
+      border: 2px solid var(--success);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      color: var(--success);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .finish-time-input input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.3);
+    }
+
     @media (max-width: 900px) {
       .hourly-update-grid {
         grid-template-columns: repeat(3, 1fr);
+      }
+      .hourly-update-section .section-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
 
@@ -3014,6 +3066,10 @@
     <div class="hourly-update-section">
       <div class="section-header">
         <h2 class="section-title">📋 Hourly Update</h2>
+        <div class="finish-time-input">
+          <label>Target Finish:</label>
+          <input type="time" id="targetFinishTime" value="08:00" oninput="updateHourlyDisplay()">
+        </div>
         <button class="btn btn-copy-hourly" onclick="copyHourlyUpdate()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -3024,28 +3080,29 @@
       </div>
       <div class="hourly-update-grid">
         <div class="hourly-stat">
-          <span class="hourly-label">Remaining Induct</span>
-          <span class="hourly-value" id="hourlyRemInduct">0</span>
+          <span class="hourly-label">Total Inducted</span>
+          <span class="hourly-value" id="hourlyTotalInducted">0</span>
         </div>
         <div class="hourly-stat">
-          <span class="hourly-label">Remaining Stow</span>
-          <span class="hourly-value" id="hourlyRemStow">0</span>
+          <span class="hourly-label">Left to Induct</span>
+          <span class="hourly-value orange" id="hourlyLeftInduct">0</span>
         </div>
         <div class="hourly-stat">
-          <span class="hourly-label">Required Flow</span>
-          <span class="hourly-value" id="hourlyReqFlow">0</span>
+          <span class="hourly-label">Total Stowed</span>
+          <span class="hourly-value" id="hourlyTotalStowed">0</span>
+        </div>
+        <div class="hourly-stat">
+          <span class="hourly-label">Left to Stow</span>
+          <span class="hourly-value orange" id="hourlyLeftStow">0</span>
         </div>
         <div class="hourly-stat">
           <span class="hourly-label">Time Left</span>
           <span class="hourly-value" id="hourlyTimeLeft">0:00</span>
         </div>
-        <div class="hourly-stat">
-          <span class="hourly-label">Dock HC</span>
-          <span class="hourly-value" id="hourlyDockHC">0</span>
-        </div>
-        <div class="hourly-stat">
-          <span class="hourly-label">Sort HC</span>
-          <span class="hourly-value" id="hourlySortHC">0</span>
+        <div class="hourly-stat highlight">
+          <span class="hourly-label">Required Flow to Finish</span>
+          <span class="hourly-value" id="hourlyReqFlow">0</span>
+          <span class="hourly-sub">TPH</span>
         </div>
       </div>
     </div>
@@ -3641,32 +3698,36 @@
 
     // Update hourly display section
     function updateHourlyDisplay() {
+      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+      const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
+      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
       const remainingInduct = parseInt(document.getElementById('remainingInduct').value) || 0;
       const remainingStow = parseInt(document.getElementById('remainingStow').value) || 0;
-      const dockHC = parseInt(document.getElementById('recInductHC').textContent) || 0;
-      const sortHC = parseInt(document.getElementById('recStowHC').textContent) || 0;
       
-      // Calculate time remaining
-      const shiftEnd = document.getElementById('earlyEnd').value || document.getElementById('shiftEnd').value;
+      // Calculate time remaining to target finish
+      const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
       const now = new Date();
-      const [endHour, endMin] = shiftEnd.split(':').map(Number);
-      let endTime = new Date(now);
-      endTime.setHours(endHour, endMin, 0);
-      if (endTime < now) endTime.setDate(endTime.getDate() + 1);
+      const [finishHour, finishMin] = targetFinish.split(':').map(Number);
+      let finishTime = new Date(now);
+      finishTime.setHours(finishHour, finishMin, 0);
+      if (finishTime < now) finishTime.setDate(finishTime.getDate() + 1);
       
-      const msRemaining = endTime - now;
+      const msRemaining = finishTime - now;
       const hoursRemaining = Math.max(0, msRemaining / (1000 * 60 * 60));
-      const timeLeftStr = `${Math.floor(hoursRemaining)}:${String(Math.floor((hoursRemaining % 1) * 60)).padStart(2, '0')}`;
+      const hrs = Math.floor(hoursRemaining);
+      const mins = Math.floor((hoursRemaining % 1) * 60);
+      const timeLeftStr = `${hrs}:${String(mins).padStart(2, '0')}`;
       
-      // Calculate required flow
+      // Calculate required flow to finish on time
       const requiredFlow = hoursRemaining > 0 ? Math.round(remainingStow / hoursRemaining) : 0;
       
-      document.getElementById('hourlyRemInduct').textContent = remainingInduct.toLocaleString();
-      document.getElementById('hourlyRemStow').textContent = remainingStow.toLocaleString();
-      document.getElementById('hourlyReqFlow').textContent = requiredFlow.toLocaleString();
+      // Update display
+      document.getElementById('hourlyTotalInducted').textContent = inductedSoFar.toLocaleString();
+      document.getElementById('hourlyLeftInduct').textContent = remainingInduct.toLocaleString();
+      document.getElementById('hourlyTotalStowed').textContent = stowedSoFar.toLocaleString();
+      document.getElementById('hourlyLeftStow').textContent = remainingStow.toLocaleString();
       document.getElementById('hourlyTimeLeft').textContent = timeLeftStr;
-      document.getElementById('hourlyDockHC').textContent = dockHC;
-      document.getElementById('hourlySortHC').textContent = sortHC;
+      document.getElementById('hourlyReqFlow').textContent = requiredFlow.toLocaleString();
     }
 
     // Copy hourly update to clipboard
@@ -3674,21 +3735,30 @@
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
       
-      const remainingInduct = document.getElementById('hourlyRemInduct').textContent;
-      const remainingStow = document.getElementById('hourlyRemStow').textContent;
+      const totalInducted = document.getElementById('hourlyTotalInducted').textContent;
+      const leftInduct = document.getElementById('hourlyLeftInduct').textContent;
+      const totalStowed = document.getElementById('hourlyTotalStowed').textContent;
+      const leftStow = document.getElementById('hourlyLeftStow').textContent;
       const requiredFlow = document.getElementById('hourlyReqFlow').textContent;
       const timeLeft = document.getElementById('hourlyTimeLeft').textContent;
-      const dockHC = document.getElementById('hourlyDockHC').textContent;
-      const sortHC = document.getElementById('hourlySortHC').textContent;
+      const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
       
-      const output = `📊 HOURLY UPDATE - ${timeStr}
+      // Format target finish for display
+      const [h, m] = targetFinish.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      const targetFinishStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      
+      const output = `📋 HOURLY UPDATE - ${timeStr}
 
-📦 Remaining to Induct: ${remainingInduct}
-📦 Remaining to Stow: ${remainingStow}
-⚡ Required Flow: ${requiredFlow} TPH
+📦 Total Inducted: ${totalInducted}
+📦 Left to Induct: ${leftInduct}
+📦 Total Stowed: ${totalStowed}
+📦 Left to Stow: ${leftStow}
+
+🎯 Target Finish: ${targetFinishStr}
 ⏱️ Time Left: ${timeLeft}
-👥 Dock HC: ${dockHC}
-👥 Sort HC: ${sortHC}`;
+⚡ Required Flow to Finish: ${requiredFlow} TPH`;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(output).then(() => {
