@@ -986,6 +986,54 @@
       color: var(--success);
     }
 
+    /* Break Copy Section */
+    .break-copy-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .btn-copy-break {
+      background: linear-gradient(135deg, var(--amazon-teal) 0%, #008080 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.875rem 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-break:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 168, 168, 0.4);
+    }
+
+    .btn-copy-break svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .break-copy-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .break-copy-confirm.show {
+      opacity: 1;
+    }
+
     /* Report Modal Styles */
     .report-modal {
       max-width: 600px;
@@ -1992,6 +2040,256 @@
       }
     }
 
+    /* WIP Compliance Section */
+    .wip-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--warning);
+    }
+
+    .wip-section .section-header {
+      border-bottom-color: var(--warning);
+    }
+
+    .wip-section .section-title {
+      color: var(--warning);
+    }
+
+    .wip-section .section-title::before {
+      background: var(--warning);
+    }
+
+    .wip-status {
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(139, 148, 158, 0.2);
+      color: var(--text-muted);
+    }
+
+    .wip-status.compliant {
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+    }
+
+    .wip-status.warning {
+      background: rgba(210, 153, 34, 0.2);
+      color: var(--warning);
+    }
+
+    .wip-status.critical {
+      background: rgba(248, 81, 73, 0.2);
+      color: var(--danger);
+    }
+
+    .wip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.5fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .wip-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .wip-card h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .wip-card.targets {
+      border-color: rgba(210, 153, 34, 0.3);
+    }
+
+    .wip-card.targets h4 {
+      color: var(--warning);
+    }
+
+    .wip-card.result {
+      border-color: var(--amazon-teal);
+      background: rgba(0, 168, 168, 0.1);
+    }
+
+    .wip-card.result h4 {
+      color: var(--amazon-teal);
+    }
+
+    .wip-input-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .wip-input-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .wip-input-item label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .wip-input-item input {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .wip-input-item input:focus {
+      outline: none;
+      border-color: var(--warning);
+      box-shadow: 0 0 0 3px rgba(210, 153, 34, 0.2);
+    }
+
+    /* Buffer Display */
+    .buffer-display {
+      text-align: center;
+    }
+
+    .buffer-minutes {
+      margin-bottom: 1rem;
+    }
+
+    .buffer-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--amazon-teal);
+    }
+
+    .buffer-value.low {
+      color: var(--danger);
+    }
+
+    .buffer-value.good {
+      color: var(--success);
+    }
+
+    .buffer-value.high {
+      color: var(--warning);
+    }
+
+    .buffer-label {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-left: 0.5rem;
+    }
+
+    .buffer-bar-container {
+      position: relative;
+      margin: 0.5rem 0;
+    }
+
+    .buffer-bar-bg {
+      display: flex;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .buffer-zone {
+      height: 100%;
+    }
+
+    .buffer-zone.low {
+      flex: 1;
+      background: rgba(248, 81, 73, 0.4);
+    }
+
+    .buffer-zone.target {
+      flex: 1;
+      background: rgba(63, 185, 80, 0.4);
+    }
+
+    .buffer-zone.high {
+      flex: 1;
+      background: rgba(210, 153, 34, 0.4);
+    }
+
+    .buffer-marker {
+      position: absolute;
+      top: -5px;
+      width: 4px;
+      height: 30px;
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      transition: left 0.3s ease;
+      left: 0%;
+    }
+
+    .buffer-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* WIP Actions */
+    .wip-actions {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--text-muted);
+    }
+
+    .wip-actions.action-increase {
+      border-left-color: var(--danger);
+      background: rgba(248, 81, 73, 0.1);
+    }
+
+    .wip-actions.action-hold {
+      border-left-color: var(--success);
+      background: rgba(63, 185, 80, 0.1);
+    }
+
+    .wip-actions.action-decrease {
+      border-left-color: var(--warning);
+      background: rgba(210, 153, 34, 0.1);
+    }
+
+    .wip-action-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .wip-action-text {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .wip-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 900px) {
       .summary-stats {
         grid-template-columns: repeat(2, 1fr);
@@ -2063,11 +2361,11 @@
 <body>
   <header class="header">
     <div class="logo">
-      <a href="amazon-pa-dashboard.html" class="back-btn">
+      <a href="index.html" class="back-btn">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back
+        Home
       </a>
       <div class="logo-icon">PPH</div>
       <div class="logo-text">PPH <span>Flow Staffing</span></div>
@@ -2401,6 +2699,77 @@
             <small>TPH</small>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- WIP Compliance Section -->
+    <section class="wip-section">
+      <div class="section-header">
+        <h2 class="section-title">📊 WIP Compliance</h2>
+        <span class="wip-status" id="wipStatus">Enter Data</span>
+      </div>
+      
+      <div class="wip-grid">
+        <!-- WIP Inputs -->
+        <div class="wip-card inputs">
+          <h4>📥 Current WIP</h4>
+          <div class="wip-input-row">
+            <div class="wip-input-item">
+              <label>WIP Units (Buffer)</label>
+              <input type="number" id="wipUnits" placeholder="0" oninput="calculateWIP()">
+            </div>
+            <div class="wip-input-item">
+              <label>Current Stow Rate (TPH)</label>
+              <input type="number" id="wipStowRate" placeholder="0" oninput="calculateWIP()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Range -->
+        <div class="wip-card targets">
+          <h4>🎯 Target Buffer Range (Minutes)</h4>
+          <div class="wip-input-row">
+            <div class="wip-input-item">
+              <label>Min Buffer</label>
+              <input type="number" id="wipTargetMin" value="10" oninput="calculateWIP()">
+            </div>
+            <div class="wip-input-item">
+              <label>Max Buffer</label>
+              <input type="number" id="wipTargetMax" value="20" oninput="calculateWIP()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated Result -->
+        <div class="wip-card result">
+          <h4>⏱️ Buffer Status</h4>
+          <div class="buffer-display">
+            <div class="buffer-minutes">
+              <span class="buffer-value" id="bufferMinutes">0</span>
+              <span class="buffer-label">minutes</span>
+            </div>
+            <div class="buffer-bar-container">
+              <div class="buffer-bar-bg">
+                <div class="buffer-zone low"></div>
+                <div class="buffer-zone target"></div>
+                <div class="buffer-zone high"></div>
+              </div>
+              <div class="buffer-marker" id="bufferMarker"></div>
+            </div>
+            <div class="buffer-labels">
+              <span>0</span>
+              <span id="bufferMinLabel">10</span>
+              <span id="bufferMaxLabel">20</span>
+              <span>30+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PA Actions -->
+      <div class="wip-actions" id="wipActions">
+        <div class="wip-action-title">💡 Recommended Action</div>
+        <div class="wip-action-text" id="wipActionText">Enter WIP units and stow rate to see recommendations</div>
       </div>
     </section>
 
@@ -2912,6 +3281,17 @@
             <div class="time-remaining-value" id="modalStatus">Enter data to calculate</div>
           </div>
         </div>
+        
+        <!-- Copy Button for Break Status -->
+        <div class="break-copy-section">
+          <button class="btn btn-copy-break" onclick="copyBreakStatus()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            Copy Break Status
+          </button>
+          <span class="break-copy-confirm" id="breakCopyConfirm">✓ Copied!</span>
+        </div>
       </div>
     </div>
   </div>
@@ -3400,6 +3780,67 @@
       document.getElementById('breakModal').classList.remove('active');
     }
 
+    function copyBreakStatus() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      
+      const remainingInduct = document.getElementById('modalRemainingInduct').textContent;
+      const remainingStow = document.getElementById('modalRemainingStow').textContent;
+      const inductedSoFar = document.getElementById('modalInductedSoFar').textContent;
+      const stowedSoFar = document.getElementById('modalStowedSoFar').textContent;
+      const inductFlow = document.getElementById('modalInductFlow').textContent;
+      const stowFlow = document.getElementById('modalStowFlow').textContent;
+      const targetTime = document.getElementById('modalTargetTime').textContent;
+      const timeRemaining = document.getElementById('modalTimeRemaining').textContent;
+      const status = document.getElementById('modalStatus').textContent;
+
+      const output = `⏰ BREAK UPDATE - ${timeStr}
+
+📊 PROGRESS:
+Inducted: ${inductedSoFar}
+Stowed: ${stowedSoFar}
+
+📦 REMAINING:
+Induct: ${remainingInduct}
+Stow: ${remainingStow}
+
+⚡ REQUIRED FLOW:
+Induct Flow Needed: ${inductFlow} TPH
+Stow Flow Needed: ${stowFlow} TPH
+
+🎯 Target Finish: ${targetTime}
+⏱️ Time Remaining: ${timeRemaining}
+📈 Status: ${status}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(output).then(() => {
+          showBreakCopyConfirm();
+        }).catch(() => {
+          fallbackBreakCopy(output);
+        });
+      } else {
+        fallbackBreakCopy(output);
+      }
+    }
+
+    function fallbackBreakCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showBreakCopyConfirm();
+    }
+
+    function showBreakCopyConfirm() {
+      const confirm = document.getElementById('breakCopyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
     // Close modal on escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeBreakModal();
@@ -3412,8 +3853,68 @@
 
     // Initialize
     loadWeeklyRates(); // Load Sort Wash rates if available
+    loadPreshiftData(); // Load Pre-Shift Planning data if available
     calculateRunTime();
     calculatePreshift(); // Initialize preshift calculations
+
+    // ==================== LOAD PRE-SHIFT DATA ====================
+    function loadPreshiftData() {
+      const savedData = localStorage.getItem('preshiftData');
+      if (savedData) {
+        const preshift = JSON.parse(savedData);
+        
+        // Check if data is from today (within last 24 hours)
+        const savedTime = new Date(preshift.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+        
+        if (hoursDiff < 24 && preshift.c1Volume > 0) {
+          // Set C1 Volume
+          document.getElementById('totalVolume').value = preshift.c1Volume;
+          
+          // Show indicator that pre-shift data was loaded
+          showPreshiftLoaded(preshift);
+          
+          // Trigger calculations
+          updateStats();
+          
+          console.log('Loaded Pre-Shift data:', preshift);
+        }
+      }
+    }
+
+    function showPreshiftLoaded(preshift) {
+      const volumeInput = document.getElementById('totalVolume');
+      if (volumeInput) {
+        // Add a visual indicator
+        volumeInput.style.borderColor = '#3FB950';
+        volumeInput.style.boxShadow = '0 0 0 3px rgba(63, 185, 80, 0.3)';
+        
+        // Show a toast notification
+        const toast = document.createElement('div');
+        toast.innerHTML = `✅ Pre-Shift data loaded: Volume ${preshift.c1Volume.toLocaleString()} | HC ${preshift.plannedHC}`;
+        toast.style.cssText = `
+          position: fixed;
+          top: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(135deg, #3FB950 0%, #2da44e 100%);
+          color: white;
+          padding: 1rem 2rem;
+          border-radius: 8px;
+          font-weight: 600;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transition = 'opacity 0.3s';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    }
 
     // ==================== PRE-SHIFT PLANNER ====================
     function calculatePreshift() {
@@ -3513,6 +4014,79 @@
       
       // Scroll to staffing section
       document.getElementById('staffingSummary').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==================== WIP COMPLIANCE ====================
+    function calculateWIP() {
+      const wipUnits = parseFloat(document.getElementById('wipUnits').value) || 0;
+      const stowRate = parseFloat(document.getElementById('wipStowRate').value) || 0;
+      const targetMin = parseFloat(document.getElementById('wipTargetMin').value) || 10;
+      const targetMax = parseFloat(document.getElementById('wipTargetMax').value) || 20;
+
+      // Update labels
+      document.getElementById('bufferMinLabel').textContent = targetMin;
+      document.getElementById('bufferMaxLabel').textContent = targetMax;
+
+      // Calculate buffer minutes
+      const ratePerMinute = stowRate / 60;
+      const bufferMinutes = (ratePerMinute > 0) ? wipUnits / ratePerMinute : 0;
+      
+      const bufferValueEl = document.getElementById('bufferMinutes');
+      bufferValueEl.textContent = bufferMinutes.toFixed(1);
+
+      // Update status and colors
+      const wipStatus = document.getElementById('wipStatus');
+      const wipActions = document.getElementById('wipActions');
+      const wipActionText = document.getElementById('wipActionText');
+      const bufferMarker = document.getElementById('bufferMarker');
+
+      // Calculate marker position (0-100%)
+      const maxDisplay = targetMax * 1.5; // Show up to 1.5x max
+      let markerPos = (bufferMinutes / maxDisplay) * 100;
+      markerPos = Math.min(Math.max(markerPos, 0), 100);
+      bufferMarker.style.left = markerPos + '%';
+
+      if (wipUnits === 0 || stowRate === 0) {
+        // No data entered
+        wipStatus.textContent = 'Enter Data';
+        wipStatus.className = 'wip-status';
+        bufferValueEl.className = 'buffer-value';
+        wipActions.className = 'wip-actions';
+        wipActionText.textContent = 'Enter WIP units and stow rate to see recommendations';
+      } else if (bufferMinutes < targetMin) {
+        // Too low - starving
+        wipStatus.textContent = '🔴 LOW - Starving';
+        wipStatus.className = 'wip-status critical';
+        bufferValueEl.className = 'buffer-value low';
+        wipActions.className = 'wip-actions action-increase';
+        wipActionText.innerHTML = `<strong>WIP TOO LOW - Downstream may run out of work!</strong><br>
+          • <strong>Increase feed:</strong> Raise induct/sort rate<br>
+          • <strong>Move carts/racks:</strong> Push buffer to starving clusters<br>
+          • <strong>Temporarily reduce stow HC:</strong> Avoid idle walking until buffer builds<br>
+          • Target: Get buffer to ${targetMin}-${targetMax} minutes`;
+      } else if (bufferMinutes > targetMax) {
+        // Too high - flooding
+        wipStatus.textContent = '🟡 HIGH - Flooding';
+        wipStatus.className = 'wip-status warning';
+        bufferValueEl.className = 'buffer-value high';
+        wipActions.className = 'wip-actions action-decrease';
+        wipActionText.innerHTML = `<strong>WIP TOO HIGH - Risk of congestion!</strong><br>
+          • <strong>Reduce feed:</strong> Slow induct/sort or pause building new WIP<br>
+          • <strong>Add stowers:</strong> Shift labor to heavy WIP areas<br>
+          • <strong>Drain worst clusters first:</strong> Focus on highest risk zones<br>
+          • <strong>Clear PS/jams:</strong> Stop dirty WIP from growing<br>
+          • Target: Get buffer down to ${targetMin}-${targetMax} minutes`;
+      } else {
+        // In range - compliant
+        wipStatus.textContent = '✅ COMPLIANT';
+        wipStatus.className = 'wip-status compliant';
+        bufferValueEl.className = 'buffer-value good';
+        wipActions.className = 'wip-actions action-hold';
+        wipActionText.innerHTML = `<strong>WIP is in target range - maintain current flow!</strong><br>
+          • Buffer: ${bufferMinutes.toFixed(1)} min (Target: ${targetMin}-${targetMax} min)<br>
+          • Keep feed rate matched to process rate<br>
+          • Monitor cluster balance for even distribution`;
+      }
     }
 
     // ==================== SAME DAY CALCULATIONS ====================
