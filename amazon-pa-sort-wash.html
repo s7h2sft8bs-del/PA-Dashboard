@@ -622,7 +622,7 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back
+        Home
       </a>
       <div class="logo-icon">SW</div>
       <div class="logo-text">Sort <span>Wash</span></div>
@@ -758,6 +758,10 @@
       </div>
       
       <div class="metrics-grid">
+        <div class="metric-item">
+          <label>RTS Slot</label>
+          <input type="text" id="rtsSlot" placeholder="e.g., 04:30">
+        </div>
         <div class="metric-item">
           <label>MNR</label>
           <input type="number" id="mnr" placeholder="0">
@@ -1069,6 +1073,7 @@ Line Loader PvA: ${getValue('lineloaderPlanned')} vs ${getValue('lineloaderActua
 BRT PvA: ${getValue('brtPlanned')} vs ${getValue('brtActual')}
 
 📋 ADDITIONAL METRICS
+RTS Slot: ${getValue('rtsSlot')}
 MNR: ${getValue('mnr')}
 5S Bridge: ${getValue('fiveSBridge')}
 Yard Audit: ${getValue('yardAudit')}
