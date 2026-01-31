@@ -3809,7 +3809,9 @@
     function updateStats() {
       const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
       
+      // Update BOTH volume displays
       document.getElementById('statTotalVolume').textContent = totalVolume.toLocaleString();
+      document.getElementById('summaryVolume').textContent = totalVolume.toLocaleString();
       
       // Calculate required TPH
       const runTimeText = document.getElementById('totalRunTime').textContent;
@@ -4086,6 +4088,9 @@
       document.getElementById('recStowFlow').textContent = Math.round(requiredStowFlow).toLocaleString();
       document.getElementById('recEffectiveRate').textContent = Math.round(effectiveStowPPH);
       document.getElementById('recStowers').textContent = stowersNeeded;
+      
+      // Also update the Sort Total with stowers count
+      document.getElementById('c1SortTotal').textContent = stowersNeeded;
       
       // Total HC breakdown
       document.getElementById('recInductHC').textContent = dockHC;
