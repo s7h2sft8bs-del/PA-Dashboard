@@ -1086,15 +1086,22 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       
       preventCloudLoad = true;
       
+      // Clear ALL localStorage
       localStorage.removeItem('preshiftPageData');
       localStorage.removeItem('preshiftData');
+      localStorage.removeItem('preShiftPlanData');
       
-      const inputs = document.querySelectorAll('input[type="number"]:not(.setting-item input)');
-      inputs.forEach(input => {
-        if (input.id !== 'targetTPH' && input.id !== 'indirectFactor' && input.id !== 'hoursPerAA') {
-          input.value = '';
-        }
-      });
+      // Explicitly clear each input field
+      document.getElementById('rts').value = '';
+      document.getElementById('mnr').value = '';
+      document.getElementById('rolled').value = '';
+      document.getElementById('slam').value = '';
+      document.getElementById('sideline').value = '';
+      document.getElementById('schedule').value = '';
+      document.getElementById('softCap').value = '';
+      document.getElementById('lmcp').value = '';
+      document.getElementById('cube').value = '';
+      document.getElementById('fph').value = '';
       
       // Clear paste box
       const pasteBox = document.getElementById('pasteBox');
