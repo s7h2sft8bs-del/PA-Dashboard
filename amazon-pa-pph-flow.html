@@ -464,71 +464,95 @@
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
       border: 3px solid #10B981;
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.25rem;
       margin-bottom: 1.5rem;
     }
 
-    .final-stow-panel .section-header {
-      border-bottom-color: #10B981;
-    }
-
-    .final-stow-panel .section-title {
-      color: #10B981;
-    }
-
-    .final-stow-panel .section-title::before {
-      background: #10B981;
-    }
-
-    .final-stow-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .final-header {
+      display: flex;
+      align-items: center;
       gap: 1rem;
-      margin: 1rem 0;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #10B981;
+      flex-wrap: wrap;
     }
 
-    .final-stat {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      padding: 1rem;
+    .final-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #10B981;
+      text-transform: uppercase;
+    }
+
+    .final-flag {
+      font-size: 1.5rem;
+    }
+
+    .final-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .final-stow-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .final-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .final-row .final-icon {
+      font-size: 1rem;
+      width: 24px;
       text-align: center;
     }
 
-    .final-label {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
+    .final-row .final-label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
     }
 
-    .final-value {
+    .final-row .final-value {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.75rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-primary);
     }
 
-    .final-value.green { color: #10B981; }
-    .final-value.orange { color: var(--amazon-orange); }
-    .final-value.red { color: #F85149; }
-    .final-value.purple { color: #A78BFA; }
+    .final-row .final-value.green { color: #10B981; }
+    .final-row .final-value.orange { color: var(--amazon-orange); }
+    .final-row .final-value.red { color: #F85149; }
+    .final-row .final-value.purple { color: #A78BFA; }
 
-    .final-sub {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .final-stat.highlight-final {
+    .final-row.highlight-row {
       background: rgba(255, 153, 0, 0.2);
       border: 2px solid var(--amazon-orange);
-      grid-column: span 3;
+      padding: 0.75rem;
     }
 
-    .final-stat.highlight-final .final-value {
-      font-size: 2.5rem;
+    .final-row.highlight-row .final-value.big {
+      font-size: 1.75rem;
       color: var(--amazon-orange);
+    }
+
+    .final-row .final-unit {
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
     .btn-copy-final {
@@ -557,14 +581,12 @@
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.75rem;
       font-family: 'Barlow', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      margin-left: auto;
     }
 
     .btn-undo-induct:hover {
@@ -584,25 +606,22 @@
       opacity: 1;
     }
 
-    @media (max-width: 768px) {
-      .final-stow-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .final-stat.highlight-final {
-        grid-column: span 2;
-      }
-    }
-
     @media (max-width: 480px) {
-      .final-stow-grid {
-        grid-template-columns: 1fr 1fr;
+      .final-stow-panel {
+        padding: 1rem;
       }
-      .final-stat.highlight-final {
-        grid-column: span 2;
+      .final-title {
+        font-size: 1rem;
       }
-      .btn-induct-complete {
-        font-size: 0.85rem;
-        padding: 0.75rem 1rem;
+      .final-row .final-value {
+        font-size: 1.1rem;
+      }
+      .final-row.highlight-row .final-value.big {
+        font-size: 1.5rem;
+      }
+      .btn-copy-final {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -3158,11 +3177,11 @@
       <div class="stow-settings">
         <div class="stow-setting">
           <label>Stow Rate (PPH)</label>
-          <input type="number" id="stowRatePPH" value="260" oninput="updateStats()">
+          <input type="number" id="stowRatePPH" placeholder="260" oninput="updateStats()">
         </div>
         <div class="stow-setting">
           <label>Efficiency %</label>
-          <input type="number" id="efficiencyPercent" value="85" min="1" max="100" oninput="updateStats()">
+          <input type="number" id="efficiencyPercent" placeholder="85" min="1" max="100" oninput="updateStats()">
         </div>
         <div class="stow-setting result">
           <label>Effective Stow PPH</label>
@@ -3445,7 +3464,7 @@
         </div>
         <div class="time-input-group">
           <label>Shift End</label>
-          <input type="time" class="time-input" id="shiftEnd" value="09:32" onchange="calculateRunTime()">
+          <input type="time" class="time-input" id="shiftEnd" value="08:30" onchange="calculateRunTime()">
         </div>
         <div class="time-input-group">
           <label>Early End Adjustment</label>
@@ -3582,43 +3601,49 @@
 
     <!-- Induct Complete Final Stow Panel (Hidden until induct complete) -->
     <div class="final-stow-panel" id="finalStowPanel" style="display: none;">
-      <div class="section-header">
-        <h2 class="section-title">🏁 INDUCT COMPLETE - Final Stow Plan</h2>
-        <button class="btn btn-undo-induct" onclick="undoInductComplete()">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
-          </svg>
-          Undo
-        </button>
+      <div class="final-header">
+        <div class="final-title">
+          <span class="final-flag">🏁</span>
+          <span>INDUCT COMPLETE</span>
+        </div>
+        <span class="final-time" id="finalTimeStamp">08:54 AM</span>
+        <button class="btn btn-undo-induct" onclick="undoInductComplete()">Undo</button>
       </div>
-      <div class="final-stow-grid">
-        <div class="final-stat">
-          <span class="final-label">Final Inducted</span>
+      
+      <div class="final-stow-list">
+        <div class="final-row">
+          <span class="final-icon">✅</span>
+          <span class="final-label">Final Inducted:</span>
           <span class="final-value green" id="finalInducted">0</span>
         </div>
-        <div class="final-stat">
-          <span class="final-label">Already Stowed</span>
+        <div class="final-row">
+          <span class="final-icon">📦</span>
+          <span class="final-label">Already Stowed:</span>
           <span class="final-value" id="finalAlreadyStowed">0</span>
         </div>
-        <div class="final-stat">
-          <span class="final-label">Left to Stow</span>
+        <div class="final-row">
+          <span class="final-icon">📦</span>
+          <span class="final-label">Left to Stow:</span>
           <span class="final-value orange" id="finalLeftToStow">0</span>
         </div>
-        <div class="final-stat">
-          <span class="final-label">Crashed/Rolled</span>
+        <div class="final-row">
+          <span class="final-icon">🚫</span>
+          <span class="final-label">Crashed/Rolled:</span>
           <span class="final-value red" id="finalCrashedRolled">0</span>
-          <span class="final-sub">(not inducted)</span>
         </div>
-        <div class="final-stat">
-          <span class="final-label">Time to 9 AM</span>
+        <div class="final-row">
+          <span class="final-icon">⏰</span>
+          <span class="final-label">Time to 9 AM:</span>
           <span class="final-value purple" id="finalTimeTo9am">0:00</span>
         </div>
-        <div class="final-stat highlight-final">
-          <span class="final-label">🎯 Final Stow Flow Needed</span>
-          <span class="final-value" id="finalStowFlow">0</span>
-          <span class="final-sub">TPH to finish by 9 AM</span>
+        <div class="final-row highlight-row">
+          <span class="final-icon">🎯</span>
+          <span class="final-label">Required Stow Flow:</span>
+          <span class="final-value big" id="finalStowFlow">0</span>
+          <span class="final-unit">TPH</span>
         </div>
       </div>
+      
       <button class="btn btn-copy-final" onclick="copyFinalStowPlan()">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -4211,7 +4236,7 @@
     // Reset to default shift times
     function resetToDefault() {
       document.getElementById('shiftStart').value = '01:20';
-      document.getElementById('shiftEnd').value = '09:32';
+      document.getElementById('shiftEnd').value = '08:30';
       document.getElementById('earlyEnd').value = '';
       document.getElementById('break1').checked = true;
       document.getElementById('lunch').checked = true;
@@ -4379,6 +4404,10 @@
       inductCompleteData.timeTo9am = timeTo9amStr;
       inductCompleteData.hoursTo9am = hoursTo9am;
       inductCompleteData.finalStowFlow = finalStowFlow;
+      
+      // Update timestamp display
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      document.getElementById('finalTimeStamp').textContent = timeStr;
       
       // Update display
       document.getElementById('finalInducted').textContent = inductCompleteData.finalInducted.toLocaleString();
@@ -4745,14 +4774,14 @@
       
       document.getElementById('c1SortTotal').textContent = sortHC;
       
-      // Update old total staff display
-      document.getElementById('statTotalStaff').textContent = totalHC;
+      // Update old total staff display - use actual calculated
+      document.getElementById('statTotalStaff').textContent = totalHCActual;
       
       // ===== UPDATE STAFFING SUMMARY PANEL =====
       document.getElementById('summaryVolume').textContent = totalVolume.toLocaleString();
       document.getElementById('summaryRunTime').textContent = runTimeText + 'h';
       document.getElementById('summaryTPH').textContent = Math.round(hourlyRate).toLocaleString();
-      document.getElementById('summaryTotalHC').textContent = totalHC;
+      document.getElementById('summaryTotalHC').textContent = totalHCActual;
       
       // Dock side breakdown
       document.getElementById('recWaterspider').textContent = Math.ceil(parseFloat(c1Waterspider));
@@ -4770,15 +4799,15 @@
       // Also update the Sort Total with stowers count
       document.getElementById('c1SortTotal').textContent = stowersNeeded;
       
-      // Total HC breakdown
+      // Total HC breakdown - Use actual Dock + Sort calculation
       document.getElementById('recInductHC').textContent = dockHC;
       document.getElementById('recStowHC').textContent = sortHC;
-      document.getElementById('recTotalHC').textContent = totalHC;
+      document.getElementById('recTotalHC').textContent = totalHCActual;
       
       // ===== SAVE TO LOCALSTORAGE FOR LOAD OUT PLAN =====
       const flowStaffingData = {
         c1Volume: totalVolume,
-        totalHC: totalHC,
+        totalHC: totalHCActual,
         dockHC: dockHC,
         sortHC: sortHC,
         requiredTPH: Math.round(hourlyRate),
@@ -5975,7 +6004,7 @@ ${dateStr}
         document.getElementById('samedayVolume').value || '',
         document.getElementById('stowRatePPH').value || '260',
         document.getElementById('shiftStart').value || '01:20',
-        document.getElementById('shiftEnd').value || '09:32',
+        document.getElementById('shiftEnd').value || '08:30',
         document.getElementById('sunriseInducted').value || '',
         document.getElementById('sunriseStowed').value || '',
         document.getElementById('samedayInducted').value || '',
@@ -6227,14 +6256,14 @@ ${dateStr}
       // Reset all inputs to defaults
       document.getElementById('totalVolume').value = '';
       document.getElementById('shiftStart').value = '01:20';
-      document.getElementById('shiftEnd').value = '09:32';
+      document.getElementById('shiftEnd').value = '08:30';
       document.getElementById('earlyEnd').value = '';
       document.getElementById('break1').checked = true;
       document.getElementById('lunch').checked = true;
       document.getElementById('break2').checked = true;
       document.getElementById('customBreak').value = '0';
-      document.getElementById('stowRatePPH').value = '260';
-      document.getElementById('efficiencyPercent').value = '85';
+      document.getElementById('stowRatePPH').value = '';
+      document.getElementById('efficiencyPercent').value = '';
       document.getElementById('inductedSoFar').value = '';
       document.getElementById('stowedSoFar').value = '';
       document.getElementById('remainingInduct').value = '';
