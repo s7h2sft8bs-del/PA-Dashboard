@@ -1189,6 +1189,56 @@
       color: var(--text-muted);
     }
 
+    /* 9 AM Row Styles */
+    .hourly-9am-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(139, 92, 246, 0.15);
+      border: 2px solid var(--purple);
+      border-radius: 10px;
+    }
+
+    .nine-am-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nine-am-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .nine-am-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .nine-am-stat.highlight-9am {
+      background: rgba(139, 92, 246, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--purple);
+    }
+
+    .nine-am-stat.highlight-9am .nine-am-value {
+      font-size: 2rem;
+      color: #A78BFA;
+    }
+
+    .nine-am-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+    }
+
     .finish-time-input {
       display: flex;
       align-items: center;
@@ -1345,17 +1395,76 @@
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
         text-align: center;
       }
 
+      .header-left {
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
       .header-right {
-        flex-direction: column;
-        gap: 1rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      .header-right .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.7rem;
+      }
+
+      .header-right .btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .btn-voice, .btn-report, .btn-break, .btn-reset, .btn-sync {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.75rem !important;
+      }
+
+      .btn-voice svg, .btn-report svg, .btn-break svg, .btn-reset svg, .btn-sync svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .sync-status {
+        font-size: 1rem;
+        padding: 0.25rem;
       }
 
       .header-time {
         text-align: center;
+        margin-top: 0.25rem;
+      }
+
+      .current-time {
+        font-size: 1.25rem;
+      }
+
+      .current-date {
+        font-size: 0.75rem;
+      }
+
+      .logo-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+
+      .logo-text {
+        font-size: 1rem;
+      }
+
+      .home-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
       }
 
       .staffing-section {
@@ -1368,6 +1477,69 @@
 
       .flow-required-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 480px) {
+      .header {
+        padding: 0.5rem;
+        gap: 0.4rem;
+      }
+
+      .header-left {
+        gap: 0.4rem;
+      }
+
+      .logo-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+      }
+
+      .logo-text {
+        font-size: 0.9rem;
+      }
+
+      .logo-text span {
+        font-size: 0.9rem;
+      }
+
+      .home-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+      }
+
+      .header-right {
+        gap: 0.4rem;
+      }
+
+      .btn-voice, .btn-report, .btn-break, .btn-reset, .btn-sync {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.65rem !important;
+        gap: 0.3rem !important;
+      }
+
+      .btn-voice svg, .btn-report svg, .btn-break svg, .btn-reset svg, .btn-sync svg {
+        width: 12px !important;
+        height: 12px !important;
+      }
+
+      .sync-status {
+        font-size: 0.85rem;
+      }
+
+      .current-time {
+        font-size: 1rem;
+      }
+
+      .live-indicator {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.5rem;
+      }
+
+      .container {
+        padding: 0.5rem;
       }
     }
 
@@ -3263,9 +3435,21 @@
           <span class="hourly-value" id="hourlyTimeLeft">0:00</span>
         </div>
         <div class="hourly-stat highlight">
-          <span class="hourly-label">Required Flow to Finish</span>
+          <span class="hourly-label">Req Flow to Finish</span>
           <span class="hourly-value" id="hourlyReqFlow">0</span>
           <span class="hourly-sub">TPH</span>
+        </div>
+      </div>
+      <!-- 9 AM Finish Row -->
+      <div class="hourly-9am-row">
+        <div class="nine-am-stat">
+          <span class="nine-am-label">⏰ Time to 9:00 AM:</span>
+          <span class="nine-am-value" id="timeTo9am">0:00</span>
+        </div>
+        <div class="nine-am-stat highlight-9am">
+          <span class="nine-am-label">📦 Required Stow Flow by 9 AM:</span>
+          <span class="nine-am-value" id="reqFlowBy9am">0</span>
+          <span class="nine-am-sub">TPH</span>
         </div>
       </div>
     </div>
@@ -3872,30 +4056,76 @@
         remainingStow = Math.max(0, totalVolume - stowedSoFar);
       }
       
-      // Calculate time remaining to target finish
-      const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
       const now = new Date();
-      const [finishHour, finishMin] = targetFinish.split(':').map(Number);
-      let finishTime = new Date(now);
-      finishTime.setHours(finishHour, finishMin, 0);
-      if (finishTime < now) finishTime.setDate(finishTime.getDate() + 1);
+      const currentHour = now.getHours();
       
-      const msRemaining = finishTime - now;
-      const hoursRemaining = Math.max(0, msRemaining / (1000 * 60 * 60));
+      // ===== TARGET FINISH TIME CALCULATION =====
+      const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
+      const [finishHour, finishMin] = targetFinish.split(':').map(Number);
+      
+      let finishTime = new Date(now);
+      finishTime.setHours(finishHour, finishMin, 0, 0);
+      
+      // Smart overnight detection for target
+      if (finishHour < 12) {
+        if (currentHour >= 12) {
+          finishTime.setDate(finishTime.getDate() + 1);
+        } else if (finishTime <= now) {
+          finishTime.setDate(finishTime.getDate() + 1);
+        }
+      }
+      
+      let msRemaining = finishTime - now;
+      let hoursRemaining = msRemaining / (1000 * 60 * 60);
+      
+      // Cap at 12 hours max
+      if (hoursRemaining > 12) hoursRemaining = 12;
+      if (hoursRemaining < 0) hoursRemaining = 0;
+      
       const hrs = Math.floor(hoursRemaining);
       const mins = Math.floor((hoursRemaining % 1) * 60);
       const timeLeftStr = `${hrs}:${String(mins).padStart(2, '0')}`;
       
-      // Calculate required flow to finish on time (based on remaining stow)
+      // Calculate required flow to finish on time
       const requiredFlow = hoursRemaining > 0 ? Math.round(remainingStow / hoursRemaining) : 0;
       
-      // Update display
+      // ===== 9 AM CALCULATION =====
+      let nineAMTime = new Date(now);
+      nineAMTime.setHours(9, 0, 0, 0);
+      
+      // If 9 AM already passed today (and it's AM), use tomorrow's 9 AM
+      // If it's PM, 9 AM is tomorrow
+      if (currentHour >= 12) {
+        nineAMTime.setDate(nineAMTime.getDate() + 1);
+      } else if (nineAMTime <= now) {
+        nineAMTime.setDate(nineAMTime.getDate() + 1);
+      }
+      
+      let msTo9am = nineAMTime - now;
+      let hoursTo9am = msTo9am / (1000 * 60 * 60);
+      
+      // Cap at 12 hours max
+      if (hoursTo9am > 12) hoursTo9am = 12;
+      if (hoursTo9am < 0) hoursTo9am = 0;
+      
+      const hrs9am = Math.floor(hoursTo9am);
+      const mins9am = Math.floor((hoursTo9am % 1) * 60);
+      const timeTo9amStr = `${hrs9am}:${String(mins9am).padStart(2, '0')}`;
+      
+      // Calculate required flow to finish by 9 AM
+      const reqFlowBy9am = hoursTo9am > 0 ? Math.round(remainingStow / hoursTo9am) : 0;
+      
+      // Update display - Target Time
       document.getElementById('hourlyTotalInducted').textContent = inductedSoFar.toLocaleString();
       document.getElementById('hourlyLeftInduct').textContent = remainingInduct.toLocaleString();
       document.getElementById('hourlyTotalStowed').textContent = stowedSoFar.toLocaleString();
       document.getElementById('hourlyLeftStow').textContent = remainingStow.toLocaleString();
       document.getElementById('hourlyTimeLeft').textContent = timeLeftStr;
       document.getElementById('hourlyReqFlow').textContent = requiredFlow.toLocaleString();
+      
+      // Update display - 9 AM
+      document.getElementById('timeTo9am').textContent = timeTo9amStr;
+      document.getElementById('reqFlowBy9am').textContent = reqFlowBy9am.toLocaleString();
     }
 
     // Copy hourly update to clipboard
