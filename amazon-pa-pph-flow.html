@@ -4247,15 +4247,24 @@
       const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
       const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
       
-      const remainingInduct = Math.max(0, totalVolume - inductedSoFar);
-      const remainingStow = Math.max(0, totalVolume - stowedSoFar);
+      // If induct is complete, use inducted amount as total
+      const effectiveTotal = inductCompleteData ? inductCompleteData.finalInducted : totalVolume;
+      
+      const remainingInduct = inductCompleteData ? 0 : Math.max(0, totalVolume - inductedSoFar);
+      const remainingStow = Math.max(0, effectiveTotal - stowedSoFar);
       
       document.getElementById('remainingInduct').value = remainingInduct;
       document.getElementById('remainingStow').value = remainingStow;
       document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
       
       // Update hourly display with calculated values
-      updateHourlyDisplay(inductedSoFar, stowedSoFar, remainingInduct, remainingStow);
+      if (inductCompleteData) {
+        // Recalculate final stow data
+        updateFinalStowDisplay();
+        updateHourlyDisplayAfterInductComplete();
+      } else {
+        updateHourlyDisplay(inductedSoFar, stowedSoFar, remainingInduct, remainingStow);
+      }
     }
 
     // ==================== INDUCT COMPLETE ====================
@@ -4313,12 +4322,7 @@
       };
       
       // Update display
-      document.getElementById('finalInducted').textContent = inductedSoFar.toLocaleString();
-      document.getElementById('finalAlreadyStowed').textContent = stowedSoFar.toLocaleString();
-      document.getElementById('finalLeftToStow').textContent = finalLeftToStow.toLocaleString();
-      document.getElementById('finalCrashedRolled').textContent = crashedRolled.toLocaleString();
-      document.getElementById('finalTimeTo9am').textContent = timeTo9amStr;
-      document.getElementById('finalStowFlow').textContent = finalStowFlow.toLocaleString();
+      updateFinalStowDisplay();
       
       // Show panel
       document.getElementById('finalStowPanel').style.display = 'block';
@@ -4335,6 +4339,63 @@
       
       // Update remaining stow to be based on inducted (not planned volume)
       document.getElementById('remainingStow').value = finalLeftToStow;
+      
+      // Update hourly display
+      updateHourlyDisplayAfterInductComplete();
+    }
+
+    function updateFinalStowDisplay() {
+      if (!inductCompleteData) return;
+      
+      // Recalculate based on current stowed
+      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
+      const finalLeftToStow = Math.max(0, inductCompleteData.finalInducted - stowedSoFar);
+      
+      // Recalculate time to 9 AM
+      const now = new Date();
+      const currentHour = now.getHours();
+      let nineAMTime = new Date(now);
+      nineAMTime.setHours(9, 0, 0, 0);
+      
+      if (currentHour >= 12) {
+        nineAMTime.setDate(nineAMTime.getDate() + 1);
+      } else if (nineAMTime <= now) {
+        nineAMTime.setDate(nineAMTime.getDate() + 1);
+      }
+      
+      let hoursTo9am = (nineAMTime - now) / (1000 * 60 * 60);
+      if (hoursTo9am > 12) hoursTo9am = 12;
+      if (hoursTo9am < 0) hoursTo9am = 0;
+      
+      const hrs9am = Math.floor(hoursTo9am);
+      const mins9am = Math.floor((hoursTo9am % 1) * 60);
+      const timeTo9amStr = `${hrs9am}:${String(mins9am).padStart(2, '0')}`;
+      
+      const finalStowFlow = hoursTo9am > 0 ? Math.round(finalLeftToStow / hoursTo9am) : 0;
+      
+      // Update saved data
+      inductCompleteData.alreadyStowed = stowedSoFar;
+      inductCompleteData.leftToStow = finalLeftToStow;
+      inductCompleteData.timeTo9am = timeTo9amStr;
+      inductCompleteData.hoursTo9am = hoursTo9am;
+      inductCompleteData.finalStowFlow = finalStowFlow;
+      
+      // Update display
+      document.getElementById('finalInducted').textContent = inductCompleteData.finalInducted.toLocaleString();
+      document.getElementById('finalAlreadyStowed').textContent = stowedSoFar.toLocaleString();
+      document.getElementById('finalLeftToStow').textContent = finalLeftToStow.toLocaleString();
+      document.getElementById('finalCrashedRolled').textContent = inductCompleteData.crashedRolled.toLocaleString();
+      document.getElementById('finalTimeTo9am').textContent = timeTo9amStr;
+      document.getElementById('finalStowFlow').textContent = finalStowFlow.toLocaleString();
+    }
+
+    function updateHourlyDisplayAfterInductComplete() {
+      if (!inductCompleteData) return;
+      
+      // Update the hourly display to show actual values
+      document.getElementById('hourlyLeftInduct').textContent = '0';
+      document.getElementById('hourlyLeftStow').textContent = inductCompleteData.leftToStow.toLocaleString();
+      document.getElementById('hourlyReqFlow').textContent = inductCompleteData.finalStowFlow.toLocaleString();
     }
 
     function undoInductComplete() {
@@ -4500,8 +4561,6 @@
       const totalInducted = document.getElementById('hourlyTotalInducted').textContent;
       const leftInduct = document.getElementById('hourlyLeftInduct').textContent;
       const totalStowed = document.getElementById('hourlyTotalStowed').textContent;
-      const leftStow = document.getElementById('hourlyLeftStow').textContent;
-      const requiredFlow = document.getElementById('hourlyReqFlow').textContent;
       const timeLeft = document.getElementById('hourlyTimeLeft').textContent;
       const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
       
@@ -4511,7 +4570,31 @@
       const h12 = h % 12 || 12;
       const targetFinishStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
       
-      const output = `📋 HOURLY UPDATE - ${timeStr}
+      let output;
+      
+      // Check if induct is complete
+      if (inductCompleteData) {
+        // Use actual inducted volume for calculations
+        const actualLeftToStow = inductCompleteData.leftToStow;
+        const finalStowFlow = inductCompleteData.finalStowFlow;
+        
+        output = `📋 HOURLY UPDATE - ${timeStr}
+🏁 INDUCT COMPLETE
+
+✅ Final Inducted: ${inductCompleteData.finalInducted.toLocaleString()}
+📦 Total Stowed: ${totalStowed}
+📦 Left to Stow: ${actualLeftToStow.toLocaleString()}
+🚫 Crashed/Rolled: ${inductCompleteData.crashedRolled.toLocaleString()}
+
+🎯 Target Finish: ${targetFinishStr}
+⏱️ Time Left: ${timeLeft}
+⚡ Required Flow to Finish: ${finalStowFlow.toLocaleString()} TPH`;
+      } else {
+        // Normal hourly update
+        const leftStow = document.getElementById('hourlyLeftStow').textContent;
+        const requiredFlow = document.getElementById('hourlyReqFlow').textContent;
+        
+        output = `📋 HOURLY UPDATE - ${timeStr}
 
 📦 Total Inducted: ${totalInducted}
 📦 Left to Induct: ${leftInduct}
@@ -4521,6 +4604,7 @@
 🎯 Target Finish: ${targetFinishStr}
 ⏱️ Time Left: ${timeLeft}
 ⚡ Required Flow to Finish: ${requiredFlow} TPH`;
+      }
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(output).then(() => {
