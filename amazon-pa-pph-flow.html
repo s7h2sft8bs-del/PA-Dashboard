@@ -6124,6 +6124,9 @@ ${dateStr}
     // Debounce save to avoid too many requests
     let saveTimeout;
     function debouncedCloudSave() {
+      // Don't save if reset is in progress
+      if (preventCloudLoad) return;
+      
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveToCloud, 2000); // Save 2 seconds after last change
     }
@@ -6133,6 +6136,7 @@ ${dateStr}
 
     // Save all form data to localStorage
     function saveAllData() {
+      // Don't auto-save if reset is in progress (but allow explicit saves)
       const data = {
         // Main volume
         totalVolume: document.getElementById('totalVolume').value,
@@ -6184,6 +6188,12 @@ ${dateStr}
 
     // Load all form data from localStorage
     function loadAllData() {
+      // Don't load if reset was just clicked
+      if (preventCloudLoad) {
+        console.log('Local load prevented after reset');
+        return;
+      }
+      
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return;
       
@@ -6369,9 +6379,11 @@ ${dateStr}
       calculateWIP();
       updateHourlyDisplay();
       
-      // IMPORTANT: Save empty data to cloud to overwrite old data
+      // IMPORTANT: Temporarily allow saves, then save empty data to cloud
+      preventCloudLoad = false;
       saveAllData();
       saveToCloud();
+      preventCloudLoad = true; // Re-enable protection
       
       // Update sync status
       document.getElementById('syncStatus').textContent = '☁️ Reset';
@@ -6387,6 +6399,8 @@ ${dateStr}
 
     // Auto-save on any input change
     document.addEventListener('input', function(e) {
+      if (preventCloudLoad) return; // Don't auto-save during reset
+      
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
         saveAllData();
         debouncedCloudSave(); // Also save to cloud
