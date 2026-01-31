@@ -647,6 +647,32 @@
       height: 20px;
     }
 
+    .btn-sync {
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-sync:hover {
+      background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
+      box-shadow: 0 4px 12px rgba(46, 160, 67, 0.4);
+    }
+
+    .btn-sync svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .sync-status {
+      font-size: 1.25rem;
+      padding: 0.5rem;
+      transition: color 0.3s;
+    }
+
     .btn-report {
       background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
       color: white;
@@ -2622,6 +2648,13 @@
         </svg>
         RESET
       </button>
+      <button class="btn btn-sync" onclick="loadFromCloud()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        </svg>
+        SYNC
+      </button>
+      <span id="syncStatus" class="sync-status">☁️</span>
       <div class="header-time">
         <div class="live-indicator">Live</div>
         <div class="current-time" id="currentTime">--:--:--</div>
@@ -5238,6 +5271,142 @@ ${dateStr}
       }
     }
 
+    // ==================== GOOGLE SHEETS SYNC ====================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybFEFYa9c3mVSWo0PHROF3-fYNSjT0sJsQd5QEMwAH-ByFWP35_Vktvr40uQm8jsJ5Ag/exec';
+    const PAGE_NAME = 'pph-flow-staffing';
+
+    // Save to Google Sheets
+    async function saveToCloud() {
+      const data = [
+        new Date().toISOString(),
+        PAGE_NAME,
+        document.getElementById('totalVolume').value || '',
+        document.getElementById('inductedSoFar').value || '',
+        document.getElementById('stowedSoFar').value || '',
+        document.getElementById('remainingInduct').value || '',
+        document.getElementById('remainingStow').value || '',
+        document.getElementById('sunriseVolume').value || '',
+        document.getElementById('samedayVolume').value || '',
+        document.getElementById('stowRatePPH').value || '260',
+        document.getElementById('shiftStart').value || '01:20',
+        document.getElementById('shiftEnd').value || '09:32',
+        document.getElementById('sunriseInducted').value || '',
+        document.getElementById('sunriseStowed').value || '',
+        document.getElementById('samedayInducted').value || '',
+        document.getElementById('samedayStowed').value || '',
+        document.getElementById('clusterA').value || '',
+        document.getElementById('clusterB').value || '',
+        document.getElementById('clusterC').value || '',
+        document.getElementById('clusterD').value || '',
+        document.getElementById('clusterE').value || '',
+        document.getElementById('clusterG').value || '',
+        document.getElementById('targetFinishTime').value || '08:00',
+        document.getElementById('efficiencyPercent').value || '85'
+      ];
+      
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(data))}`;
+        await fetch(url, { mode: 'no-cors' });
+        showSyncStatus('saved');
+      } catch (error) {
+        console.error('Cloud save error:', error);
+        showSyncStatus('error');
+      }
+    }
+
+    // Load from Google Sheets
+    async function loadFromCloud() {
+      try {
+        showSyncStatus('loading');
+        const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME}`;
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const data = result.data;
+          // data[0] = timestamp, data[1] = page name, data[2+] = values
+          if (data[2]) document.getElementById('totalVolume').value = data[2];
+          if (data[3]) document.getElementById('inductedSoFar').value = data[3];
+          if (data[4]) document.getElementById('stowedSoFar').value = data[4];
+          if (data[5]) document.getElementById('remainingInduct').value = data[5];
+          if (data[6]) document.getElementById('remainingStow').value = data[6];
+          if (data[7]) document.getElementById('sunriseVolume').value = data[7];
+          if (data[8]) document.getElementById('samedayVolume').value = data[8];
+          if (data[9]) document.getElementById('stowRatePPH').value = data[9];
+          if (data[10]) document.getElementById('shiftStart').value = data[10];
+          if (data[11]) document.getElementById('shiftEnd').value = data[11];
+          if (data[12]) document.getElementById('sunriseInducted').value = data[12];
+          if (data[13]) document.getElementById('sunriseStowed').value = data[13];
+          if (data[14]) document.getElementById('samedayInducted').value = data[14];
+          if (data[15]) document.getElementById('samedayStowed').value = data[15];
+          if (data[16]) document.getElementById('clusterA').value = data[16];
+          if (data[17]) document.getElementById('clusterB').value = data[17];
+          if (data[18]) document.getElementById('clusterC').value = data[18];
+          if (data[19]) document.getElementById('clusterD').value = data[19];
+          if (data[20]) document.getElementById('clusterE').value = data[20];
+          if (data[21]) document.getElementById('clusterG').value = data[21];
+          if (data[22]) document.getElementById('targetFinishTime').value = data[22];
+          if (data[23]) document.getElementById('efficiencyPercent').value = data[23];
+          
+          // Trigger calculations
+          calculateRunTime();
+          updateStats();
+          updateProgress();
+          calculateSameDay();
+          updateHourlyDisplay();
+          
+          showSyncStatus('loaded');
+        } else {
+          showSyncStatus('empty');
+        }
+      } catch (error) {
+        console.error('Cloud load error:', error);
+        showSyncStatus('error');
+      }
+    }
+
+    // Show sync status
+    function showSyncStatus(status) {
+      const indicator = document.getElementById('syncStatus');
+      if (!indicator) return;
+      
+      switch(status) {
+        case 'saved':
+          indicator.innerHTML = '☁️ Saved';
+          indicator.style.color = '#3FB950';
+          break;
+        case 'loading':
+          indicator.innerHTML = '☁️ Loading...';
+          indicator.style.color = '#FF9900';
+          break;
+        case 'loaded':
+          indicator.innerHTML = '☁️ Synced';
+          indicator.style.color = '#3FB950';
+          break;
+        case 'error':
+          indicator.innerHTML = '☁️ Offline';
+          indicator.style.color = '#F85149';
+          break;
+        case 'empty':
+          indicator.innerHTML = '☁️ No data';
+          indicator.style.color = '#8B949E';
+          break;
+      }
+      
+      // Fade out after 3 seconds
+      setTimeout(() => {
+        indicator.innerHTML = '☁️';
+        indicator.style.color = '#8B949E';
+      }, 3000);
+    }
+
+    // Debounce save to avoid too many requests
+    let saveTimeout;
+    function debouncedCloudSave() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(saveToCloud, 2000); // Save 2 seconds after last change
+    }
+
     // ==================== DATA PERSISTENCE ====================
     const STORAGE_KEY = 'pphFlowStaffingData';
 
@@ -5424,11 +5593,15 @@ ${dateStr}
     document.addEventListener('input', function(e) {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
         saveAllData();
+        debouncedCloudSave(); // Also save to cloud
       }
     });
 
     // Load saved data on page load
     loadAllData();
+    
+    // Try to load from cloud
+    loadFromCloud();
   </script>
 </body>
 </html>
