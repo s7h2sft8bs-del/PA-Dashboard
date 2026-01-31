@@ -1078,9 +1078,13 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       setTimeout(() => confirm.classList.remove('show'), 2000);
     }
 
+    let preventCloudLoad = false;
+
     // Clear all fields (now acts as Reset)
     function clearAll() {
       if (!confirm('Are you sure you want to reset all data?')) return;
+      
+      preventCloudLoad = true;
       
       localStorage.removeItem('preshiftPageData');
       localStorage.removeItem('preshiftData');
@@ -1091,7 +1095,21 @@ Pre-Shift Projected Hours = ${projectedHours}`;
           input.value = '';
         }
       });
+      
+      // Clear paste box
+      const pasteBox = document.getElementById('pasteBox');
+      if (pasteBox) pasteBox.value = '';
+      
       calculateAll();
+      
+      // Update sync status
+      const syncStatus = document.getElementById('syncStatus');
+      if (syncStatus) syncStatus.textContent = '☁️ Reset';
+      
+      // Re-enable cloud load after delay
+      setTimeout(() => { preventCloudLoad = false; }, 3000);
+      
+      alert('All data has been reset!');
     }
 
     // Save data to localStorage
@@ -1189,6 +1207,11 @@ Pre-Shift Projected Hours = ${projectedHours}`;
     }
 
     async function loadFromCloud() {
+      if (preventCloudLoad) {
+        console.log('Cloud load prevented after reset');
+        return;
+      }
+      
       try {
         showSyncStatus('loading');
         const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME}`;
