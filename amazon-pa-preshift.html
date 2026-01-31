@@ -113,6 +113,33 @@
       gap: 1.5rem;
     }
 
+    .btn-sync {
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-sync:hover {
+      background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
+      box-shadow: 0 4px 12px rgba(46, 160, 67, 0.4);
+    }
+
+    .sync-status {
+      font-size: 1.25rem;
+      padding: 0.5rem;
+      transition: color 0.3s;
+    }
+
     .header-time {
       text-align: right;
     }
@@ -574,6 +601,13 @@
       <div class="logo-text">Pre-Shift <span>Planning</span></div>
     </div>
     <div class="header-right">
+      <button class="btn btn-sync" onclick="loadFromCloud()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        </svg>
+        SYNC
+      </button>
+      <span id="syncStatus" class="sync-status">☁️</span>
       <div class="header-time">
         <div class="live-indicator">Live</div>
         <div class="current-time" id="currentTime">--:--:--</div>
@@ -1037,11 +1071,103 @@ Pre-Shift Projected Hours = ${projectedHours}`;
     }
 
     // Auto-save on input
-    document.addEventListener('input', saveData);
+    document.addEventListener('input', function() {
+      saveData();
+      debouncedCloudSave();
+    });
+
+    // ==================== GOOGLE SHEETS SYNC ====================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybFEFYa9c3mVSWo0PHROF3-fYNSjT0sJsQd5QEMwAH-ByFWP35_Vktvr40uQm8jsJ5Ag/exec';
+    const PAGE_NAME = 'preshift-planning';
+
+    async function saveToCloud() {
+      const data = [
+        new Date().toISOString(),
+        PAGE_NAME,
+        document.getElementById('rts').value || '',
+        document.getElementById('mnr').value || '',
+        document.getElementById('rolled').value || '',
+        document.getElementById('slam').value || '',
+        document.getElementById('sideline').value || '',
+        document.getElementById('schedule').value || '',
+        document.getElementById('softCap').value || '',
+        document.getElementById('lmcp').value || '',
+        document.getElementById('cube').value || '',
+        document.getElementById('fph').value || '',
+        document.getElementById('targetTPH').value || '90',
+        document.getElementById('indirectFactor').value || '1.17',
+        document.getElementById('hoursPerAA').value || '7.2'
+      ];
+      
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(data))}`;
+        await fetch(url, { mode: 'no-cors' });
+        showSyncStatus('saved');
+      } catch (error) {
+        console.error('Cloud save error:', error);
+      }
+    }
+
+    async function loadFromCloud() {
+      try {
+        showSyncStatus('loading');
+        const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME}`;
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const data = result.data;
+          if (data[2]) document.getElementById('rts').value = data[2];
+          if (data[3]) document.getElementById('mnr').value = data[3];
+          if (data[4]) document.getElementById('rolled').value = data[4];
+          if (data[5]) document.getElementById('slam').value = data[5];
+          if (data[6]) document.getElementById('sideline').value = data[6];
+          if (data[7]) document.getElementById('schedule').value = data[7];
+          if (data[8]) document.getElementById('softCap').value = data[8];
+          if (data[9]) document.getElementById('lmcp').value = data[9];
+          if (data[10]) document.getElementById('cube').value = data[10];
+          if (data[11]) document.getElementById('fph').value = data[11];
+          if (data[12]) document.getElementById('targetTPH').value = data[12];
+          if (data[13]) document.getElementById('indirectFactor').value = data[13];
+          if (data[14]) document.getElementById('hoursPerAA').value = data[14];
+          
+          calculateAll();
+          showSyncStatus('loaded');
+        } else {
+          showSyncStatus('empty');
+        }
+      } catch (error) {
+        console.error('Cloud load error:', error);
+        showSyncStatus('error');
+      }
+    }
+
+    function showSyncStatus(status) {
+      const indicator = document.getElementById('syncStatus');
+      if (!indicator) return;
+      
+      const colors = { saved: '#3FB950', loading: '#FF9900', loaded: '#3FB950', error: '#F85149', empty: '#8B949E' };
+      const labels = { saved: '☁️ Saved', loading: '☁️ Loading...', loaded: '☁️ Synced', error: '☁️ Offline', empty: '☁️ No data' };
+      
+      indicator.innerHTML = labels[status] || '☁️';
+      indicator.style.color = colors[status] || '#8B949E';
+      
+      setTimeout(() => {
+        indicator.innerHTML = '☁️';
+        indicator.style.color = '#8B949E';
+      }, 3000);
+    }
+
+    let saveTimeout;
+    function debouncedCloudSave() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(saveToCloud, 2000);
+    }
 
     // Initialize
     loadData();
     calculateAll();
+    loadFromCloud();
   </script>
 </body>
 </html>
