@@ -3837,15 +3837,15 @@
       document.getElementById('remainingStow').value = remainingStow;
       document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
       
-      // Update hourly display
-      updateHourlyDisplay();
+      // Update hourly display with calculated values
+      updateHourlyDisplay(inductedSoFar, stowedSoFar, remainingInduct, remainingStow);
     }
 
     // Update when user directly enters Remaining values
     function updateFromRemaining() {
       const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
-      const remainingInduct = parseInt(document.getElementById('remainingInduct').value) || 0;
-      const remainingStow = parseInt(document.getElementById('remainingStow').value) || 0;
+      const remainingInduct = parseInt(document.getElementById('remainingInduct').value.replace(/,/g, '')) || 0;
+      const remainingStow = parseInt(document.getElementById('remainingStow').value.replace(/,/g, '')) || 0;
       
       // Calculate inducted/stowed so far based on remaining
       const inductedSoFar = Math.max(0, totalVolume - remainingInduct);
@@ -3855,17 +3855,20 @@
       document.getElementById('stowedSoFar').value = stowedSoFar;
       document.getElementById('statRemainingVol').textContent = remainingInduct.toLocaleString();
       
-      // Update hourly display
-      updateHourlyDisplay();
+      // Update hourly display with calculated values
+      updateHourlyDisplay(inductedSoFar, stowedSoFar, remainingInduct, remainingStow);
     }
 
     // Update hourly display section
-    function updateHourlyDisplay() {
-      const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
-      const inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
-      const stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
-      const remainingInduct = parseInt(document.getElementById('remainingInduct').value) || 0;
-      const remainingStow = parseInt(document.getElementById('remainingStow').value) || 0;
+    function updateHourlyDisplay(inductedSoFar, stowedSoFar, remainingInduct, remainingStow) {
+      // If called without params, get values from DOM
+      if (inductedSoFar === undefined) {
+        const totalVolume = parseInt(document.getElementById('totalVolume').value) || 0;
+        inductedSoFar = parseInt(document.getElementById('inductedSoFar').value) || 0;
+        stowedSoFar = parseInt(document.getElementById('stowedSoFar').value) || 0;
+        remainingInduct = Math.max(0, totalVolume - inductedSoFar);
+        remainingStow = Math.max(0, totalVolume - stowedSoFar);
+      }
       
       // Calculate time remaining to target finish
       const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
@@ -3881,7 +3884,7 @@
       const mins = Math.floor((hoursRemaining % 1) * 60);
       const timeLeftStr = `${hrs}:${String(mins).padStart(2, '0')}`;
       
-      // Calculate required flow to finish on time
+      // Calculate required flow to finish on time (based on remaining stow)
       const requiredFlow = hoursRemaining > 0 ? Math.round(remainingStow / hoursRemaining) : 0;
       
       // Update display
