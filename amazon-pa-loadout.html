@@ -1917,8 +1917,36 @@ ${statusLine}`;
       document.getElementById('livePickEnd').value = '11:30';
       document.getElementById('actualPickRate').value = '125';
       
+      // Reset display values
+      document.getElementById('pickDuration').textContent = '0';
+      document.getElementById('pickersNeeded').textContent = '0';
+      document.getElementById('pickPS').textContent = '3';
+      document.getElementById('daAssists').textContent = '4';
+      document.getElementById('summaryOnPremise').textContent = '0';
+      document.getElementById('summaryLeaving').textContent = '0';
+      document.getElementById('summaryVTO').textContent = '0';
+      document.getElementById('summaryAttrition').textContent = '0';
+      document.getElementById('summaryReadys').textContent = '0';
+      document.getElementById('summaryVET').textContent = '0';
+      document.getElementById('pvaNeeded').textContent = '0';
+      document.getElementById('pvaActual').textContent = '0';
+      document.getElementById('pvaStatus').textContent = '--';
+      document.getElementById('leftToPick').textContent = '0';
+      document.getElementById('timeToFinish').textContent = '0:00';
+      document.getElementById('requiredUPH').textContent = '0';
+      document.getElementById('pickersToFinish').textContent = '0';
+      document.getElementById('statusCurrentPickers').textContent = '0';
+      document.getElementById('statusPickersNeeded').textContent = '0';
+      document.getElementById('pickerDiff').textContent = '0';
+      document.getElementById('liveVolume').textContent = '0';
+      document.getElementById('livePickedSoFar').textContent = '0';
+      
       calculateAll();
       updateLiveProgress();
+      
+      // IMPORTANT: Save empty data to cloud to overwrite old data
+      saveAllData();
+      saveToCloud();
       
       // Update sync status
       const syncStatus = document.getElementById('syncStatus');
