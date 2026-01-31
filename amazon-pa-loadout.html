@@ -1889,10 +1889,15 @@ ${statusLine}`;
       loadFromPPHFlow();
     }
 
+    let preventCloudLoad = false;
+
     function resetAllData() {
       if (!confirm('Are you sure you want to reset all data?')) return;
       
+      preventCloudLoad = true;
+      
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('loadOutPlanData');
       
       document.getElementById('plannedVolume').value = '';
       document.getElementById('plannedRate').value = '380';
@@ -1906,8 +1911,23 @@ ${statusLine}`;
       document.getElementById('midShiftAttrition').value = '';
       document.getElementById('incomingReadys').value = '';
       document.getElementById('incomingVET').value = '';
+      document.getElementById('pickedSoFar').value = '';
+      document.getElementById('currentPickers').value = '';
+      document.getElementById('actualStartTime').value = '09:00';
+      document.getElementById('livePickEnd').value = '11:30';
+      document.getElementById('actualPickRate').value = '125';
       
       calculateAll();
+      updateLiveProgress();
+      
+      // Update sync status
+      const syncStatus = document.getElementById('syncStatus');
+      if (syncStatus) syncStatus.textContent = '☁️ Reset';
+      
+      // Re-enable cloud load after delay
+      setTimeout(() => { preventCloudLoad = false; }, 3000);
+      
+      alert('All data has been reset!');
     }
 
     // ==================== GOOGLE SHEETS SYNC ====================
@@ -1942,6 +1962,11 @@ ${statusLine}`;
     }
 
     async function loadFromCloud() {
+      if (preventCloudLoad) {
+        console.log('Cloud load prevented after reset');
+        return;
+      }
+      
       try {
         showSyncStatus('loading');
         const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME_CLOUD}`;
