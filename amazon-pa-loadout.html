@@ -617,6 +617,253 @@
       overflow-y: auto;
     }
 
+    /* Live Progress Section */
+    .live-progress-section {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%);
+      border: 2px solid #EF4444;
+    }
+
+    .live-progress-section .section-title {
+      color: #EF4444;
+    }
+
+    .live-progress-section .section-title::before {
+      background: #EF4444;
+    }
+
+    .live-input-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .live-stats-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .live-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .live-stat .live-icon {
+      font-size: 1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    .live-stat .live-label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .live-stat .live-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .live-stat .live-value.orange { color: var(--amazon-orange); }
+    .live-stat .live-value.purple { color: #A78BFA; }
+    .live-stat .live-value.green { color: #10B981; }
+
+    .live-stat.highlight-live {
+      background: rgba(255, 153, 0, 0.2);
+      border: 2px solid var(--amazon-orange);
+    }
+
+    .live-stat.highlight-live .live-value.big {
+      font-size: 1.5rem;
+      color: var(--amazon-orange);
+    }
+
+    .live-stat.green-highlight {
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10B981;
+    }
+
+    .live-stat.green-highlight .live-value.big {
+      color: #10B981;
+    }
+
+    /* Picker Status Comparison */
+    .live-picker-status {
+      margin: 1rem 0;
+    }
+
+    .picker-comparison {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .picker-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .picker-box .picker-label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .picker-box .picker-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .picker-box.current {
+      border: 2px solid var(--amazon-blue-light);
+    }
+
+    .picker-box.current .picker-value {
+      color: var(--text-primary);
+    }
+
+    .picker-box.needed {
+      border: 2px solid var(--amazon-orange);
+    }
+
+    .picker-box.needed .picker-value {
+      color: var(--amazon-orange);
+    }
+
+    .picker-box.diff {
+      min-width: 140px;
+    }
+
+    .picker-box.diff.over {
+      background: rgba(63, 185, 80, 0.2);
+      border: 2px solid var(--success);
+    }
+
+    .picker-box.diff.over .picker-value {
+      color: var(--success);
+    }
+
+    .picker-box.diff.under {
+      background: rgba(248, 81, 73, 0.2);
+      border: 2px solid var(--danger);
+    }
+
+    .picker-box.diff.under .picker-value {
+      color: var(--danger);
+    }
+
+    .picker-box.diff.even {
+      background: rgba(139, 92, 246, 0.2);
+      border: 2px solid var(--purple);
+    }
+
+    .picker-box.diff.even .picker-value {
+      color: var(--purple);
+    }
+
+    .picker-vs {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .live-recommendation {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .live-recommendation.warning {
+      background: rgba(255, 153, 0, 0.2);
+      border: 1px solid var(--amazon-orange);
+      color: var(--amazon-orange);
+    }
+
+    .live-recommendation.danger {
+      background: rgba(248, 81, 73, 0.2);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+
+    .live-recommendation.success {
+      background: rgba(63, 185, 80, 0.2);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .btn-copy-live {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-live:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    @media (max-width: 600px) {
+      .picker-comparison {
+        gap: 0.5rem;
+      }
+      .picker-box {
+        min-width: 90px;
+        padding: 0.5rem 0.75rem;
+      }
+      .picker-box .picker-value {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .live-input-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .live-input-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .live-stat .live-value {
+        font-size: 1.1rem;
+      }
+      .live-stat.highlight-live .live-value.big {
+        font-size: 1.25rem;
+      }
+    }
+
     /* Buttons */
     .btn {
       background: var(--amazon-orange);
@@ -952,6 +1199,99 @@
       </div>
     </div>
 
+    <!-- Live Pick Progress Section -->
+    <div class="section live-progress-section">
+      <div class="section-header">
+        <h2 class="section-title">🔴 Live Pick Progress</h2>
+      </div>
+      
+      <div class="live-input-grid">
+        <div class="input-item">
+          <label>Actual Start Time</label>
+          <input type="time" id="actualStartTime" value="09:00" oninput="updateLiveProgress()">
+        </div>
+        <div class="input-item">
+          <label>Must Finish By</label>
+          <input type="time" id="livePickEnd" value="11:30" oninput="updateLiveProgress()">
+        </div>
+        <div class="input-item">
+          <label>Picked So Far</label>
+          <input type="number" id="pickedSoFar" placeholder="0" oninput="updateLiveProgress()">
+        </div>
+        <div class="input-item">
+          <label>Current Pickers</label>
+          <input type="number" id="currentPickers" placeholder="0" oninput="updateLiveProgress()">
+        </div>
+        <div class="input-item">
+          <label>Pick Rate (UPH)</label>
+          <input type="number" id="actualPickRate" placeholder="125" value="125" oninput="updateLiveProgress()">
+        </div>
+      </div>
+
+      <div class="live-stats-grid">
+        <div class="live-stat">
+          <span class="live-icon">📦</span>
+          <span class="live-label">Total Volume:</span>
+          <span class="live-value" id="liveVolume">0</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-icon">✅</span>
+          <span class="live-label">Picked So Far:</span>
+          <span class="live-value green" id="livePickedSoFar">0</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-icon">📦</span>
+          <span class="live-label">Left to Pick:</span>
+          <span class="live-value orange" id="leftToPick">0</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-icon">⏰</span>
+          <span class="live-label">Time Remaining:</span>
+          <span class="live-value purple" id="timeToFinish">0:00</span>
+        </div>
+        <div class="live-stat highlight-live">
+          <span class="live-icon">⚡</span>
+          <span class="live-label">Required UPH per Picker:</span>
+          <span class="live-value big" id="requiredUPH">0</span>
+        </div>
+        <div class="live-stat highlight-live green-highlight">
+          <span class="live-icon">👥</span>
+          <span class="live-label">Pickers Needed @ Standard Rate:</span>
+          <span class="live-value big" id="pickersToFinish">0</span>
+        </div>
+      </div>
+
+      <div class="live-picker-status" id="pickerStatus">
+        <div class="picker-comparison">
+          <div class="picker-box current">
+            <span class="picker-label">Current Pickers</span>
+            <span class="picker-value" id="statusCurrentPickers">0</span>
+          </div>
+          <div class="picker-vs">vs</div>
+          <div class="picker-box needed">
+            <span class="picker-label">Pickers Needed</span>
+            <span class="picker-value" id="statusPickersNeeded">0</span>
+          </div>
+          <div class="picker-box diff" id="pickerDiffBox">
+            <span class="picker-label" id="pickerDiffLabel">Difference</span>
+            <span class="picker-value" id="pickerDiff">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="live-recommendation" id="liveRecommendation">
+        Enter your current progress to see recommendations
+      </div>
+
+      <button class="btn btn-copy-live" onclick="copyLiveProgress()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        Copy Live Update
+      </button>
+      <span class="copy-confirm" id="liveCopyConfirm">✓ Copied!</span>
+    </div>
+
     <!-- Output Section -->
     <div class="section output-section">
       <div class="section-header">
@@ -1145,6 +1485,182 @@ Expected Pick HC PvA: ${pvaNeeded} v ${pvaActual}`;
       setTimeout(() => confirm.classList.remove('show'), 2000);
     }
 
+    // ==================== LIVE PICK PROGRESS ====================
+    function updateLiveProgress() {
+      const totalVolume = parseInt(document.getElementById('plannedVolume').value) || 0;
+      const pickedSoFar = parseInt(document.getElementById('pickedSoFar').value) || 0;
+      const currentPickers = parseInt(document.getElementById('currentPickers').value) || 0;
+      const pickRate = parseInt(document.getElementById('actualPickRate').value) || 125;
+      
+      // Get end time from Live section input (fallback to plan end time)
+      const livePickEnd = document.getElementById('livePickEnd');
+      const pickEndTime = livePickEnd ? livePickEnd.value : (document.getElementById('pickEnd').value || '11:30');
+      
+      // Update display values
+      document.getElementById('liveVolume').textContent = totalVolume.toLocaleString();
+      document.getElementById('livePickedSoFar').textContent = pickedSoFar.toLocaleString();
+      
+      // Calculate left to pick
+      const leftToPick = Math.max(0, totalVolume - pickedSoFar);
+      document.getElementById('leftToPick').textContent = leftToPick.toLocaleString();
+      
+      // Calculate time remaining to pick end
+      const now = new Date();
+      const [endHour, endMin] = pickEndTime.split(':').map(Number);
+      let endTime = new Date(now);
+      endTime.setHours(endHour, endMin, 0, 0);
+      
+      // If end time already passed today, assume it's for current context
+      if (endTime < now) {
+        endTime.setDate(endTime.getDate() + 1);
+      }
+      
+      let hoursRemaining = (endTime - now) / (1000 * 60 * 60);
+      // Cap at reasonable values
+      if (hoursRemaining > 12) hoursRemaining = 2.5; // Default to 2.5 hours
+      if (hoursRemaining < 0) hoursRemaining = 0;
+      
+      const hrs = Math.floor(hoursRemaining);
+      const mins = Math.floor((hoursRemaining % 1) * 60);
+      document.getElementById('timeToFinish').textContent = `${hrs}:${String(mins).padStart(2, '0')}`;
+      
+      // Calculate required UPH to finish with current pickers
+      let requiredUPH = 0;
+      if (currentPickers > 0 && hoursRemaining > 0) {
+        requiredUPH = Math.round(leftToPick / hoursRemaining / currentPickers);
+      }
+      document.getElementById('requiredUPH').textContent = requiredUPH.toLocaleString();
+      
+      // Calculate pickers needed to finish at standard rate
+      let pickersNeeded = 0;
+      if (hoursRemaining > 0 && pickRate > 0) {
+        pickersNeeded = Math.ceil(leftToPick / hoursRemaining / pickRate);
+      }
+      document.getElementById('pickersToFinish').textContent = pickersNeeded;
+      
+      // Update picker status comparison
+      document.getElementById('statusCurrentPickers').textContent = currentPickers;
+      document.getElementById('statusPickersNeeded').textContent = pickersNeeded;
+      
+      const pickerDiff = currentPickers - pickersNeeded;
+      const diffBox = document.getElementById('pickerDiffBox');
+      const diffLabel = document.getElementById('pickerDiffLabel');
+      const diffValue = document.getElementById('pickerDiff');
+      
+      if (pickerDiff > 0) {
+        diffLabel.textContent = 'Extra Pickers';
+        diffValue.textContent = '+' + pickerDiff;
+        diffBox.className = 'picker-box diff over';
+      } else if (pickerDiff < 0) {
+        diffLabel.textContent = 'Need More';
+        diffValue.textContent = pickerDiff;
+        diffBox.className = 'picker-box diff under';
+      } else {
+        diffLabel.textContent = 'Perfect Match';
+        diffValue.textContent = '0';
+        diffBox.className = 'picker-box diff even';
+      }
+      
+      // Generate recommendation
+      const recEl = document.getElementById('liveRecommendation');
+      
+      if (leftToPick === 0) {
+        recEl.textContent = '✅ Pick complete!';
+        recEl.className = 'live-recommendation success';
+      } else if (currentPickers === 0 || pickedSoFar === 0) {
+        recEl.textContent = 'Enter your current progress to see recommendations';
+        recEl.className = 'live-recommendation';
+      } else if (requiredUPH > pickRate * 1.3) {
+        // Need more than 130% of normal rate
+        const extraPickers = pickersNeeded - currentPickers;
+        recEl.innerHTML = `⚠️ <strong>BEHIND PACE!</strong> Need ${requiredUPH} UPH per picker (vs ${pickRate} standard).<br>Add <strong>${Math.max(0, extraPickers)} more pickers</strong> to finish on time!`;
+        recEl.className = 'live-recommendation danger';
+      } else if (requiredUPH > pickRate) {
+        recEl.innerHTML = `⚡ Slightly behind. Need ${requiredUPH} UPH per picker. Consider adding 1-2 pickers.`;
+        recEl.className = 'live-recommendation warning';
+      } else if (currentPickers > pickersNeeded + 2) {
+        const extraPickers = currentPickers - pickersNeeded;
+        recEl.innerHTML = `✅ Ahead of pace! Can VTO <strong>${extraPickers} pickers</strong> if needed.`;
+        recEl.className = 'live-recommendation success';
+      } else {
+        recEl.textContent = `✅ On track! ${requiredUPH} UPH needed per picker, ${pickRate} UPH standard.`;
+        recEl.className = 'live-recommendation success';
+      }
+      
+      // Save to storage
+      saveAllData();
+    }
+
+    function copyLiveProgress() {
+      const totalVolume = parseInt(document.getElementById('plannedVolume').value) || 0;
+      const pickedSoFar = parseInt(document.getElementById('pickedSoFar').value) || 0;
+      const currentPickers = parseInt(document.getElementById('currentPickers').value) || 0;
+      const leftToPick = document.getElementById('leftToPick').textContent;
+      const timeToFinish = document.getElementById('timeToFinish').textContent;
+      const requiredUPH = document.getElementById('requiredUPH').textContent;
+      const pickersNeeded = document.getElementById('pickersToFinish').textContent;
+      const pickerDiff = document.getElementById('pickerDiff').textContent;
+      
+      // Get end time from Live section
+      const livePickEnd = document.getElementById('livePickEnd');
+      const pickEnd = livePickEnd ? livePickEnd.value : (document.getElementById('pickEnd').value || '11:30');
+      
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      
+      // Format pick end time
+      const [h, m] = pickEnd.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      const pickEndStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      
+      // Determine status
+      let statusLine = '';
+      const diffNum = parseInt(pickerDiff) || 0;
+      if (diffNum > 0) {
+        statusLine = `✅ AHEAD - Can VTO ${diffNum} pickers`;
+      } else if (diffNum < 0) {
+        statusLine = `⚠️ BEHIND - Need ${Math.abs(diffNum)} more pickers`;
+      } else {
+        statusLine = `✅ ON TRACK - Perfect staffing`;
+      }
+      
+      const output = `🚚 PICK UPDATE - ${timeStr}
+
+📦 Total Volume: ${totalVolume.toLocaleString()}
+✅ Picked So Far: ${pickedSoFar.toLocaleString()}
+📦 Left to Pick: ${leftToPick}
+
+⏰ Must Finish By: ${pickEndStr}
+⏱️ Time Remaining: ${timeToFinish}
+
+👥 Current Pickers: ${currentPickers}
+👥 Pickers Needed: ${pickersNeeded}
+⚡ Required UPH/Picker: ${requiredUPH}
+
+${statusLine}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(output).then(() => {
+          showLiveCopyConfirm();
+        });
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = output;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showLiveCopyConfirm();
+      }
+    }
+
+    function showLiveCopyConfirm() {
+      const confirm = document.getElementById('liveCopyConfirm');
+      confirm.classList.add('show');
+      setTimeout(() => confirm.classList.remove('show'), 2000);
+    }
+
     // Clear all
     function clearAll() {
       document.getElementById('plannedVolume').value = '';
@@ -1159,11 +1675,18 @@ Expected Pick HC PvA: ${pvaNeeded} v ${pvaActual}`;
       document.getElementById('midShiftAttrition').value = '';
       document.getElementById('incomingReadys').value = '';
       document.getElementById('incomingVET').value = '';
+      // Live progress fields
+      document.getElementById('actualStartTime').value = '09:00';
+      document.getElementById('pickedSoFar').value = '';
+      document.getElementById('currentPickers').value = '';
+      document.getElementById('actualPickRate').value = '125';
       calculateAll();
+      updateLiveProgress();
     }
 
     // Initialize
     calculateAll();
+    updateLiveProgress();
     loadFromPPHFlow();
     
     // Poll for updates every 2 seconds (real-time sync with PPH Flow)
