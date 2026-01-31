@@ -6315,21 +6315,63 @@ ${dateStr}
       // Clear all actual HC inputs
       document.querySelectorAll('.actual-input').forEach(input => input.value = '');
       
-      // Reset display values
+      // Reset ALL display values to 0
       document.getElementById('effectiveStowPPH').textContent = '0';
       document.getElementById('statTotalVolume').textContent = '0';
       document.getElementById('summaryVolume').textContent = '0';
       document.getElementById('statTotalStaff').textContent = '0';
       document.getElementById('statRequiredTPH').textContent = '0';
       document.getElementById('statRemainingVol').textContent = '0';
+      document.getElementById('summaryTPH').textContent = '0';
+      document.getElementById('summaryTotalHC').textContent = '0';
       
-      // Trigger all calculations
+      // Reset Dock Side calculations
+      document.getElementById('c1WaterspiderPlan').textContent = '0';
+      document.getElementById('c1LineloaderPlan').textContent = '0';
+      document.getElementById('c1InductersPlan').textContent = '0';
+      document.getElementById('c1PushersPlan').textContent = '0';
+      document.getElementById('c1DockTotal').textContent = '0';
+      
+      // Reset Sort Side calculations
+      document.getElementById('recStowFlow').textContent = '0';
+      document.getElementById('recEffectiveRate').textContent = '0';
+      document.getElementById('recStowers').textContent = '0';
+      document.getElementById('c1SortTotal').textContent = '0';
+      
+      // Reset Total HC breakdown
+      document.getElementById('recInductHC').textContent = '0';
+      document.getElementById('recStowHC').textContent = '0';
+      document.getElementById('recTotalHC').textContent = '0';
+      
+      // Reset staffing summary
+      document.getElementById('recWaterspider').textContent = '0';
+      document.getElementById('recLineloader').textContent = '0';
+      document.getElementById('recInducters').textContent = '0';
+      document.getElementById('recPushers').textContent = '0';
+      document.getElementById('recDiverter').textContent = '0';
+      document.getElementById('recInductTotal').textContent = '0';
+      
+      // Reset hourly update displays
+      document.getElementById('hourlyTotalInducted').textContent = '0';
+      document.getElementById('hourlyLeftInduct').textContent = '0';
+      document.getElementById('hourlyTotalStowed').textContent = '0';
+      document.getElementById('hourlyLeftStow').textContent = '0';
+      document.getElementById('hourlyReqFlow').textContent = '0';
+      document.getElementById('hourlyTimeLeft').textContent = '0:00';
+      document.getElementById('nineAMTimeLeft').textContent = '0:00';
+      document.getElementById('nineAMReqFlow').textContent = '0';
+      
+      // Trigger all calculations (they will see empty inputs and reset)
       calculateRunTime();
       updateStats();
       updateProgress();
       calculateSameDay();
       calculateWIP();
       updateHourlyDisplay();
+      
+      // IMPORTANT: Save empty data to cloud to overwrite old data
+      saveAllData();
+      saveToCloud();
       
       // Update sync status
       document.getElementById('syncStatus').textContent = '☁️ Reset';
