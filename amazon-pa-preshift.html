@@ -171,6 +171,83 @@
       border: 1px solid var(--border-color);
     }
 
+    .paste-section {
+      border: 2px solid var(--purple);
+    }
+
+    .paste-section .section-header {
+      border-bottom-color: var(--purple);
+    }
+
+    .paste-section .section-title::before {
+      background: var(--purple);
+    }
+
+    .paste-box-container {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .paste-box {
+      flex: 1;
+      min-width: 300px;
+      height: 150px;
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+
+    .paste-box:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+    }
+
+    .paste-box::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-parse {
+      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-parse:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .parse-confirm {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      align-self: center;
+    }
+
+    .parse-confirm.show {
+      opacity: 1;
+    }
+
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -506,6 +583,32 @@
   </header>
 
   <div class="container">
+    <!-- Quick Paste Section -->
+    <div class="section paste-section">
+      <div class="section-header">
+        <h2 class="section-title">📋 Quick Paste from Slack</h2>
+      </div>
+      <div class="paste-box-container">
+        <textarea id="pasteBox" class="paste-box" placeholder="Paste your pre-shift data here...
+
+Example:
+Pre-shift 01/31/2026:
+
+RTS: 1000
+MNR: 2155
+Rolled: 0
+SLAM: 44563
+..." oninput="parsePreshiftPaste()"></textarea>
+        <button class="btn btn-parse" onclick="parsePreshiftPaste()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+          </svg>
+          Auto-Fill Fields
+        </button>
+        <span class="parse-confirm" id="parseConfirm">✓ Fields populated!</span>
+      </div>
+    </div>
+
     <!-- Raw Data Entry -->
     <div class="section">
       <div class="section-header">
@@ -665,6 +768,73 @@ Pre-Shift Projected Hours = 0
     }
     setInterval(updateTime, 1000);
     updateTime();
+
+    // Parse pasted pre-shift data
+    function parsePreshiftPaste() {
+      const pasteBox = document.getElementById('pasteBox');
+      const text = pasteBox.value;
+      
+      if (!text.trim()) return;
+      
+      // Parse each line looking for field: value patterns
+      const lines = text.split('\n');
+      let foundFields = 0;
+      
+      lines.forEach(line => {
+        // Match patterns like "RTS: 1000" or "C1 Volume: 48369"
+        const match = line.match(/^([A-Za-z0-9\s\(\)]+):\s*([\d.]+)/);
+        if (match) {
+          const fieldName = match[1].trim().toLowerCase();
+          const value = match[2];
+          
+          // Map field names to input IDs
+          if (fieldName === 'rts') {
+            document.getElementById('rts').value = value;
+            foundFields++;
+          } else if (fieldName === 'mnr') {
+            document.getElementById('mnr').value = value;
+            foundFields++;
+          } else if (fieldName === 'rolled') {
+            document.getElementById('rolled').value = value;
+            foundFields++;
+          } else if (fieldName === 'slam') {
+            document.getElementById('slam').value = value;
+            foundFields++;
+          } else if (fieldName === 'sideline') {
+            document.getElementById('sideline').value = value;
+            foundFields++;
+          } else if (fieldName === 'schedule') {
+            document.getElementById('schedule').value = value;
+            foundFields++;
+          } else if (fieldName === 'soft cap') {
+            document.getElementById('softCap').value = value;
+            foundFields++;
+          } else if (fieldName === 'lmcp') {
+            document.getElementById('lmcp').value = value;
+            foundFields++;
+          } else if (fieldName === 'cube') {
+            document.getElementById('cube').value = value;
+            foundFields++;
+          } else if (fieldName === 'fph') {
+            document.getElementById('fph').value = value;
+            foundFields++;
+          }
+        }
+      });
+      
+      if (foundFields > 0) {
+        // Trigger calculation
+        calculateAll();
+        
+        // Show confirmation
+        const confirm = document.getElementById('parseConfirm');
+        confirm.classList.add('show');
+        setTimeout(() => confirm.classList.remove('show'), 2000);
+        
+        // Save data
+        saveData();
+      }
+    }
 
     // Calculate all values
     function calculateAll() {
