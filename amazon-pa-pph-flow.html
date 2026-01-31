@@ -6031,6 +6031,12 @@ ${dateStr}
 
     // Load from Google Sheets
     async function loadFromCloud() {
+      // Don't load if reset was just clicked
+      if (preventCloudLoad) {
+        console.log('Cloud load prevented after reset');
+        return;
+      }
+      
       try {
         showSyncStatus('loading');
         const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME}`;
@@ -6244,14 +6250,31 @@ ${dateStr}
     }
 
     // Reset all data
+    let preventCloudLoad = false; // Flag to prevent cloud reload after reset
+
     function resetAllData() {
       if (!confirm('Are you sure you want to reset all data? This cannot be undone.')) {
         return;
       }
       
-      // Clear localStorage
+      // Set flag to prevent cloud from reloading
+      preventCloudLoad = true;
+      
+      // Clear ALL localStorage for this page
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem('flowStaffingData');
+      localStorage.removeItem('pphFlowStaffingData');
+      
+      // Clear induct complete data
+      inductCompleteData = null;
+      document.getElementById('finalStowPanel').style.display = 'none';
+      const btn = document.getElementById('inductCompleteBtn');
+      if (btn) {
+        btn.classList.remove('completed');
+        btn.innerHTML = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg> INDUCT COMPLETE`;
+      }
       
       // Reset all inputs to defaults
       document.getElementById('totalVolume').value = '';
@@ -6292,6 +6315,14 @@ ${dateStr}
       // Clear all actual HC inputs
       document.querySelectorAll('.actual-input').forEach(input => input.value = '');
       
+      // Reset display values
+      document.getElementById('effectiveStowPPH').textContent = '0';
+      document.getElementById('statTotalVolume').textContent = '0';
+      document.getElementById('summaryVolume').textContent = '0';
+      document.getElementById('statTotalStaff').textContent = '0';
+      document.getElementById('statRequiredTPH').textContent = '0';
+      document.getElementById('statRemainingVol').textContent = '0';
+      
       // Trigger all calculations
       calculateRunTime();
       updateStats();
@@ -6300,8 +6331,16 @@ ${dateStr}
       calculateWIP();
       updateHourlyDisplay();
       
+      // Update sync status
+      document.getElementById('syncStatus').textContent = '☁️ Reset';
+      
+      // Re-enable cloud load after a short delay
+      setTimeout(() => {
+        preventCloudLoad = false;
+      }, 3000);
+      
       // Show confirmation
-      alert('All data has been reset.');
+      alert('All data has been reset!');
     }
 
     // Auto-save on any input change
@@ -6315,8 +6354,10 @@ ${dateStr}
     // Load saved data on page load
     loadAllData();
     
-    // Try to load from cloud
-    loadFromCloud();
+    // Try to load from cloud (but respect prevent flag)
+    if (!preventCloudLoad) {
+      loadFromCloud();
+    }
   </script>
 </body>
 </html>
