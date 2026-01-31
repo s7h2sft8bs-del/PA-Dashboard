@@ -1100,7 +1100,17 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       const pasteBox = document.getElementById('pasteBox');
       if (pasteBox) pasteBox.value = '';
       
+      // Reset display values
+      document.getElementById('totalVolume').textContent = '0';
+      document.getElementById('plannedHC').textContent = '0';
+      document.getElementById('directHours').textContent = '0';
+      document.getElementById('plannedHours').textContent = '0';
+      
       calculateAll();
+      
+      // IMPORTANT: Save empty data to cloud to overwrite old data
+      saveData();
+      saveToCloud();
       
       // Update sync status
       const syncStatus = document.getElementById('syncStatus');
