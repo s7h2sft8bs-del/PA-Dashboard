@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Same Day Operations - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-orange-dark: #E88B00;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --bg-card-alt: #1C2128;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+      --sunrise: #F59E0B;
+      --sameday-am: #EC4899;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--sunrise);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--sunrise) 0%, var(--sameday-am) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .logo-text .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--sunrise);
+    }
+
+    .logo-text .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-sync {
+      background: var(--amazon-teal);
+      color: white;
+    }
+
+    .btn-sync:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-reset {
+      background: var(--bg-card-alt);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-reset:hover {
+      background: var(--danger);
+    }
+
+    .btn-copy {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-copy:hover {
+      filter: brightness(1.1);
+    }
+
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Current Time */
+    .time-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .current-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .update-time {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-card.sunrise {
+      border-color: var(--sunrise);
+      border-width: 2px;
+    }
+
+    .section-card.sameday-am {
+      border-color: var(--sameday-am);
+      border-width: 2px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title.sunrise {
+      color: var(--sunrise);
+    }
+
+    .section-title.sameday-am {
+      color: var(--sameday-am);
+    }
+
+    .section-badge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .section-badge.sunrise {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--sunrise);
+      border: 1px solid var(--sunrise);
+    }
+
+    .section-badge.sameday-am {
+      background: rgba(236, 72, 153, 0.2);
+      color: var(--sameday-am);
+      border: 1px solid var(--sameday-am);
+    }
+
+    /* Staffing Grid */
+    .staffing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .staff-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .staff-item.highlight {
+      border-color: var(--amazon-orange);
+      background: rgba(255, 153, 0, 0.1);
+    }
+
+    .staff-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .staff-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .staff-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: var(--amazon-orange);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .staff-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+    }
+
+    /* Volume Section */
+    .volume-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .volume-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .volume-card.sunrise {
+      border-color: var(--sunrise);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .volume-card.sameday-am {
+      border-color: var(--sameday-am);
+      background: rgba(236, 72, 153, 0.05);
+    }
+
+    .volume-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .volume-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .volume-value.sunrise {
+      color: var(--sunrise);
+    }
+
+    .volume-value.sameday-am {
+      color: var(--sameday-am);
+    }
+
+    .volume-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.6rem;
+      color: var(--text-primary);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .volume-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+    }
+
+    .volume-input.sunrise:focus {
+      border-color: var(--sunrise);
+    }
+
+    .volume-input.sameday-am:focus {
+      border-color: var(--sameday-am);
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      margin-top: 1rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+
+    .progress-fill.sunrise {
+      background: linear-gradient(90deg, var(--sunrise) 0%, #FBBF24 100%);
+    }
+
+    .progress-fill.sameday-am {
+      background: linear-gradient(90deg, var(--sameday-am) 0%, #F472B6 100%);
+    }
+
+    /* Remaining Section */
+    .remaining-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .remaining-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .remaining-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .remaining-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--warning);
+    }
+
+    /* Copy Output */
+    .output-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .output-text {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* Total Summary */
+    .total-bar {
+      background: linear-gradient(135deg, var(--amazon-orange) 0%, var(--amazon-orange-dark) 100%);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .total-label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--amazon-blue);
+    }
+
+    .total-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--amazon-blue);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0.75rem 1rem;
+      }
+
+      .staffing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .volume-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .staff-value, .volume-value {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Home
+      </a>
+      <div class="logo">
+        <div class="logo-icon">☀️</div>
+        <div class="logo-text">
+          <div class="title">Same Day Operations</div>
+          <div class="subtitle">Sunrise & AM SSD Tracking</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-sync" onclick="pullFromPPHFlow()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        PULL DATA
+      </button>
+      <button class="btn btn-reset" onclick="resetAll()">RESET</button>
+      <button class="btn btn-copy" onclick="copyOutput()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+        </svg>
+        COPY
+      </button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Time Bar -->
+    <div class="time-bar">
+      <div class="current-time" id="currentTime">--:--</div>
+      <div class="update-time">Last updated: <span id="lastUpdate">--</span></div>
+    </div>
+
+    <!-- SSD Staffing -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title" style="color: var(--amazon-orange);">
+          <span>👥</span> Same Day Staffing
+        </div>
+        <span class="section-badge sunrise">PULLED FROM PPH FLOW</span>
+      </div>
+      
+      <div class="staffing-grid">
+        <div class="staff-item">
+          <div class="staff-label">Pick to Buffer</div>
+          <input type="number" class="staff-input" id="p2bCount" placeholder="0" oninput="updateOutput()">
+        </div>
+        <div class="staff-item">
+          <div class="staff-label">Inducters</div>
+          <input type="number" class="staff-input" id="inducterCount" placeholder="0" oninput="updateOutput()">
+        </div>
+        <div class="staff-item">
+          <div class="staff-label">Pushers</div>
+          <input type="number" class="staff-input" id="pusherCount" placeholder="0" oninput="updateOutput()">
+        </div>
+        <div class="staff-item">
+          <div class="staff-label">Stowers</div>
+          <input type="number" class="staff-input" id="stowerCount" placeholder="0" oninput="updateOutput()">
+        </div>
+        <div class="staff-item">
+          <div class="staff-label">Lines Inducting</div>
+          <input type="number" class="staff-input" id="linesCount" placeholder="0" oninput="updateOutput()">
+        </div>
+        <div class="staff-item">
+          <div class="staff-label">Yard Assist</div>
+          <input type="number" class="staff-input" id="yardAssistCount" placeholder="0" oninput="updateOutput()">
+        </div>
+      </div>
+
+      <div class="total-bar">
+        <div class="total-label">Total SSD Headcount</div>
+        <div class="total-value" id="totalSSDHC">0</div>
+      </div>
+    </div>
+
+    <!-- Sunrise SSD -->
+    <div class="section-card sunrise">
+      <div class="section-header">
+        <div class="section-title sunrise">
+          <span>🌅</span> Sunrise SSD
+        </div>
+        <span class="section-badge sunrise">DEADLINE: 5:00 AM</span>
+      </div>
+      
+      <div class="volume-grid">
+        <div class="volume-card sunrise">
+          <div class="volume-label">Total Volume</div>
+          <input type="number" class="volume-input sunrise" id="sunriseVolume" placeholder="0" oninput="calculateProgress('sunrise')">
+        </div>
+        <div class="volume-card sunrise">
+          <div class="volume-label">Inducted</div>
+          <input type="number" class="volume-input sunrise" id="sunriseInducted" placeholder="0" oninput="calculateProgress('sunrise')">
+        </div>
+        <div class="volume-card sunrise">
+          <div class="volume-label">Stowed</div>
+          <input type="number" class="volume-input sunrise" id="sunriseStowed" placeholder="0" oninput="calculateProgress('sunrise')">
+        </div>
+      </div>
+
+      <div class="remaining-grid">
+        <div class="remaining-item">
+          <div class="remaining-label">Left to Induct</div>
+          <div class="remaining-value" id="sunriseLeftInduct">0</div>
+        </div>
+        <div class="remaining-item">
+          <div class="remaining-label">Left to Stow</div>
+          <div class="remaining-value" id="sunriseLeftStow">0</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Induct Progress</span>
+          <span id="sunriseInductPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill sunrise" id="sunriseInductBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Stow Progress</span>
+          <span id="sunriseStowPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill sunrise" id="sunriseStowBar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AM Same Day -->
+    <div class="section-card sameday-am">
+      <div class="section-header">
+        <div class="section-title sameday-am">
+          <span>☀️</span> AM Same Day
+        </div>
+        <span class="section-badge sameday-am">DEADLINE: 9:00 AM</span>
+      </div>
+      
+      <div class="volume-grid">
+        <div class="volume-card sameday-am">
+          <div class="volume-label">Total Volume</div>
+          <input type="number" class="volume-input sameday-am" id="amVolume" placeholder="0" oninput="calculateProgress('am')">
+        </div>
+        <div class="volume-card sameday-am">
+          <div class="volume-label">Inducted</div>
+          <input type="number" class="volume-input sameday-am" id="amInducted" placeholder="0" oninput="calculateProgress('am')">
+        </div>
+        <div class="volume-card sameday-am">
+          <div class="volume-label">Stowed</div>
+          <input type="number" class="volume-input sameday-am" id="amStowed" placeholder="0" oninput="calculateProgress('am')">
+        </div>
+      </div>
+
+      <div class="remaining-grid">
+        <div class="remaining-item">
+          <div class="remaining-label">Left to Induct</div>
+          <div class="remaining-value" id="amLeftInduct">0</div>
+        </div>
+        <div class="remaining-item">
+          <div class="remaining-label">Left to Stow</div>
+          <div class="remaining-value" id="amLeftStow">0</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Induct Progress</span>
+          <span id="amInductPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill sameday-am" id="amInductBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Stow Progress</span>
+          <span id="amStowPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill sameday-am" id="amStowBar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copy Output -->
+    <div class="output-section">
+      <div class="section-header">
+        <div class="section-title" style="color: var(--success);">
+          <span>📤</span> Slack Update
+        </div>
+      </div>
+      <div class="output-text" id="outputText">Click "PULL DATA" to load values from PPH Flow page.</div>
+    </div>
+  </div>
+
+  <script>
+    // Update current time
+    function updateTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      document.getElementById('currentTime').textContent = timeStr;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Pull data from PPH Flow localStorage
+    function pullFromPPHFlow() {
+      // Try to get data from PPH Flow page
+      const flowData = localStorage.getItem('pphFlowStaffingData');
+      
+      if (flowData) {
+        try {
+          const data = JSON.parse(flowData);
+          
+          // Sunrise data
+          if (data.sunriseVolume) document.getElementById('sunriseVolume').value = data.sunriseVolume;
+          if (data.sunriseInducted) document.getElementById('sunriseInducted').value = data.sunriseInducted;
+          if (data.sunriseStowed) document.getElementById('sunriseStowed').value = data.sunriseStowed;
+          
+          // AM Same Day data
+          if (data.samedayVolume) document.getElementById('amVolume').value = data.samedayVolume;
+          if (data.samedayInducted) document.getElementById('amInducted').value = data.samedayInducted;
+          if (data.samedayStowed) document.getElementById('amStowed').value = data.samedayStowed;
+          
+          calculateProgress('sunrise');
+          calculateProgress('am');
+          
+        } catch(e) {
+          console.error('Error parsing flow data:', e);
+        }
+      }
+
+      // Try to get SSD staffing from flow staffing data
+      const staffingData = localStorage.getItem('flowStaffingData');
+      if (staffingData) {
+        try {
+          const data = JSON.parse(staffingData);
+          // These would be populated if saved from PPH Flow
+        } catch(e) {}
+      }
+
+      // Update last update time
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+      });
+
+      updateOutput();
+      saveData();
+    }
+
+    // Calculate progress for sunrise or am
+    function calculateProgress(type) {
+      const volume = parseInt(document.getElementById(`${type}Volume`).value) || 0;
+      const inducted = parseInt(document.getElementById(`${type}Inducted`).value) || 0;
+      const stowed = parseInt(document.getElementById(`${type}Stowed`).value) || 0;
+
+      const leftInduct = Math.max(0, volume - inducted);
+      const leftStow = Math.max(0, volume - stowed);
+
+      const inductPercent = volume > 0 ? Math.min(100, Math.round((inducted / volume) * 100)) : 0;
+      const stowPercent = volume > 0 ? Math.min(100, Math.round((stowed / volume) * 100)) : 0;
+
+      // Update displays based on type
+      const prefix = type === 'sunrise' ? 'sunrise' : 'am';
+      
+      document.getElementById(`${prefix}LeftInduct`).textContent = leftInduct.toLocaleString();
+      document.getElementById(`${prefix}LeftStow`).textContent = leftStow.toLocaleString();
+      document.getElementById(`${prefix}InductPercent`).textContent = `${inductPercent}%`;
+      document.getElementById(`${prefix}StowPercent`).textContent = `${stowPercent}%`;
+      document.getElementById(`${prefix}InductBar`).style.width = `${inductPercent}%`;
+      document.getElementById(`${prefix}StowBar`).style.width = `${stowPercent}%`;
+
+      updateTotalHC();
+      updateOutput();
+      saveData();
+    }
+
+    // Update total SSD headcount
+    function updateTotalHC() {
+      const p2b = parseInt(document.getElementById('p2bCount').value) || 0;
+      const inducters = parseInt(document.getElementById('inducterCount').value) || 0;
+      const pushers = parseInt(document.getElementById('pusherCount').value) || 0;
+      const stowers = parseInt(document.getElementById('stowerCount').value) || 0;
+      const yardAssist = parseInt(document.getElementById('yardAssistCount').value) || 0;
+
+      const total = p2b + inducters + pushers + stowers + yardAssist;
+      document.getElementById('totalSSDHC').textContent = total;
+    }
+
+    // Update output for Slack
+    function updateOutput() {
+      updateTotalHC();
+      
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      // Staffing
+      const p2b = document.getElementById('p2bCount').value || '0';
+      const inducters = document.getElementById('inducterCount').value || '0';
+      const pushers = document.getElementById('pusherCount').value || '0';
+      const stowers = document.getElementById('stowerCount').value || '0';
+      const lines = document.getElementById('linesCount').value || '0';
+      const yardAssist = document.getElementById('yardAssistCount').value || '0';
+      const totalHC = document.getElementById('totalSSDHC').textContent;
+
+      // Sunrise
+      const sunriseVol = document.getElementById('sunriseVolume').value || '0';
+      const sunriseInd = document.getElementById('sunriseInducted').value || '0';
+      const sunriseStow = document.getElementById('sunriseStowed').value || '0';
+      const sunriseLeftInd = document.getElementById('sunriseLeftInduct').textContent;
+      const sunriseLeftStow = document.getElementById('sunriseLeftStow').textContent;
+      const sunriseIndPct = document.getElementById('sunriseInductPercent').textContent;
+      const sunriseStowPct = document.getElementById('sunriseStowPercent').textContent;
+
+      // AM
+      const amVol = document.getElementById('amVolume').value || '0';
+      const amInd = document.getElementById('amInducted').value || '0';
+      const amStow = document.getElementById('amStowed').value || '0';
+      const amLeftInd = document.getElementById('amLeftInduct').textContent;
+      const amLeftStow = document.getElementById('amLeftStow').textContent;
+      const amIndPct = document.getElementById('amInductPercent').textContent;
+      const amStowPct = document.getElementById('amStowPercent').textContent;
+
+      let output = `☀️ SAME DAY UPDATE - ${timeStr}\n`;
+      output += `━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+      
+      output += `👥 SSD STAFFING:\n`;
+      output += `• Pick to Buffer: ${p2b}\n`;
+      output += `• Inducters: ${inducters}\n`;
+      output += `• Pushers: ${pushers}\n`;
+      output += `• Stowers: ${stowers}\n`;
+      output += `• Lines Inducting: ${lines}\n`;
+      output += `• Yard Assist: ${yardAssist}\n`;
+      output += `• Total HC: ${totalHC}\n\n`;
+
+      output += `🌅 SUNRISE SSD (Deadline: 5:00 AM):\n`;
+      output += `• Volume: ${parseInt(sunriseVol).toLocaleString()}\n`;
+      output += `• Inducted: ${parseInt(sunriseInd).toLocaleString()} (${sunriseIndPct})\n`;
+      output += `• Stowed: ${parseInt(sunriseStow).toLocaleString()} (${sunriseStowPct})\n`;
+      output += `• Left to Induct: ${sunriseLeftInd}\n`;
+      output += `• Left to Stow: ${sunriseLeftStow}\n\n`;
+
+      output += `☀️ AM SAME DAY (Deadline: 9:00 AM):\n`;
+      output += `• Volume: ${parseInt(amVol).toLocaleString()}\n`;
+      output += `• Inducted: ${parseInt(amInd).toLocaleString()} (${amIndPct})\n`;
+      output += `• Stowed: ${parseInt(amStow).toLocaleString()} (${amStowPct})\n`;
+      output += `• Left to Induct: ${amLeftInd}\n`;
+      output += `• Left to Stow: ${amLeftStow}\n`;
+
+      document.getElementById('outputText').textContent = output;
+    }
+
+    // Copy output
+    function copyOutput() {
+      const text = document.getElementById('outputText').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+        }, 2000);
+      });
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      const data = {
+        p2bCount: document.getElementById('p2bCount').value,
+        inducterCount: document.getElementById('inducterCount').value,
+        pusherCount: document.getElementById('pusherCount').value,
+        stowerCount: document.getElementById('stowerCount').value,
+        linesCount: document.getElementById('linesCount').value,
+        yardAssistCount: document.getElementById('yardAssistCount').value,
+        sunriseVolume: document.getElementById('sunriseVolume').value,
+        sunriseInducted: document.getElementById('sunriseInducted').value,
+        sunriseStowed: document.getElementById('sunriseStowed').value,
+        amVolume: document.getElementById('amVolume').value,
+        amInducted: document.getElementById('amInducted').value,
+        amStowed: document.getElementById('amStowed').value,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('sameDayData', JSON.stringify(data));
+    }
+
+    // Load saved data
+    function loadData() {
+      const saved = localStorage.getItem('sameDayData');
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        
+        // Check if recent (within 24 hours)
+        if (data.timestamp) {
+          const savedTime = new Date(data.timestamp);
+          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
+          if (hoursDiff > 24) return;
+        }
+
+        if (data.p2bCount) document.getElementById('p2bCount').value = data.p2bCount;
+        if (data.inducterCount) document.getElementById('inducterCount').value = data.inducterCount;
+        if (data.pusherCount) document.getElementById('pusherCount').value = data.pusherCount;
+        if (data.stowerCount) document.getElementById('stowerCount').value = data.stowerCount;
+        if (data.linesCount) document.getElementById('linesCount').value = data.linesCount;
+        if (data.yardAssistCount) document.getElementById('yardAssistCount').value = data.yardAssistCount;
+        if (data.sunriseVolume) document.getElementById('sunriseVolume').value = data.sunriseVolume;
+        if (data.sunriseInducted) document.getElementById('sunriseInducted').value = data.sunriseInducted;
+        if (data.sunriseStowed) document.getElementById('sunriseStowed').value = data.sunriseStowed;
+        if (data.amVolume) document.getElementById('amVolume').value = data.amVolume;
+        if (data.amInducted) document.getElementById('amInducted').value = data.amInducted;
+        if (data.amStowed) document.getElementById('amStowed').value = data.amStowed;
+
+        calculateProgress('sunrise');
+        calculateProgress('am');
+        updateOutput();
+      } catch(e) {
+        console.error('Error loading same day data:', e);
+      }
+    }
+
+    // Reset all
+    function resetAll() {
+      if (!confirm('Reset all Same Day data?')) return;
+
+      localStorage.removeItem('sameDayData');
+
+      document.querySelectorAll('input').forEach(input => input.value = '');
+      
+      document.getElementById('totalSSDHC').textContent = '0';
+      document.getElementById('sunriseLeftInduct').textContent = '0';
+      document.getElementById('sunriseLeftStow').textContent = '0';
+      document.getElementById('sunriseInductPercent').textContent = '0%';
+      document.getElementById('sunriseStowPercent').textContent = '0%';
+      document.getElementById('sunriseInductBar').style.width = '0%';
+      document.getElementById('sunriseStowBar').style.width = '0%';
+      document.getElementById('amLeftInduct').textContent = '0';
+      document.getElementById('amLeftStow').textContent = '0';
+      document.getElementById('amInductPercent').textContent = '0%';
+      document.getElementById('amStowPercent').textContent = '0%';
+      document.getElementById('amInductBar').style.width = '0%';
+      document.getElementById('amStowBar').style.width = '0%';
+
+      updateOutput();
+    }
+
+    // Initialize
+    loadData();
+    updateOutput();
+  </script>
+</body>
+</html>
