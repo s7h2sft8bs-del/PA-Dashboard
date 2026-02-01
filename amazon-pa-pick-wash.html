@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pick Wash - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-orange-dark: #E88B00;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --bg-card-alt: #1C2128;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--purple);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--purple);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .logo-text .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .logo-text .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-reset {
+      background: var(--bg-card-alt);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-reset:hover {
+      background: var(--danger);
+    }
+
+    .btn-copy {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-copy:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-sync {
+      background: var(--amazon-teal);
+      color: white;
+    }
+
+    .btn-sync:hover {
+      filter: brightness(1.1);
+    }
+
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-badge {
+      background: var(--purple);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* PvA Grid */
+    .pva-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .pva-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .pva-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pva-values {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .pva-planned, .pva-actual {
+      flex: 1;
+    }
+
+    .pva-planned-label, .pva-actual-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .pva-planned-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--amazon-orange);
+    }
+
+    .pva-vs {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .pva-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .pva-input:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+
+    .pva-input.good {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .pva-input.warning {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .pva-input.bad {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* Headcount Row */
+    .hc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .hc-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .hc-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .hc-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: var(--amazon-orange);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .hc-input:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+
+    /* Time Percentages */
+    .time-section {
+      margin-top: 1rem;
+    }
+
+    .time-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .time-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .toggle-100 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-dark);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    .toggle-100 input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--success);
+    }
+
+    .toggle-100 label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .time-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    .time-item.complete {
+      border-color: var(--success);
+      background: rgba(63, 185, 80, 0.1);
+    }
+
+    .time-item.incomplete {
+      border-color: var(--danger);
+      background: rgba(248, 81, 73, 0.1);
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .time-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.25rem;
+    }
+
+    .time-input:focus {
+      outline: none;
+    }
+
+    .time-input.complete {
+      color: var(--success);
+    }
+
+    .time-input.incomplete {
+      color: var(--danger);
+    }
+
+    /* Additional Metrics */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .metric-item.highlight {
+      border-color: var(--danger);
+      background: rgba(248, 81, 73, 0.1);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: var(--text-primary);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .metric-input:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+
+    .metric-input.crash {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    /* Summary */
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--bg-dark);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .summary-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .summary-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    /* Copy Output */
+    .output-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .output-text {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0.75rem 1rem;
+      }
+
+      .logo-text .title {
+        font-size: 1.25rem;
+      }
+
+      .pva-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Home
+      </a>
+      <div class="logo">
+        <div class="logo-icon">🎯</div>
+        <div class="logo-text">
+          <div class="title">Pick Wash</div>
+          <div class="subtitle">End of Shift PvA</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-sync" onclick="loadFromOtherPages()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        PULL DATA
+      </button>
+      <button class="btn btn-reset" onclick="resetAll()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        RESET
+      </button>
+      <button class="btn btn-copy" onclick="copyOutput()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+        </svg>
+        COPY
+      </button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Volume & Rate PvA -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📊</span> Volume & Rate PvA
+        </div>
+        <span class="section-badge">PLANNED vs ACTUAL</span>
+      </div>
+      
+      <div class="pva-grid">
+        <!-- Planned Volume -->
+        <div class="pva-item">
+          <div class="pva-label">Planned Volume</div>
+          <div class="pva-values">
+            <div class="pva-planned">
+              <div class="pva-planned-label">PLANNED</div>
+              <div class="pva-planned-value" id="plannedVolumeDisplay">0</div>
+            </div>
+            <div class="pva-vs">vs</div>
+            <div class="pva-actual">
+              <div class="pva-actual-label">ACTUAL</div>
+              <input type="number" class="pva-input" id="actualVolume" placeholder="0" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Planned Rate -->
+        <div class="pva-item">
+          <div class="pva-label">Planned Rate (PPH)</div>
+          <div class="pva-values">
+            <div class="pva-planned">
+              <div class="pva-planned-label">PLANNED</div>
+              <div class="pva-planned-value" id="plannedRateDisplay">380</div>
+            </div>
+            <div class="pva-vs">vs</div>
+            <div class="pva-actual">
+              <div class="pva-actual-label">ACTUAL</div>
+              <input type="number" class="pva-input" id="actualRate" placeholder="0" step="0.01" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pick Planned Hours -->
+        <div class="pva-item">
+          <div class="pva-label">Pick Planned Hours</div>
+          <div class="pva-values">
+            <div class="pva-planned">
+              <div class="pva-planned-label">PLANNED</div>
+              <div class="pva-planned-value" id="plannedHoursDisplay">0</div>
+            </div>
+            <div class="pva-vs">vs</div>
+            <div class="pva-actual">
+              <div class="pva-actual-label">ACTUAL</div>
+              <input type="number" class="pva-input" id="actualHours" placeholder="0" step="0.01" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Planned Pickers -->
+        <div class="pva-item">
+          <div class="pva-label">Planned Pickers</div>
+          <div class="pva-values">
+            <div class="pva-planned">
+              <div class="pva-planned-label">PLANNED</div>
+              <div class="pva-planned-value" id="plannedPickersDisplay">0</div>
+            </div>
+            <div class="pva-vs">vs</div>
+            <div class="pva-actual">
+              <div class="pva-actual-label">ACTUAL</div>
+              <input type="number" class="pva-input" id="actualPickers" placeholder="0" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Headcount -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>👥</span> Headcount
+        </div>
+      </div>
+      
+      <div class="hc-grid">
+        <div class="hc-item">
+          <div class="hc-label">DA's</div>
+          <input type="number" class="hc-input" id="daCount" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="hc-item">
+          <div class="hc-label">TC's</div>
+          <input type="number" class="hc-input" id="tcCount" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="hc-item">
+          <div class="hc-label">Problem Solve</div>
+          <input type="number" class="hc-input" id="psCount" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="hc-item">
+          <div class="hc-label">Total HC</div>
+          <div class="hc-input" id="totalHC" style="background: var(--bg-dark); border-color: var(--amazon-orange);">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Percentages -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>⏰</span> Load Out Times
+        </div>
+      </div>
+      
+      <div class="time-section">
+        <div class="time-header">
+          <div class="time-title">Compliance Percentages</div>
+          <div class="toggle-100">
+            <input type="checkbox" id="toggle100" onchange="setAll100()">
+            <label for="toggle100">Set All to 100%</label>
+          </div>
+        </div>
+        
+        <div class="time-grid" id="timeGrid">
+          <!-- Times will be populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Metrics -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📈</span> Additional Metrics
+        </div>
+      </div>
+      
+      <div class="metrics-grid">
+        <div class="metric-item highlight">
+          <div class="metric-label">🚫 CRASH Volume</div>
+          <input type="number" class="metric-input crash" id="crashVolume" placeholder="0" oninput="calculateAll()">
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">🧹 5S Hours</div>
+          <input type="number" class="metric-input" id="fiveSHours" placeholder="0" step="0.01" oninput="calculateAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Copy Output -->
+    <div class="output-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📤</span> Copy Output
+        </div>
+      </div>
+      <div class="output-text" id="outputText">Click "PULL DATA" to load planned values from Pre-Shift and Load Out pages.</div>
+    </div>
+  </div>
+
+  <script>
+    // Default pick times from load out
+    const defaultTimes = [
+      '09:50', '09:55', '10:15', '10:20', '10:40', 
+      '10:45', '11:05', '11:10', '11:30', '11:35'
+    ];
+
+    let timeData = {};
+
+    // Initialize
+    function init() {
+      initTimeGrid();
+      loadFromLocalStorage();
+      loadFromOtherPages();
+      calculateAll();
+    }
+
+    function initTimeGrid() {
+      const grid = document.getElementById('timeGrid');
+      grid.innerHTML = '';
+      
+      defaultTimes.forEach(time => {
+        timeData[time] = 100;
+        
+        const div = document.createElement('div');
+        div.className = 'time-item complete';
+        div.id = `time-${time.replace(':', '')}`;
+        div.innerHTML = `
+          <div class="time-label">${time}</div>
+          <input type="number" class="time-input complete" 
+                 id="input-${time.replace(':', '')}" 
+                 value="100" 
+                 min="0" max="100"
+                 oninput="updateTimeValue('${time}', this.value)">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">%</span>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function updateTimeValue(time, value) {
+      const numValue = parseInt(value) || 0;
+      timeData[time] = numValue;
+      
+      const container = document.getElementById(`time-${time.replace(':', '')}`);
+      const input = document.getElementById(`input-${time.replace(':', '')}`);
+      
+      if (numValue === 100) {
+        container.className = 'time-item complete';
+        input.className = 'time-input complete';
+      } else {
+        container.className = 'time-item incomplete';
+        input.className = 'time-input incomplete';
+      }
+      
+      // Uncheck the toggle if any value is not 100
+      const allComplete = Object.values(timeData).every(v => v === 100);
+      document.getElementById('toggle100').checked = allComplete;
+      
+      calculateAll();
+    }
+
+    function setAll100() {
+      const isChecked = document.getElementById('toggle100').checked;
+      
+      if (isChecked) {
+        defaultTimes.forEach(time => {
+          timeData[time] = 100;
+          const input = document.getElementById(`input-${time.replace(':', '')}`);
+          const container = document.getElementById(`time-${time.replace(':', '')}`);
+          
+          if (input) {
+            input.value = 100;
+            input.className = 'time-input complete';
+          }
+          if (container) {
+            container.className = 'time-item complete';
+          }
+        });
+        
+        calculateAll();
+      }
+    }
+
+    function loadFromOtherPages() {
+      // Try to load from Pre-Shift data (planned volume)
+      const preshiftData = localStorage.getItem('preshiftData');
+      if (preshiftData) {
+        try {
+          const data = JSON.parse(preshiftData);
+          if (data.c1Volume) {
+            document.getElementById('plannedVolumeDisplay').textContent = parseInt(data.c1Volume).toLocaleString();
+          }
+        } catch(e) {}
+      }
+
+      // Try to load from Load Out data
+      const loadoutData = localStorage.getItem('loadOutPlanData');
+      if (loadoutData) {
+        try {
+          const data = JSON.parse(loadoutData);
+          if (data.plannedVolume) {
+            // Use load out volume as actual (final loaded)
+            document.getElementById('actualVolume').value = data.plannedVolume;
+          }
+          if (data.pickersNeeded) {
+            document.getElementById('plannedPickersDisplay').textContent = data.pickersNeeded;
+          }
+        } catch(e) {}
+      }
+
+      // Also check for direct load out form data
+      const loadoutFormData = localStorage.getItem('loadout-plan');
+      if (loadoutFormData) {
+        try {
+          const data = JSON.parse(loadoutFormData);
+          if (data.plannedVolume) {
+            document.getElementById('plannedVolumeDisplay').textContent = parseInt(data.plannedVolume).toLocaleString();
+          }
+          if (data.pickersNeeded) {
+            document.getElementById('plannedPickersDisplay').textContent = data.pickersNeeded;
+          }
+        } catch(e) {}
+      }
+
+      // Calculate planned hours from volume and rate
+      calculatePlannedHours();
+      calculateAll();
+    }
+
+    function calculatePlannedHours() {
+      const plannedVolumeText = document.getElementById('plannedVolumeDisplay').textContent;
+      const plannedVolume = parseInt(plannedVolumeText.replace(/,/g, '')) || 0;
+      const plannedRate = parseFloat(document.getElementById('plannedRateDisplay').textContent) || 380;
+      
+      if (plannedVolume > 0 && plannedRate > 0) {
+        const plannedHours = (plannedVolume / plannedRate).toFixed(2);
+        document.getElementById('plannedHoursDisplay').textContent = plannedHours;
+      }
+    }
+
+    function calculateAll() {
+      // Calculate Total HC
+      const da = parseInt(document.getElementById('daCount').value) || 0;
+      const tc = parseInt(document.getElementById('tcCount').value) || 0;
+      const ps = parseInt(document.getElementById('psCount').value) || 0;
+      const actualPickers = parseInt(document.getElementById('actualPickers').value) || 0;
+      
+      const totalHC = actualPickers + da + tc + ps;
+      document.getElementById('totalHC').textContent = totalHC;
+
+      // Style the actual inputs based on comparison
+      styleComparison('actualVolume', 'plannedVolumeDisplay');
+      styleComparisonRate('actualRate', 'plannedRateDisplay');
+      styleComparison('actualHours', 'plannedHoursDisplay', true); // Lower is better for hours
+      styleComparison('actualPickers', 'plannedPickersDisplay', true); // Lower is better
+
+      updateOutput();
+      saveToLocalStorage();
+    }
+
+    function styleComparison(inputId, displayId, lowerIsBetter = false) {
+      const input = document.getElementById(inputId);
+      const displayText = document.getElementById(displayId).textContent;
+      const planned = parseFloat(displayText.replace(/,/g, '')) || 0;
+      const actual = parseFloat(input.value) || 0;
+
+      input.classList.remove('good', 'warning', 'bad');
+      
+      if (actual === 0) return;
+
+      if (lowerIsBetter) {
+        if (actual <= planned) {
+          input.classList.add('good');
+        } else if (actual <= planned * 1.1) {
+          input.classList.add('warning');
+        } else {
+          input.classList.add('bad');
+        }
+      } else {
+        if (actual >= planned) {
+          input.classList.add('good');
+        } else if (actual >= planned * 0.9) {
+          input.classList.add('warning');
+        } else {
+          input.classList.add('bad');
+        }
+      }
+    }
+
+    function styleComparisonRate(inputId, displayId) {
+      const input = document.getElementById(inputId);
+      const displayText = document.getElementById(displayId).textContent;
+      const planned = parseFloat(displayText) || 380;
+      const actual = parseFloat(input.value) || 0;
+
+      input.classList.remove('good', 'warning', 'bad');
+      
+      if (actual === 0) return;
+
+      if (actual >= planned * 0.95) {
+        input.classList.add('good');
+      } else if (actual >= planned * 0.85) {
+        input.classList.add('warning');
+      } else {
+        input.classList.add('bad');
+      }
+    }
+
+    function updateOutput() {
+      const plannedVolume = document.getElementById('plannedVolumeDisplay').textContent;
+      const actualVolume = document.getElementById('actualVolume').value || '0';
+      const plannedRate = document.getElementById('plannedRateDisplay').textContent;
+      const actualRate = document.getElementById('actualRate').value || '0';
+      const plannedHours = document.getElementById('plannedHoursDisplay').textContent;
+      const actualHours = document.getElementById('actualHours').value || '0';
+      const plannedPickers = document.getElementById('plannedPickersDisplay').textContent;
+      const actualPickers = document.getElementById('actualPickers').value || '0';
+      
+      const da = document.getElementById('daCount').value || '0';
+      const tc = document.getElementById('tcCount').value || '0';
+      const ps = document.getElementById('psCount').value || '0';
+      const totalHC = document.getElementById('totalHC').textContent;
+      
+      const crashVolume = document.getElementById('crashVolume').value || '0';
+      const fiveSHours = document.getElementById('fiveSHours').value || '0';
+
+      let output = `🎯 Pick Wash\n`;
+      output += `━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      output += `Planned volume: ${plannedVolume} v ${parseInt(actualVolume).toLocaleString()}\n`;
+      output += `Planned rate: ${plannedRate} PPH v ${actualRate}\n`;
+      output += `Pick Planned hours: ${plannedHours} v ${actualHours}\n\n`;
+      output += `Planned pickers: ${plannedPickers} v ${actualPickers}\n`;
+      output += `DA's: ${da}\n`;
+      output += `TC's: ${tc}\n`;
+      output += `Problem Solve: ${ps}\n`;
+      output += `Total headcount: ${totalHC}\n\n`;
+
+      // Time percentages
+      defaultTimes.forEach(time => {
+        const value = timeData[time] || 100;
+        output += `${time}: ${value}%\n`;
+      });
+
+      output += `\nCRASH Volume: ${crashVolume}\n`;
+      output += `5S: hours ${fiveSHours}\n`;
+
+      document.getElementById('outputText').textContent = output;
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('outputText').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      });
+    }
+
+    function saveToLocalStorage() {
+      const data = {
+        actualVolume: document.getElementById('actualVolume').value,
+        actualRate: document.getElementById('actualRate').value,
+        actualHours: document.getElementById('actualHours').value,
+        actualPickers: document.getElementById('actualPickers').value,
+        daCount: document.getElementById('daCount').value,
+        tcCount: document.getElementById('tcCount').value,
+        psCount: document.getElementById('psCount').value,
+        crashVolume: document.getElementById('crashVolume').value,
+        fiveSHours: document.getElementById('fiveSHours').value,
+        timeData: timeData,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('pickWashData', JSON.stringify(data));
+    }
+
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('pickWashData');
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        
+        // Check if data is recent (within 24 hours)
+        if (data.timestamp) {
+          const savedTime = new Date(data.timestamp);
+          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
+          if (hoursDiff > 24) return;
+        }
+
+        if (data.actualVolume) document.getElementById('actualVolume').value = data.actualVolume;
+        if (data.actualRate) document.getElementById('actualRate').value = data.actualRate;
+        if (data.actualHours) document.getElementById('actualHours').value = data.actualHours;
+        if (data.actualPickers) document.getElementById('actualPickers').value = data.actualPickers;
+        if (data.daCount) document.getElementById('daCount').value = data.daCount;
+        if (data.tcCount) document.getElementById('tcCount').value = data.tcCount;
+        if (data.psCount) document.getElementById('psCount').value = data.psCount;
+        if (data.crashVolume) document.getElementById('crashVolume').value = data.crashVolume;
+        if (data.fiveSHours) document.getElementById('fiveSHours').value = data.fiveSHours;
+        
+        if (data.timeData) {
+          timeData = data.timeData;
+          Object.keys(timeData).forEach(time => {
+            const input = document.getElementById(`input-${time.replace(':', '')}`);
+            const container = document.getElementById(`time-${time.replace(':', '')}`);
+            if (input) {
+              input.value = timeData[time];
+              if (timeData[time] === 100) {
+                input.className = 'time-input complete';
+                if (container) container.className = 'time-item complete';
+              } else {
+                input.className = 'time-input incomplete';
+                if (container) container.className = 'time-item incomplete';
+              }
+            }
+          });
+        }
+      } catch(e) {
+        console.error('Error loading pick wash data:', e);
+      }
+    }
+
+    function resetAll() {
+      if (!confirm('Reset all Pick Wash data?')) return;
+      
+      localStorage.removeItem('pickWashData');
+      
+      document.getElementById('actualVolume').value = '';
+      document.getElementById('actualRate').value = '';
+      document.getElementById('actualHours').value = '';
+      document.getElementById('actualPickers').value = '';
+      document.getElementById('daCount').value = '';
+      document.getElementById('tcCount').value = '';
+      document.getElementById('psCount').value = '';
+      document.getElementById('crashVolume').value = '';
+      document.getElementById('fiveSHours').value = '';
+      document.getElementById('totalHC').textContent = '0';
+      
+      // Reset all inputs styling
+      document.querySelectorAll('.pva-input').forEach(input => {
+        input.classList.remove('good', 'warning', 'bad');
+      });
+      
+      // Reset time grid
+      initTimeGrid();
+      document.getElementById('toggle100').checked = false;
+      
+      calculateAll();
+    }
+
+    // Initialize on page load
+    init();
+  </script>
+</body>
+</html>
