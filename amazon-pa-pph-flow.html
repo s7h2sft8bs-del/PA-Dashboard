@@ -5344,9 +5344,12 @@ Stow Flow Needed: ${stowFlow} TPH
       const ssdRequiredFlow = Math.max(sunriseFlow, samedayFlow);
       
       // Calculate SSD staffing - P2B and Stowers only (pulled from Sort Side)
-      // P2B minimum is 6
-      const ssdP2BCalc = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.pickToBuffer) : 0;
-      const ssdP2B = Math.max(6, ssdP2BCalc); // Minimum 6 P2B
+      // P2B minimum is 6 ONLY when there's actual SSD volume
+      let ssdP2B = 0;
+      if (totalSSDVolume > 0) {
+        const ssdP2BCalc = ssdRequiredFlow > 0 ? Math.ceil(ssdRequiredFlow / PPH.pickToBuffer) : 0;
+        ssdP2B = Math.max(6, ssdP2BCalc); // Minimum 6 P2B when active
+      }
       
       // Stowers using efficiency
       const stowRatePPH = parseFloat(document.getElementById('stowRatePPH').value) || 260;
@@ -6377,6 +6380,17 @@ ${dateStr}
       document.getElementById('recPushers').textContent = '0';
       document.getElementById('recDiverter').textContent = '0';
       document.getElementById('recInductTotal').textContent = '0';
+      
+      // Reset SSD Staffing
+      document.getElementById('ssdP2B').textContent = '0';
+      document.getElementById('ssdStowers').textContent = '0';
+      document.getElementById('ssdTotalHC').textContent = '0';
+      document.getElementById('pullFromC1').textContent = '0';
+      
+      // Reset C1 Adjusted
+      document.getElementById('originalC1Sort').textContent = '0';
+      document.getElementById('pulledForSSD').textContent = '0';
+      document.getElementById('remainingC1Sort').textContent = '0';
       
       // Reset hourly update displays
       document.getElementById('hourlyTotalInducted').textContent = '0';
