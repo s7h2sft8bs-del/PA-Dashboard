@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -4637,15 +4637,24 @@
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
       
-      const totalInducted = document.getElementById('hourlyTotalInducted').textContent;
-      const leftInduct = document.getElementById('hourlyLeftInduct').textContent;
-      const totalStowed = document.getElementById('hourlyTotalStowed').textContent;
-      const timeLeft = document.getElementById('hourlyTimeLeft').textContent;
+      // Get all values from Station Command section and hourly display
+      const inductStartTime = document.getElementById('inductStartTime').value || '';
+      const inductStartStr = inductStartTime ? formatTimeDisplay(inductStartTime) : 'N/A';
       
-      // Get induct end time (belt run time end - default 8:30 AM)
-      const shiftEnd = document.getElementById('shiftEnd').value || '08:30';
-      // Stow finish is always 9:00 AM
-      const stowFinish = '09:00';
+      const totalInducted = document.getElementById('scInducted').textContent || document.getElementById('hourlyTotalInducted').textContent || '0';
+      const leftInduct = document.getElementById('hourlyLeftInduct').textContent || '0';
+      const totalStowed = document.getElementById('hourlyTotalStowed').textContent || '0';
+      
+      // Get from Station Command inputs/displays
+      const scInductFlow = document.getElementById('scInductFlow').textContent || '0';
+      const scStowFlow = document.getElementById('scStowFlow').textContent || '0';
+      const scWIP = document.getElementById('scCurrentWIP').value || '0';
+      const scWIPCompliance = document.getElementById('scWIPCompliance').textContent || '--';
+      const scDwells = document.getElementById('scDwells').value || '0';
+      
+      // Get target times
+      const shiftEnd = document.getElementById('shiftEnd').value || '08:30'; // Induct end
+      const stowFinish = '09:00'; // Stow always 9 AM
       
       // Format times for display
       function formatTime12(time24) {
@@ -4658,7 +4667,7 @@
       const inductEndStr = formatTime12(shiftEnd);
       const stowEndStr = formatTime12(stowFinish);
       
-      // Calculate time remaining for induct (to shiftEnd/8:30)
+      // Calculate time remaining for induct
       const [inductEndH, inductEndM] = shiftEnd.split(':').map(Number);
       const inductEndDate = new Date(now);
       inductEndDate.setHours(inductEndH, inductEndM, 0, 0);
@@ -4671,47 +4680,35 @@
       if (stowEndDate <= now) stowEndDate.setDate(stowEndDate.getDate() + 1);
       const stowHoursLeft = Math.max(0, (stowEndDate - now) / (1000 * 60 * 60));
       
-      // Calculate remaining break time (breaks not yet taken)
+      // Calculate remaining break time
       const currentHour = now.getHours();
       const currentMin = now.getMinutes();
       const currentTimeValue = currentHour + (currentMin / 60);
       
-      let inductBreakMinsRemaining = 0;
-      let stowBreakMinsRemaining = 0;
+      let inductBreakMins = 0;
+      let stowBreakMins = 0;
       
-      // 1st Break: 4:00-4:15 AM - affects both induct and stow if not taken yet
+      // 1st Break: 4:00-4:15 AM
       if (currentTimeValue < 4.25 && document.getElementById('break1').checked) {
-        inductBreakMinsRemaining += 15;
-        stowBreakMinsRemaining += 15;
+        inductBreakMins += 15;
+        stowBreakMins += 15;
       }
-      // Lunch: 6:00-6:30 AM - affects both induct and stow if not taken yet
+      // Lunch: 6:00-6:30 AM
       if (currentTimeValue < 6.5 && document.getElementById('lunch').checked) {
-        inductBreakMinsRemaining += 30;
-        stowBreakMinsRemaining += 30;
+        inductBreakMins += 30;
+        stowBreakMins += 30;
       }
-      // 2nd Break: 8:45-9:00 AM - only affects stow (after induct ends)
+      // 2nd Break: 8:45-9:00 AM (only affects stow usually)
       if (currentTimeValue < 9 && document.getElementById('break2').checked) {
-        // Only add to induct if induct end is after 9:00
-        if (inductEndH >= 9) {
-          inductBreakMinsRemaining += 15;
-        }
-        stowBreakMinsRemaining += 15;
+        if (inductEndH >= 9) inductBreakMins += 15;
+        stowBreakMins += 15;
       }
       
-      // Calculate effective working hours (subtract remaining break time)
-      const effectiveInductHours = Math.max(0, inductHoursLeft - (inductBreakMinsRemaining / 60));
-      const effectiveStowHours = Math.max(0, stowHoursLeft - (stowBreakMinsRemaining / 60));
+      // Effective working hours
+      const effectiveInductHours = Math.max(0, inductHoursLeft - (inductBreakMins / 60));
+      const effectiveStowHours = Math.max(0, stowHoursLeft - (stowBreakMins / 60));
       
-      // Format time left displays (showing actual clock time left, not effective)
-      const inductTimeLeftH = Math.floor(inductHoursLeft);
-      const inductTimeLeftM = Math.round((inductHoursLeft - inductTimeLeftH) * 60);
-      const inductTimeLeftStr = `${inductTimeLeftH}:${String(inductTimeLeftM).padStart(2, '0')}`;
-      
-      const stowTimeLeftH = Math.floor(stowHoursLeft);
-      const stowTimeLeftM = Math.round((stowHoursLeft - stowTimeLeftH) * 60);
-      const stowTimeLeftStr = `${stowTimeLeftH}:${String(stowTimeLeftM).padStart(2, '0')}`;
-      
-      // Format effective working time
+      // Format effective time
       const effectiveInductH = Math.floor(effectiveInductHours);
       const effectiveInductM = Math.round((effectiveInductHours - effectiveInductH) * 60);
       const effectiveInductStr = `${effectiveInductH}:${String(effectiveInductM).padStart(2, '0')}`;
@@ -4720,29 +4717,19 @@
       const effectiveStowM = Math.round((effectiveStowHours - effectiveStowH) * 60);
       const effectiveStowStr = `${effectiveStowH}:${String(effectiveStowM).padStart(2, '0')}`;
       
-      // Calculate required flows using EFFECTIVE working hours
+      // Calculate required flows
       const leftInductNum = parseInt(leftInduct.replace(/,/g, '')) || 0;
       const requiredInductFlow = effectiveInductHours > 0 ? Math.ceil(leftInductNum / effectiveInductHours) : 0;
       
-      // Get dwells from input
-      const scDwells = document.getElementById('scDwells').value || '0';
       const dwellsNum = parseInt(scDwells.replace(/,/g, '')) || 0;
       const leftStowNum = dwellsNum > 0 ? dwellsNum : (parseInt(document.getElementById('hourlyLeftStow').textContent.replace(/,/g, '')) || 0);
       const requiredStowFlow = effectiveStowHours > 0 ? Math.ceil(leftStowNum / effectiveStowHours) : 0;
       
-      // Get station command data (WIP and Dwells are now inputs)
-      const scInductFlow = document.getElementById('scInductFlow').textContent || '0';
-      const scStowFlow = document.getElementById('scStowFlow').textContent || '0';
-      const scWIP = document.getElementById('scCurrentWIP').value || '0';
-      const scWIPCompliance = document.getElementById('scWIPCompliance').textContent || '--';
-      const inductStartTime = document.getElementById('inductStartTime').value || '';
-      const inductStartStr = inductStartTime ? formatTimeDisplay(inductStartTime) : 'N/A';
-      
+      // Build ONE clean report
       let output;
       
-      // Check if induct is complete
       if (inductCompleteData) {
-        // Use actual inducted volume for calculations
+        // Induct complete version
         const actualLeftToStow = inductCompleteData.leftToStow;
         const finalStowFlow = effectiveStowHours > 0 ? Math.ceil(actualLeftToStow / effectiveStowHours) : 0;
         
@@ -4752,37 +4739,32 @@
 ⏰ Induct Started: ${inductStartStr}
 ✅ Final Inducted: ${inductCompleteData.finalInducted.toLocaleString()}
 📦 Total Stowed: ${totalStowed}
-📦 Dwells (Left to Stow): ${actualLeftToStow.toLocaleString()}
+📦 Dwells: ${actualLeftToStow.toLocaleString()}
 🚫 Crashed/Rolled: ${inductCompleteData.crashedRolled.toLocaleString()}
 
-⚡ Current Stow Flow: ${scStowFlow} TPH
-📊 Current WIP: ${parseInt(scWIP).toLocaleString()}
+⚡ Stow Flow: ${scStowFlow} TPH
+📊 WIP: ${parseInt(scWIP).toLocaleString()}
 ✅ WIP Compliance: ${scWIPCompliance}
 
-📍 STOW (Target: ${stowEndStr})
-⏱️ Time Left: ${stowTimeLeftStr} (${effectiveStowStr} working)
+🎯 Stow Finish: ${stowEndStr} | Time Left: ${effectiveStowStr}
 ⚡ Required Stow Flow: ${finalStowFlow.toLocaleString()} TPH`;
+
       } else {
-        // Normal hourly update
+        // Normal hourly update - ONE report
         output = `📋 HOURLY UPDATE - ${timeStr}
 
 ⏰ Induct Started: ${inductStartStr}
-📦 Total Inducted: ${totalInducted}
-📦 Left to Induct: ${leftInduct}
-📦 Total Stowed: ${totalStowed}
-📦 Dwells (Left to Stow): ${leftStowNum.toLocaleString()}
+📦 Inducted: ${parseInt(totalInducted.replace(/,/g, '')).toLocaleString()} | Left: ${leftInduct}
+📦 Stowed: ${totalStowed} | Dwells: ${leftStowNum.toLocaleString()}
 
-⚡ Current Induct Flow: ${scInductFlow} TPH
-⚡ Current Stow Flow: ${scStowFlow} TPH
-📊 Current WIP: ${parseInt(scWIP).toLocaleString()}
-✅ WIP Compliance: ${scWIPCompliance}
+⚡ Induct Flow: ${scInductFlow} TPH
+⚡ Stow Flow: ${scStowFlow} TPH
+📊 WIP: ${parseInt(scWIP).toLocaleString()} | Compliance: ${scWIPCompliance}
 
-📍 INDUCT (Target: ${inductEndStr})
-⏱️ Time Left: ${inductTimeLeftStr} (${effectiveInductStr} working)
+🎯 Induct Finish: ${inductEndStr} | Time Left: ${effectiveInductStr}
 ⚡ Required Induct Flow: ${requiredInductFlow.toLocaleString()} TPH
 
-📍 STOW (Target: ${stowEndStr})
-⏱️ Time Left: ${stowTimeLeftStr} (${effectiveStowStr} working)
+🎯 Stow Finish: ${stowEndStr} | Time Left: ${effectiveStowStr}
 ⚡ Required Stow Flow: ${requiredStowFlow.toLocaleString()} TPH`;
       }
 
