@@ -6002,7 +6002,7 @@ ${dateStr}
         document.getElementById('remainingStow').value || '',
         document.getElementById('sunriseVolume').value || '',
         document.getElementById('samedayVolume').value || '',
-        document.getElementById('stowRatePPH').value || '260',
+        document.getElementById('stowRatePPH').value || '',
         document.getElementById('shiftStart').value || '01:20',
         document.getElementById('shiftEnd').value || '08:30',
         document.getElementById('sunriseInducted').value || '',
@@ -6016,7 +6016,7 @@ ${dateStr}
         document.getElementById('clusterE').value || '',
         document.getElementById('clusterG').value || '',
         document.getElementById('targetFinishTime').value || '08:00',
-        document.getElementById('efficiencyPercent').value || '85'
+        document.getElementById('efficiencyPercent').value || ''
       ];
       
       try {
@@ -6026,6 +6026,23 @@ ${dateStr}
       } catch (error) {
         console.error('Cloud save error:', error);
         showSyncStatus('error');
+      }
+    }
+
+    // Clear cloud data completely
+    async function clearCloud() {
+      const emptyData = [
+        new Date().toISOString(),
+        PAGE_NAME,
+        '', '', '', '', '', '', '', '', '01:20', '08:30', '', '', '', '', '', '', '', '', '', '', '08:00', ''
+      ];
+      
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(emptyData))}`;
+        await fetch(url, { mode: 'no-cors' });
+        console.log('Cloud data cleared');
+      } catch (error) {
+        console.error('Cloud clear error:', error);
       }
     }
 
@@ -6379,19 +6396,21 @@ ${dateStr}
       calculateWIP();
       updateHourlyDisplay();
       
-      // IMPORTANT: Temporarily allow saves, then save empty data to cloud
-      preventCloudLoad = false;
-      saveAllData();
-      saveToCloud();
-      preventCloudLoad = true; // Re-enable protection
+      // IMPORTANT: Clear cloud data explicitly
+      clearCloud();
+      
+      // Also clear localStorage again to be sure
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('flowStaffingData');
+      localStorage.removeItem('pphFlowStaffingData');
       
       // Update sync status
-      document.getElementById('syncStatus').textContent = '☁️ Reset';
+      document.getElementById('syncStatus').textContent = '☁️ Cleared';
       
-      // Re-enable cloud load after a short delay
+      // Re-enable cloud load after a longer delay
       setTimeout(() => {
         preventCloudLoad = false;
-      }, 3000);
+      }, 5000);
       
       // Show confirmation
       alert('All data has been reset!');
