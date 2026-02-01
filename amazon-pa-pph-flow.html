@@ -3040,7 +3040,7 @@
         </h3>
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <label style="font-size: 0.8rem; color: var(--text-secondary);">Induct Started:</label>
-          <input type="time" id="inductStartTime" style="background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;" onchange="saveInductStartTime()">
+          <input type="time" id="inductStartTime" style="background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;" onchange="saveStationCommandData()">
         </div>
       </div>
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -3049,7 +3049,7 @@
           Parse Data
         </button>
       </div>
-      <div id="stationCommandResults" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-top: 0.75rem;">
+      <div id="stationCommandResults" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-top: 0.75rem;">
         <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
           <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Inducted</div>
           <div id="scInducted" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--amazon-orange);">0</div>
@@ -3063,16 +3063,16 @@
           <div id="scStowFlow" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--success);">0</div>
         </div>
         <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
-          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Current WIP</div>
-          <div id="scCurrentWIP" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--warning);">0</div>
-        </div>
-        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
           <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">WIP Compliance</div>
           <div id="scWIPCompliance" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--text-primary);">--</div>
         </div>
-        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
-          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Dwells</div>
-          <div id="scDwells" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--danger);">0</div>
+        <div style="background: var(--bg-dark); border: 2px solid var(--warning); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--warning); text-transform: uppercase;">Current WIP</div>
+          <input type="number" id="scCurrentWIP" placeholder="0" oninput="saveStationCommandData()" style="width: 100%; background: transparent; border: none; font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--warning); text-align: center;">
+        </div>
+        <div style="background: var(--bg-dark); border: 2px solid var(--danger); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--danger); text-transform: uppercase;">Dwells</div>
+          <input type="number" id="scDwells" placeholder="0" oninput="saveStationCommandData()" style="width: 100%; background: transparent; border: none; font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--danger); text-align: center;">
         </div>
       </div>
     </section>
@@ -4641,30 +4641,110 @@
       const leftInduct = document.getElementById('hourlyLeftInduct').textContent;
       const totalStowed = document.getElementById('hourlyTotalStowed').textContent;
       const timeLeft = document.getElementById('hourlyTimeLeft').textContent;
-      const targetFinish = document.getElementById('targetFinishTime').value || '08:00';
       
-      // Format target finish for display
-      const [h, m] = targetFinish.split(':').map(Number);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      const h12 = h % 12 || 12;
-      const targetFinishStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      // Get induct end time (belt run time end - default 8:30 AM)
+      const shiftEnd = document.getElementById('shiftEnd').value || '08:30';
+      // Stow finish is always 9:00 AM
+      const stowFinish = '09:00';
       
-      let output;
+      // Format times for display
+      function formatTime12(time24) {
+        const [h, m] = time24.split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      }
       
-      // Get station command data
+      const inductEndStr = formatTime12(shiftEnd);
+      const stowEndStr = formatTime12(stowFinish);
+      
+      // Calculate time remaining for induct (to shiftEnd/8:30)
+      const [inductEndH, inductEndM] = shiftEnd.split(':').map(Number);
+      const inductEndDate = new Date(now);
+      inductEndDate.setHours(inductEndH, inductEndM, 0, 0);
+      if (inductEndDate <= now) inductEndDate.setDate(inductEndDate.getDate() + 1);
+      const inductHoursLeft = Math.max(0, (inductEndDate - now) / (1000 * 60 * 60));
+      
+      // Calculate time remaining for stow (to 9:00 AM)
+      const stowEndDate = new Date(now);
+      stowEndDate.setHours(9, 0, 0, 0);
+      if (stowEndDate <= now) stowEndDate.setDate(stowEndDate.getDate() + 1);
+      const stowHoursLeft = Math.max(0, (stowEndDate - now) / (1000 * 60 * 60));
+      
+      // Calculate remaining break time (breaks not yet taken)
+      const currentHour = now.getHours();
+      const currentMin = now.getMinutes();
+      const currentTimeValue = currentHour + (currentMin / 60);
+      
+      let inductBreakMinsRemaining = 0;
+      let stowBreakMinsRemaining = 0;
+      
+      // 1st Break: 4:00-4:15 AM - affects both induct and stow if not taken yet
+      if (currentTimeValue < 4.25 && document.getElementById('break1').checked) {
+        inductBreakMinsRemaining += 15;
+        stowBreakMinsRemaining += 15;
+      }
+      // Lunch: 6:00-6:30 AM - affects both induct and stow if not taken yet
+      if (currentTimeValue < 6.5 && document.getElementById('lunch').checked) {
+        inductBreakMinsRemaining += 30;
+        stowBreakMinsRemaining += 30;
+      }
+      // 2nd Break: 8:45-9:00 AM - only affects stow (after induct ends)
+      if (currentTimeValue < 9 && document.getElementById('break2').checked) {
+        // Only add to induct if induct end is after 9:00
+        if (inductEndH >= 9) {
+          inductBreakMinsRemaining += 15;
+        }
+        stowBreakMinsRemaining += 15;
+      }
+      
+      // Calculate effective working hours (subtract remaining break time)
+      const effectiveInductHours = Math.max(0, inductHoursLeft - (inductBreakMinsRemaining / 60));
+      const effectiveStowHours = Math.max(0, stowHoursLeft - (stowBreakMinsRemaining / 60));
+      
+      // Format time left displays (showing actual clock time left, not effective)
+      const inductTimeLeftH = Math.floor(inductHoursLeft);
+      const inductTimeLeftM = Math.round((inductHoursLeft - inductTimeLeftH) * 60);
+      const inductTimeLeftStr = `${inductTimeLeftH}:${String(inductTimeLeftM).padStart(2, '0')}`;
+      
+      const stowTimeLeftH = Math.floor(stowHoursLeft);
+      const stowTimeLeftM = Math.round((stowHoursLeft - stowTimeLeftH) * 60);
+      const stowTimeLeftStr = `${stowTimeLeftH}:${String(stowTimeLeftM).padStart(2, '0')}`;
+      
+      // Format effective working time
+      const effectiveInductH = Math.floor(effectiveInductHours);
+      const effectiveInductM = Math.round((effectiveInductHours - effectiveInductH) * 60);
+      const effectiveInductStr = `${effectiveInductH}:${String(effectiveInductM).padStart(2, '0')}`;
+      
+      const effectiveStowH = Math.floor(effectiveStowHours);
+      const effectiveStowM = Math.round((effectiveStowHours - effectiveStowH) * 60);
+      const effectiveStowStr = `${effectiveStowH}:${String(effectiveStowM).padStart(2, '0')}`;
+      
+      // Calculate required flows using EFFECTIVE working hours
+      const leftInductNum = parseInt(leftInduct.replace(/,/g, '')) || 0;
+      const requiredInductFlow = effectiveInductHours > 0 ? Math.ceil(leftInductNum / effectiveInductHours) : 0;
+      
+      // Get dwells from input
+      const scDwells = document.getElementById('scDwells').value || '0';
+      const dwellsNum = parseInt(scDwells.replace(/,/g, '')) || 0;
+      const leftStowNum = dwellsNum > 0 ? dwellsNum : (parseInt(document.getElementById('hourlyLeftStow').textContent.replace(/,/g, '')) || 0);
+      const requiredStowFlow = effectiveStowHours > 0 ? Math.ceil(leftStowNum / effectiveStowHours) : 0;
+      
+      // Get station command data (WIP and Dwells are now inputs)
       const scInductFlow = document.getElementById('scInductFlow').textContent || '0';
       const scStowFlow = document.getElementById('scStowFlow').textContent || '0';
-      const scWIP = document.getElementById('scCurrentWIP').textContent || '0';
+      const scWIP = document.getElementById('scCurrentWIP').value || '0';
       const scWIPCompliance = document.getElementById('scWIPCompliance').textContent || '--';
-      const scDwells = document.getElementById('scDwells').textContent || '0';
       const inductStartTime = document.getElementById('inductStartTime').value || '';
       const inductStartStr = inductStartTime ? formatTimeDisplay(inductStartTime) : 'N/A';
+      
+      let output;
       
       // Check if induct is complete
       if (inductCompleteData) {
         // Use actual inducted volume for calculations
         const actualLeftToStow = inductCompleteData.leftToStow;
-        const finalStowFlow = inductCompleteData.finalStowFlow;
+        const finalStowFlow = effectiveStowHours > 0 ? Math.ceil(actualLeftToStow / effectiveStowHours) : 0;
         
         output = `📋 HOURLY UPDATE - ${timeStr}
 🏁 INDUCT COMPLETE
@@ -4676,33 +4756,34 @@
 🚫 Crashed/Rolled: ${inductCompleteData.crashedRolled.toLocaleString()}
 
 ⚡ Current Stow Flow: ${scStowFlow} TPH
-📊 Current WIP: ${scWIP}
+📊 Current WIP: ${parseInt(scWIP).toLocaleString()}
 ✅ WIP Compliance: ${scWIPCompliance}
 
-🎯 Target Finish: ${targetFinishStr}
-⏱️ Time Left: ${timeLeft}
-⚡ Required Flow to Finish: ${finalStowFlow.toLocaleString()} TPH`;
+📍 STOW (Target: ${stowEndStr})
+⏱️ Time Left: ${stowTimeLeftStr} (${effectiveStowStr} working)
+⚡ Required Stow Flow: ${finalStowFlow.toLocaleString()} TPH`;
       } else {
         // Normal hourly update
-        const leftStow = document.getElementById('hourlyLeftStow').textContent;
-        const requiredFlow = document.getElementById('hourlyReqFlow').textContent;
-        
         output = `📋 HOURLY UPDATE - ${timeStr}
 
 ⏰ Induct Started: ${inductStartStr}
 📦 Total Inducted: ${totalInducted}
 📦 Left to Induct: ${leftInduct}
 📦 Total Stowed: ${totalStowed}
-📦 Dwells (Left to Stow): ${leftStow}
+📦 Dwells (Left to Stow): ${leftStowNum.toLocaleString()}
 
-⚡ Induct Flow: ${scInductFlow} TPH
-⚡ Stow Flow: ${scStowFlow} TPH
-📊 Current WIP: ${scWIP}
+⚡ Current Induct Flow: ${scInductFlow} TPH
+⚡ Current Stow Flow: ${scStowFlow} TPH
+📊 Current WIP: ${parseInt(scWIP).toLocaleString()}
 ✅ WIP Compliance: ${scWIPCompliance}
 
-🎯 Target Finish: ${targetFinishStr}
-⏱️ Time Left: ${timeLeft}
-⚡ Required Flow to Finish: ${requiredFlow} TPH`;
+📍 INDUCT (Target: ${inductEndStr})
+⏱️ Time Left: ${inductTimeLeftStr} (${effectiveInductStr} working)
+⚡ Required Induct Flow: ${requiredInductFlow.toLocaleString()} TPH
+
+📍 STOW (Target: ${stowEndStr})
+⏱️ Time Left: ${stowTimeLeftStr} (${effectiveStowStr} working)
+⚡ Required Stow Flow: ${requiredStowFlow.toLocaleString()} TPH`;
       }
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -6609,9 +6690,9 @@ ${dateStr}
         inducted: document.getElementById('scInducted').textContent,
         inductFlow: document.getElementById('scInductFlow').textContent,
         stowFlow: document.getElementById('scStowFlow').textContent,
-        currentWIP: document.getElementById('scCurrentWIP').textContent,
+        currentWIP: document.getElementById('scCurrentWIP').value,
         wipCompliance: document.getElementById('scWIPCompliance').textContent,
-        dwells: document.getElementById('scDwells').textContent,
+        dwells: document.getElementById('scDwells').value,
         inductStartTime: document.getElementById('inductStartTime').value
       };
       localStorage.setItem('stationCommandData', JSON.stringify(data));
@@ -6625,9 +6706,9 @@ ${dateStr}
           if (data.inducted) document.getElementById('scInducted').textContent = data.inducted;
           if (data.inductFlow) document.getElementById('scInductFlow').textContent = data.inductFlow;
           if (data.stowFlow) document.getElementById('scStowFlow').textContent = data.stowFlow;
-          if (data.currentWIP) document.getElementById('scCurrentWIP').textContent = data.currentWIP;
+          if (data.currentWIP) document.getElementById('scCurrentWIP').value = data.currentWIP;
           if (data.wipCompliance) document.getElementById('scWIPCompliance').textContent = data.wipCompliance;
-          if (data.dwells) document.getElementById('scDwells').textContent = data.dwells;
+          if (data.dwells) document.getElementById('scDwells').value = data.dwells;
           if (data.inductStartTime) document.getElementById('inductStartTime').value = data.inductStartTime;
         } catch(e) {}
       }
