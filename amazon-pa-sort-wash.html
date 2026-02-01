@@ -637,21 +637,44 @@
   </header>
 
   <div class="container">
-    <!-- Quick Paste Section -->
+    <!-- Quick Paste Section - TWO OPTIONS -->
     <div class="section" style="border-color: var(--amazon-orange);">
       <div class="section-header">
         <h2 class="section-title" style="color: var(--amazon-orange);">⚡ Quick Paste - Auto-Fill Actuals</h2>
       </div>
-      <p style="color: var(--text-secondary); margin-bottom: 1rem;">Copy your metrics data from Station Command and paste below. Click "Auto-Fill" to populate all Actual values instantly.</p>
-      <textarea id="quickPasteInput" placeholder="Paste your copied metrics data here..." style="width: 100%; min-height: 120px; background: var(--input-bg); border: 2px solid var(--amazon-orange); border-radius: 8px; padding: 1rem; color: var(--text-primary); font-family: 'Barlow', sans-serif; font-size: 0.95rem; resize: vertical;"></textarea>
-      <div style="display: flex; gap: 1rem; margin-top: 1rem; align-items: center;">
-        <button class="btn" onclick="parseAndFill()" style="background: var(--amazon-orange);">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20" style="display: inline; vertical-align: middle; margin-right: 0.5rem;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-          </svg>
-          Auto-Fill Actuals
-        </button>
-        <span class="parse-confirm" id="parseConfirm" style="color: var(--success); font-weight: 600; opacity: 0; transition: opacity 0.3s;">✓ Actuals filled!</span>
+      
+      <!-- Option 1: Paste Planned (Weekly) -->
+      <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+        <p style="color: var(--text-secondary); margin-bottom: 0.75rem; font-weight: 600;">
+          📋 <span style="color: var(--amazon-teal);">STEP 1 (Weekly):</span> Paste planned rates for the week
+        </p>
+        <textarea id="plannedPasteInput" placeholder="Paste your planned metrics data here (do this once on Sunday)..." style="width: 100%; min-height: 100px; background: var(--input-bg); border: 2px solid var(--amazon-teal); border-radius: 8px; padding: 1rem; color: var(--text-primary); font-family: 'Barlow', sans-serif; font-size: 0.95rem; resize: vertical;"></textarea>
+        <div style="display: flex; gap: 1rem; margin-top: 0.75rem; align-items: center;">
+          <button class="btn" onclick="parseAndFillPlanned()" style="background: var(--amazon-teal);">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20" style="display: inline; vertical-align: middle; margin-right: 0.5rem;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            Fill Planned Values
+          </button>
+          <span class="parse-confirm" id="plannedParseConfirm" style="color: var(--amazon-teal); font-weight: 600; opacity: 0; transition: opacity 0.3s;">✓ Planned values set!</span>
+        </div>
+      </div>
+      
+      <!-- Option 2: Paste Actuals (Daily) -->
+      <div>
+        <p style="color: var(--text-secondary); margin-bottom: 0.75rem; font-weight: 600;">
+          📊 <span style="color: var(--amazon-orange);">STEP 2 (Daily):</span> Paste actual metrics from Station Command
+        </p>
+        <textarea id="quickPasteInput" placeholder="Paste your copied metrics data here (do this daily)..." style="width: 100%; min-height: 100px; background: var(--input-bg); border: 2px solid var(--amazon-orange); border-radius: 8px; padding: 1rem; color: var(--text-primary); font-family: 'Barlow', sans-serif; font-size: 0.95rem; resize: vertical;"></textarea>
+        <div style="display: flex; gap: 1rem; margin-top: 0.75rem; align-items: center;">
+          <button class="btn" onclick="parseAndFill()" style="background: var(--amazon-orange);">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20" style="display: inline; vertical-align: middle; margin-right: 0.5rem;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Auto-Fill Actuals
+          </button>
+          <span class="parse-confirm" id="parseConfirm" style="color: var(--success); font-weight: 600; opacity: 0; transition: opacity 0.3s;">✓ Actuals filled!</span>
+        </div>
       </div>
     </div>
 
@@ -1257,6 +1280,140 @@ Bridge: ${getValue('safetyBridge') || 'N/A'}
       if (filled > 0) {
         const confirm = document.getElementById('parseConfirm');
         confirm.textContent = `✓ ${filled} fields filled!`;
+        confirm.style.opacity = '1';
+        setTimeout(() => confirm.style.opacity = '0', 3000);
+      } else {
+        alert('Could not parse data. Try copying more of the metrics table.');
+      }
+    }
+
+    // ==================== PARSE AND FILL PLANNED VALUES ====================
+    function parseAndFillPlanned() {
+      const input = document.getElementById('plannedPasteInput').value;
+      
+      if (!input.trim()) {
+        alert('Please paste your planned metrics data first');
+        return;
+      }
+
+      let filled = 0;
+
+      // Volume - look for Total with large numbers (50k+)
+      const volumeMatch = input.match(/Total[\s]*([0-9,]+)[\s]*([0-9,]+)/);
+      if (volumeMatch) {
+        const vol = parseInt(volumeMatch[1].replace(/,/g, ''));
+        if (vol > 10000) {
+          document.getElementById('volumePlanned').value = vol;
+          updateStatus('volume');
+          filled++;
+        }
+      }
+
+      // Line Loader
+      const lineLoaderMatch = input.match(/Induct Line Loader[\s]*([0-9,]+)[\s]*([0-9,]+)[\s]*([0-9.]+)[\s]*([0-9,.]+)/);
+      if (lineLoaderMatch) {
+        const uph = parseFloat(lineLoaderMatch[4].replace(/,/g, ''));
+        document.getElementById('lineloaderPlanned').value = uph.toFixed(2);
+        updateStatus('lineloader');
+        filled++;
+      }
+
+      // Induct
+      const inductMatch = input.match(/Total[\s]*([0-9,]+)[\s]*([0-9,]+)[\s]*([0-9.]+)[\s]*([0-9,.]+)[\s]*([0-9,.]+)/);
+      if (inductMatch) {
+        const uph = parseFloat(inductMatch[4].replace(/,/g, ''));
+        if (uph > 400 && uph < 2000) {
+          document.getElementById('inductPlanned').value = uph.toFixed(2);
+          updateStatus('induct');
+          filled++;
+        }
+      }
+
+      // Pusher
+      const pusherMatch = input.match(/Pusher[\s]*([0-9,]+)[\s]*([0-9,]+)[\s]*([0-9.]+)[\s]*([0-9,.]+)/);
+      if (pusherMatch) {
+        const uph = parseFloat(pusherMatch[4].replace(/,/g, ''));
+        document.getElementById('pusherPlanned').value = uph.toFixed(2);
+        updateStatus('pusher');
+        filled++;
+      }
+
+      // Pick to Buffer
+      const p2bMatch = input.match(/Pick to Buffer[\s]*([0-9,]+)[\s]*([0-9,]+)[\s]*([0-9.]+)[\s]*([0-9,.]+)/);
+      if (p2bMatch) {
+        const uph = parseFloat(p2bMatch[4].replace(/,/g, ''));
+        document.getElementById('p2bPlanned').value = uph.toFixed(2);
+        updateStatus('p2b');
+        filled++;
+      }
+
+      // Container Building
+      const containerMatch = input.match(/Container Building[\s\-]*([0-9,]+)[\s]*([0-9,]+)[\s]*([0-9.]+)[\s]*([0-9,.]+)/);
+      if (containerMatch) {
+        const uph = parseFloat(containerMatch[4].replace(/,/g, ''));
+        document.getElementById('containerPlanned').value = uph.toFixed(2);
+        updateStatus('container');
+        filled++;
+      }
+
+      // W/S (Waterspider)
+      const wsMatch = input.match(/Inbound Dock W\/S[\s\-]*([0-9.]+)/);
+      if (wsMatch) {
+        const wsHours = parseFloat(wsMatch[1]);
+        const vol = parseInt(document.getElementById('volumePlanned').value) || 0;
+        if (vol > 0 && wsHours > 0) {
+          const wsRate = (vol / wsHours).toFixed(2);
+          document.getElementById('wsPlanned').value = wsRate;
+          updateStatus('ws');
+          filled++;
+        }
+      }
+
+      // Diverter
+      const diverterMatch = input.match(/Diverter[\s\-]*([0-9.]+)/);
+      if (diverterMatch) {
+        const divHours = parseFloat(diverterMatch[1]);
+        const vol = parseInt(document.getElementById('volumePlanned').value) || 0;
+        if (vol > 0 && divHours > 0) {
+          const divRate = (vol / divHours).toFixed(2);
+          document.getElementById('diverterPlanned').value = divRate;
+          updateStatus('diverter');
+          filled++;
+        }
+      }
+
+      // Hours
+      const hoursMatches = input.match(/Total[\s]*[0-9,]+[\s]*[0-9,]+[\s]*([0-9.]+)/g);
+      if (hoursMatches && hoursMatches.length > 0) {
+        let maxHours = 0;
+        hoursMatches.forEach(match => {
+          const hrs = parseFloat(match.match(/([0-9.]+)$/)[1]);
+          if (hrs > maxHours && hrs < 1000) maxHours = hrs;
+        });
+        if (maxHours > 0) {
+          document.getElementById('hoursPlanned').value = maxHours.toFixed(2);
+          updateStatus('hours');
+          filled++;
+        }
+      }
+
+      // TPH
+      const volPlanned = parseFloat(document.getElementById('volumePlanned').value) || 0;
+      const hrsPlanned = parseFloat(document.getElementById('hoursPlanned').value) || 0;
+      if (volPlanned > 0 && hrsPlanned > 0) {
+        const tph = (volPlanned / hrsPlanned).toFixed(2);
+        document.getElementById('tphPlanned').value = tph;
+        updateStatus('tph');
+        filled++;
+      }
+
+      // Save planned values
+      savePlannedValues();
+
+      // Show confirmation
+      if (filled > 0) {
+        const confirm = document.getElementById('plannedParseConfirm');
+        confirm.textContent = `✓ ${filled} planned values set!`;
         confirm.style.opacity = '1';
         setTimeout(() => confirm.style.opacity = '0', 3000);
       } else {
