@@ -1107,11 +1107,13 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       const pasteBox = document.getElementById('pasteBox');
       if (pasteBox) pasteBox.value = '';
       
-      // Reset display values
-      document.getElementById('totalVolume').textContent = '0';
-      document.getElementById('plannedHC').textContent = '0';
+      // Reset ALL display values - use correct element IDs
+      document.getElementById('c1Volume').textContent = '0';
       document.getElementById('directHours').textContent = '0';
       document.getElementById('plannedHours').textContent = '0';
+      document.getElementById('projectedHours').textContent = '0';
+      document.getElementById('plannedHC').textContent = '0';
+      document.getElementById('tphDisplay').textContent = '90';
       
       calculateAll();
       
