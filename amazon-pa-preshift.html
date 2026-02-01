@@ -1115,16 +1115,20 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       
       calculateAll();
       
-      // IMPORTANT: Save empty data to cloud to overwrite old data
-      saveData();
-      saveToCloud();
+      // IMPORTANT: Clear cloud data explicitly
+      clearCloud();
+      
+      // Also clear localStorage again
+      localStorage.removeItem('preshiftPageData');
+      localStorage.removeItem('preshiftData');
+      localStorage.removeItem('preShiftPlanData');
       
       // Update sync status
       const syncStatus = document.getElementById('syncStatus');
-      if (syncStatus) syncStatus.textContent = '☁️ Reset';
+      if (syncStatus) syncStatus.textContent = '☁️ Cleared';
       
       // Re-enable cloud load after delay
-      setTimeout(() => { preventCloudLoad = false; }, 3000);
+      setTimeout(() => { preventCloudLoad = false; }, 5000);
       
       alert('All data has been reset!');
     }
@@ -1152,6 +1156,11 @@ Pre-Shift Projected Hours = ${projectedHours}`;
 
     // Load data from localStorage
     function loadData() {
+      if (preventCloudLoad) {
+        console.log('Local load prevented after reset');
+        return;
+      }
+      
       const saved = localStorage.getItem('preshiftPageData');
       if (!saved) return;
       
@@ -1220,6 +1229,22 @@ Pre-Shift Projected Hours = ${projectedHours}`;
         showSyncStatus('saved');
       } catch (error) {
         console.error('Cloud save error:', error);
+      }
+    }
+
+    async function clearCloud() {
+      const emptyData = [
+        new Date().toISOString(),
+        PAGE_NAME,
+        '', '', '', '', '', '', '', '', '', '', '90', '1.17', '7.2'
+      ];
+      
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(emptyData))}`;
+        await fetch(url, { mode: 'no-cors' });
+        console.log('Cloud data cleared');
+      } catch (error) {
+        console.error('Cloud clear error:', error);
       }
     }
 
