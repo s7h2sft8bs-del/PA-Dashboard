@@ -3032,6 +3032,51 @@
   </header>
 
   <div class="container">
+    <!-- Station Command Quick Paste Section -->
+    <section class="station-command-paste" style="background: var(--bg-card); border: 2px solid var(--amazon-teal); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <h3 style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; color: var(--amazon-teal); display: flex; align-items: center; gap: 0.5rem;">
+          <span>⚡</span> Station Command Quick Paste
+        </h3>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <label style="font-size: 0.8rem; color: var(--text-secondary);">Induct Started:</label>
+          <input type="time" id="inductStartTime" style="background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;" onchange="saveInductStartTime()">
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <textarea id="stationCommandPaste" placeholder="Paste from Station Command..." style="flex: 1; min-width: 200px; height: 60px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; color: var(--text-primary); font-family: monospace; font-size: 0.8rem; resize: none;"></textarea>
+        <button onclick="parseStationCommand()" style="background: var(--amazon-teal); border: none; border-radius: 8px; padding: 0.5rem 1rem; color: white; font-family: 'Barlow', sans-serif; font-weight: 600; cursor: pointer; white-space: nowrap;">
+          Parse Data
+        </button>
+      </div>
+      <div id="stationCommandResults" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-top: 0.75rem;">
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Inducted</div>
+          <div id="scInducted" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--amazon-orange);">0</div>
+        </div>
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Induct Flow</div>
+          <div id="scInductFlow" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--amazon-teal);">0</div>
+        </div>
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Stow Flow</div>
+          <div id="scStowFlow" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--success);">0</div>
+        </div>
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Current WIP</div>
+          <div id="scCurrentWIP" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--warning);">0</div>
+        </div>
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">WIP Compliance</div>
+          <div id="scWIPCompliance" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--text-primary);">--</div>
+        </div>
+        <div style="background: var(--bg-dark); border-radius: 6px; padding: 0.5rem; text-align: center;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Dwells</div>
+          <div id="scDwells" style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--danger);">0</div>
+        </div>
+      </div>
+    </section>
+
     <!-- Pre-Shift Planner Section -->
     <section class="preshift-planner">
       <div class="section-header">
@@ -4045,7 +4090,12 @@
           </div>
           <div class="break-stat-card">
             <div class="break-stat-label">Stowed So Far</div>
-            <div class="break-stat-value" id="modalStowedSoFar">0</div>
+            <input type="number" id="modalStowedInput" placeholder="Enter stowed" oninput="updateBreakStowed()" style="width: 100%; background: var(--input-bg); border: 2px solid var(--amazon-teal); border-radius: 6px; padding: 0.5rem; color: var(--amazon-teal); font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center;">
+            <div class="break-stat-unit">units (manual entry)</div>
+          </div>
+          <div class="break-stat-card">
+            <div class="break-stat-label">Dwells (Left to Stow)</div>
+            <div class="break-stat-value danger" id="modalDwells">0</div>
             <div class="break-stat-unit">units</div>
           </div>
         </div>
@@ -4601,6 +4651,15 @@
       
       let output;
       
+      // Get station command data
+      const scInductFlow = document.getElementById('scInductFlow').textContent || '0';
+      const scStowFlow = document.getElementById('scStowFlow').textContent || '0';
+      const scWIP = document.getElementById('scCurrentWIP').textContent || '0';
+      const scWIPCompliance = document.getElementById('scWIPCompliance').textContent || '--';
+      const scDwells = document.getElementById('scDwells').textContent || '0';
+      const inductStartTime = document.getElementById('inductStartTime').value || '';
+      const inductStartStr = inductStartTime ? formatTimeDisplay(inductStartTime) : 'N/A';
+      
       // Check if induct is complete
       if (inductCompleteData) {
         // Use actual inducted volume for calculations
@@ -4610,10 +4669,15 @@
         output = `📋 HOURLY UPDATE - ${timeStr}
 🏁 INDUCT COMPLETE
 
+⏰ Induct Started: ${inductStartStr}
 ✅ Final Inducted: ${inductCompleteData.finalInducted.toLocaleString()}
 📦 Total Stowed: ${totalStowed}
-📦 Left to Stow: ${actualLeftToStow.toLocaleString()}
+📦 Dwells (Left to Stow): ${actualLeftToStow.toLocaleString()}
 🚫 Crashed/Rolled: ${inductCompleteData.crashedRolled.toLocaleString()}
+
+⚡ Current Stow Flow: ${scStowFlow} TPH
+📊 Current WIP: ${scWIP}
+✅ WIP Compliance: ${scWIPCompliance}
 
 🎯 Target Finish: ${targetFinishStr}
 ⏱️ Time Left: ${timeLeft}
@@ -4625,10 +4689,16 @@
         
         output = `📋 HOURLY UPDATE - ${timeStr}
 
+⏰ Induct Started: ${inductStartStr}
 📦 Total Inducted: ${totalInducted}
 📦 Left to Induct: ${leftInduct}
 📦 Total Stowed: ${totalStowed}
-📦 Left to Stow: ${leftStow}
+📦 Dwells (Left to Stow): ${leftStow}
+
+⚡ Induct Flow: ${scInductFlow} TPH
+⚡ Stow Flow: ${scStowFlow} TPH
+📊 Current WIP: ${scWIP}
+✅ WIP Compliance: ${scWIPCompliance}
 
 🎯 Target Finish: ${targetFinishStr}
 ⏱️ Time Left: ${timeLeft}
@@ -6447,6 +6517,182 @@ ${dateStr}
     if (!preventCloudLoad) {
       loadFromCloud();
     }
+
+    // ==================== STATION COMMAND QUICK PASTE ====================
+    function parseStationCommand() {
+      const input = document.getElementById('stationCommandPaste').value;
+      
+      if (!input.trim()) {
+        alert('Please paste Station Command data first');
+        return;
+      }
+
+      // Parse inducted - look for patterns like "Inducted: 12345" or just large numbers
+      const inductedMatch = input.match(/(?:inducted|induct)[:\s]*([0-9,]+)/i) || 
+                           input.match(/([0-9]{4,})/);
+      if (inductedMatch) {
+        const inducted = parseInt(inductedMatch[1].replace(/,/g, ''));
+        if (inducted > 0) {
+          document.getElementById('scInducted').textContent = inducted.toLocaleString();
+          // Also update the hourly inducted field
+          document.getElementById('hourlyTotalInducted').textContent = inducted.toLocaleString();
+        }
+      }
+
+      // Parse induct flow/rate - look for TPH or flow numbers
+      const inductFlowMatch = input.match(/(?:induct|ind)[^0-9]*(?:flow|rate|tph)[:\s]*([0-9,]+)/i) ||
+                              input.match(/(?:flow|rate|tph)[:\s]*([0-9]{2,4})/i);
+      if (inductFlowMatch) {
+        const flow = parseInt(inductFlowMatch[1].replace(/,/g, ''));
+        if (flow > 50 && flow < 3000) {
+          document.getElementById('scInductFlow').textContent = flow.toLocaleString();
+        }
+      }
+
+      // Parse stow flow
+      const stowFlowMatch = input.match(/(?:stow)[^0-9]*(?:flow|rate|tph)[:\s]*([0-9,]+)/i);
+      if (stowFlowMatch) {
+        const flow = parseInt(stowFlowMatch[1].replace(/,/g, ''));
+        if (flow > 50 && flow < 3000) {
+          document.getElementById('scStowFlow').textContent = flow.toLocaleString();
+        }
+      }
+
+      // Parse WIP
+      const wipMatch = input.match(/(?:wip|work.in.progress)[:\s]*([0-9,]+)/i) ||
+                       input.match(/(?:current)[^0-9]*(?:wip)[:\s]*([0-9,]+)/i);
+      if (wipMatch) {
+        const wip = parseInt(wipMatch[1].replace(/,/g, ''));
+        document.getElementById('scCurrentWIP').textContent = wip.toLocaleString();
+      }
+
+      // Parse WIP Compliance
+      const wipCompMatch = input.match(/(?:wip)[^0-9]*(?:compliance|comp)[:\s]*([0-9.]+%?)/i) ||
+                           input.match(/(?:compliance)[:\s]*([0-9.]+%?)/i);
+      if (wipCompMatch) {
+        let compliance = wipCompMatch[1];
+        if (!compliance.includes('%')) compliance += '%';
+        document.getElementById('scWIPCompliance').textContent = compliance;
+        
+        // Color code based on compliance
+        const compValue = parseFloat(compliance);
+        const compEl = document.getElementById('scWIPCompliance');
+        if (compValue >= 95) {
+          compEl.style.color = 'var(--success)';
+        } else if (compValue >= 85) {
+          compEl.style.color = 'var(--warning)';
+        } else {
+          compEl.style.color = 'var(--danger)';
+        }
+      }
+
+      // Parse Dwells (left to stow)
+      const dwellsMatch = input.match(/(?:dwell|left.to.stow)[:\s]*([0-9,]+)/i);
+      if (dwellsMatch) {
+        const dwells = parseInt(dwellsMatch[1].replace(/,/g, ''));
+        document.getElementById('scDwells').textContent = dwells.toLocaleString();
+      }
+
+      // Save parsed data
+      saveStationCommandData();
+      
+      // Show confirmation
+      document.getElementById('stationCommandPaste').value = '';
+      document.getElementById('stationCommandPaste').placeholder = '✓ Data parsed! Paste new data...';
+      setTimeout(() => {
+        document.getElementById('stationCommandPaste').placeholder = 'Paste from Station Command...';
+      }, 2000);
+    }
+
+    function saveStationCommandData() {
+      const data = {
+        inducted: document.getElementById('scInducted').textContent,
+        inductFlow: document.getElementById('scInductFlow').textContent,
+        stowFlow: document.getElementById('scStowFlow').textContent,
+        currentWIP: document.getElementById('scCurrentWIP').textContent,
+        wipCompliance: document.getElementById('scWIPCompliance').textContent,
+        dwells: document.getElementById('scDwells').textContent,
+        inductStartTime: document.getElementById('inductStartTime').value
+      };
+      localStorage.setItem('stationCommandData', JSON.stringify(data));
+    }
+
+    function loadStationCommandData() {
+      const saved = localStorage.getItem('stationCommandData');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          if (data.inducted) document.getElementById('scInducted').textContent = data.inducted;
+          if (data.inductFlow) document.getElementById('scInductFlow').textContent = data.inductFlow;
+          if (data.stowFlow) document.getElementById('scStowFlow').textContent = data.stowFlow;
+          if (data.currentWIP) document.getElementById('scCurrentWIP').textContent = data.currentWIP;
+          if (data.wipCompliance) document.getElementById('scWIPCompliance').textContent = data.wipCompliance;
+          if (data.dwells) document.getElementById('scDwells').textContent = data.dwells;
+          if (data.inductStartTime) document.getElementById('inductStartTime').value = data.inductStartTime;
+        } catch(e) {}
+      }
+    }
+
+    function saveInductStartTime() {
+      saveStationCommandData();
+    }
+
+    function formatTimeDisplay(time24) {
+      if (!time24) return 'N/A';
+      const [hours, mins] = time24.split(':').map(Number);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const h12 = hours % 12 || 12;
+      return `${h12}:${String(mins).padStart(2, '0')} ${ampm}`;
+    }
+
+    function updateBreakStowed() {
+      const stowedInput = document.getElementById('modalStowedInput').value;
+      const inducted = parseInt(document.getElementById('modalInductedSoFar').textContent.replace(/,/g, '')) || 0;
+      const stowed = parseInt(stowedInput) || 0;
+      
+      // Calculate dwells (inducted - stowed)
+      const dwells = Math.max(0, inducted - stowed);
+      document.getElementById('modalDwells').textContent = dwells.toLocaleString();
+      
+      // Update remaining to stow
+      document.getElementById('modalRemainingStow').textContent = dwells.toLocaleString();
+      
+      // Also update hourly stowed
+      document.getElementById('hourlyTotalStowed').textContent = stowed.toLocaleString();
+      document.getElementById('hourlyLeftStow').textContent = dwells.toLocaleString();
+      
+      // Recalculate required flow
+      calculateRequiredFlows();
+    }
+
+    function calculateRequiredFlows() {
+      // Get time remaining
+      const endTimeEl = document.getElementById('shiftEnd');
+      if (!endTimeEl) return;
+      
+      const endTime = endTimeEl.value;
+      if (!endTime) return;
+      
+      const now = new Date();
+      const [endH, endM] = endTime.split(':').map(Number);
+      const end = new Date(now);
+      end.setHours(endH, endM, 0, 0);
+      
+      if (end <= now) return;
+      
+      const hoursLeft = (end - now) / (1000 * 60 * 60);
+      if (hoursLeft <= 0) return;
+      
+      // Get remaining to stow
+      const remainingStow = parseInt(document.getElementById('modalRemainingStow').textContent.replace(/,/g, '')) || 0;
+      
+      // Calculate required stow flow
+      const requiredFlow = Math.ceil(remainingStow / hoursLeft);
+      document.getElementById('modalStowFlow').textContent = requiredFlow.toLocaleString();
+    }
+
+    // Load station command data on page load
+    loadStationCommandData();
   </script>
 </body>
 </html>
