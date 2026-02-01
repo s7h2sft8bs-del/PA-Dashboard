@@ -173,6 +173,7 @@
     .nav-card.pick::before { background: var(--purple); }
     .nav-card.preshift::before { background: var(--success); }
     .nav-card.loadout::before { background: #EC4899; }
+    .nav-card.cube::before { background: #F59E0B; }
 
     .nav-card:hover {
       transform: translateY(-8px);
@@ -205,6 +206,11 @@
     .nav-card.loadout:hover {
       border-color: #EC4899;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(236, 72, 153, 0.15);
+    }
+
+    .nav-card.cube:hover {
+      border-color: #F59E0B;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(245, 158, 11, 0.15);
     }
 
     .nav-card-icon {
@@ -241,6 +247,11 @@
     .nav-card.loadout .nav-card-icon {
       background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
       box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+    }
+
+    .nav-card.cube .nav-card-icon {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
     }
 
     .nav-card-title {
@@ -304,6 +315,12 @@
       color: #EC4899;
     }
 
+    .nav-card.cube .feature-tag {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #F59E0B;
+    }
+
     .nav-card-arrow {
       position: absolute;
       bottom: 2rem;
@@ -327,6 +344,7 @@
     .nav-card.pick:hover .nav-card-arrow { background: var(--purple); }
     .nav-card.preshift:hover .nav-card-arrow { background: var(--success); }
     .nav-card.loadout:hover .nav-card-arrow { background: #EC4899; }
+    .nav-card.cube:hover .nav-card-arrow { background: #F59E0B; }
 
     .nav-card-arrow svg {
       width: 24px;
@@ -494,6 +512,25 @@
           <span class="feature-tag">Trailer Tracking</span>
           <span class="feature-tag">Departures</span>
           <span class="feature-tag">Planning</span>
+        </div>
+        <div class="nav-card-arrow">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Cube Calculator Card -->
+      <a href="amazon-pa-cube-calc.html" class="nav-card cube">
+        <div class="nav-card-icon">📦</div>
+        <h2 class="nav-card-title">Cube Calculator</h2>
+        <p class="nav-card-description">
+          Calculate average cube from trailer data. Toggle between On Premise and In Transit volume tracking.
+        </p>
+        <div class="nav-card-features">
+          <span class="feature-tag">Paste Data</span>
+          <span class="feature-tag">Manual Entry</span>
+          <span class="feature-tag">Cube Analysis</span>
         </div>
         <div class="nav-card-arrow">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
