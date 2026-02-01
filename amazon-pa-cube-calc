@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cube Calculator - Process Assistant Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amazon-orange: #FF9900;
+      --amazon-orange-dark: #E88B00;
+      --amazon-blue: #232F3E;
+      --amazon-blue-light: #37475A;
+      --amazon-teal: #00A8A8;
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --bg-card-alt: #1C2128;
+      --text-primary: #F0F6FC;
+      --text-secondary: #8B949E;
+      --text-muted: #6E7681;
+      --border-color: #30363D;
+      --success: #3FB950;
+      --warning: #D29922;
+      --danger: #F85149;
+      --purple: #8B5CF6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--amazon-blue) 0%, var(--amazon-blue-light) 100%);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--amazon-orange);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--amazon-orange);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--amazon-blue);
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .logo-text .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .logo-text .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-reset {
+      background: var(--bg-card-alt);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-reset:hover {
+      background: var(--danger);
+    }
+
+    .btn-copy {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-copy:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Toggle Section */
+    .toggle-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .toggle-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .toggle-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--amazon-orange);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toggle-container {
+      display: flex;
+      background: var(--bg-dark);
+      border-radius: 10px;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+    }
+
+    .toggle-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toggle-btn.active {
+      background: var(--amazon-orange);
+      color: var(--amazon-blue);
+    }
+
+    .toggle-btn:not(.active):hover {
+      background: var(--bg-card-alt);
+      color: var(--text-primary);
+    }
+
+    /* Summary Cards */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .summary-card.highlight {
+      border-color: var(--amazon-orange);
+      background: linear-gradient(135deg, rgba(255,153,0,0.1) 0%, var(--bg-card) 100%);
+    }
+
+    .summary-card.total-cube {
+      border-color: var(--amazon-teal);
+      background: linear-gradient(135deg, rgba(0,168,168,0.1) 0%, var(--bg-card) 100%);
+    }
+
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--amazon-orange);
+    }
+
+    .summary-card.total-cube .summary-value {
+      color: var(--amazon-teal);
+    }
+
+    .summary-unit {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+    }
+
+    /* Input Sections */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-badge {
+      background: var(--purple);
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Paste Area */
+    .paste-area {
+      width: 100%;
+      min-height: 200px;
+      background: var(--bg-dark);
+      border: 2px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .paste-area:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+    }
+
+    .paste-area::placeholder {
+      color: var(--text-muted);
+    }
+
+    .paste-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .btn-parse {
+      margin-top: 1rem;
+      width: 100%;
+      background: var(--amazon-teal);
+      color: white;
+      padding: 0.75rem;
+    }
+
+    .btn-parse:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Manual Input */
+    .manual-row {
+      display: grid;
+      grid-template-columns: 1fr 100px 120px 60px;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: center;
+    }
+
+    .manual-row.header {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .manual-input {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .manual-input:focus {
+      outline: none;
+      border-color: var(--amazon-orange);
+    }
+
+    .manual-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-remove {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-remove:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-add-row {
+      margin-top: 0.5rem;
+      background: transparent;
+      border: 1px dashed var(--amazon-teal);
+      color: var(--amazon-teal);
+      width: 100%;
+      padding: 0.75rem;
+    }
+
+    .btn-add-row:hover {
+      background: rgba(0,168,168,0.1);
+    }
+
+    /* Results Table */
+    .results-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .results-table th {
+      background: var(--bg-dark);
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .results-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .results-table tr:hover {
+      background: var(--bg-card-alt);
+    }
+
+    .results-table .cube-value {
+      color: var(--amazon-teal);
+      font-weight: 600;
+    }
+
+    .results-table .units-value {
+      color: var(--amazon-orange);
+      font-weight: 600;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
+    /* Copy Output */
+    .copy-output {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .output-text {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      min-height: 100px;
+    }
+
+    /* Status indicator */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-badge.on-premise {
+      background: rgba(63, 185, 80, 0.2);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .status-badge.in-transit {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--purple);
+      border: 1px solid var(--purple);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header {
+        padding: 0.75rem 1rem;
+      }
+
+      .logo-text .title {
+        font-size: 1.25rem;
+      }
+
+      .toggle-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .summary-value {
+        font-size: 2rem;
+      }
+
+      .manual-row {
+        grid-template-columns: 1fr 80px 100px 50px;
+        gap: 0.25rem;
+      }
+
+      .manual-input {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Home
+      </a>
+      <div class="logo">
+        <div class="logo-icon">📦</div>
+        <div class="logo-text">
+          <div class="title">Cube Calculator</div>
+          <div class="subtitle">Volume & Cube Analysis</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-reset" onclick="resetAll()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        RESET
+      </button>
+      <button class="btn btn-copy" onclick="copyOutput()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+        </svg>
+        COPY
+      </button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Toggle Section -->
+    <div class="toggle-section">
+      <div class="toggle-header">
+        <div class="toggle-title">
+          <span>📍</span> Volume Status
+          <span class="status-badge on-premise" id="statusBadge">
+            <span id="statusIcon">🏭</span>
+            <span id="statusText">On Premise</span>
+          </span>
+        </div>
+        <div class="toggle-container">
+          <button class="toggle-btn active" id="toggleOnPremise" onclick="setMode('onpremise')">
+            🏭 On Premise
+          </button>
+          <button class="toggle-btn" id="toggleInTransit" onclick="setMode('intransit')">
+            🚛 In Transit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card highlight">
+        <div class="summary-label">Total Units</div>
+        <div class="summary-value" id="totalUnits">0</div>
+      </div>
+      <div class="summary-card total-cube">
+        <div class="summary-label">Average Cube</div>
+        <div class="summary-value" id="avgCube">0.00</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total Cube Feet</div>
+        <div class="summary-value" id="totalCubeFeet">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Trailers</div>
+        <div class="summary-value" id="trailerCount">0</div>
+      </div>
+    </div>
+
+    <!-- Input Grid -->
+    <div class="input-grid">
+      <!-- Paste Section -->
+      <div class="input-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>📋</span> Paste Data
+          </div>
+          <span class="section-badge">BULK</span>
+        </div>
+        <textarea class="paste-area" id="pasteArea" placeholder="Paste trailer data here...
+
+Format: VRID | Units | Cube Feet
+Example:
+1123MBDPH	2402	1241.47
+116V7T5TW	3326	1232.72
+1153F6GJG	2151	359.6
+
+Or just paste Units and Cube columns:
+2402	1241.47
+3326	1232.72"></textarea>
+        <div class="paste-hint">
+          💡 Supports tab-separated, comma-separated, or space-separated values. Can include or exclude VRID.
+        </div>
+        <button class="btn btn-parse" onclick="parsePastedData()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          Parse & Calculate
+        </button>
+      </div>
+
+      <!-- Manual Input Section -->
+      <div class="input-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>✏️</span> Manual Entry
+          </div>
+          <span class="section-badge">ROW-BY-ROW</span>
+        </div>
+        <div class="manual-row header">
+          <span>VRID (Optional)</span>
+          <span>Units</span>
+          <span>Cube Feet</span>
+          <span></span>
+        </div>
+        <div id="manualRows">
+          <div class="manual-row" data-row="1">
+            <input type="text" class="manual-input vrid-input" placeholder="e.g., 1123MBDPH">
+            <input type="number" class="manual-input units-input" placeholder="Units" oninput="calculateFromManual()">
+            <input type="number" class="manual-input cube-input" placeholder="Cube Feet" step="0.01" oninput="calculateFromManual()">
+            <button class="btn-remove" onclick="removeRow(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn btn-add-row" onclick="addManualRow()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Add Another Trailer
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="results-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📊</span> Calculation Results
+        </div>
+        <span id="resultMode" class="status-badge on-premise">🏭 On Premise</span>
+      </div>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>VRID</th>
+            <th>Units</th>
+            <th>Cube Feet</th>
+            <th>Cube/Unit</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody">
+          <tr class="no-data">
+            <td colspan="4">No data yet. Paste or enter trailer information above.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Copy Output -->
+    <div class="copy-output">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📤</span> Copy Output
+        </div>
+      </div>
+      <div class="output-text" id="outputText">No data to display.</div>
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'onpremise';
+    let trailerData = [];
+
+    function setMode(mode) {
+      currentMode = mode;
+      
+      // Update toggle buttons
+      document.getElementById('toggleOnPremise').classList.toggle('active', mode === 'onpremise');
+      document.getElementById('toggleInTransit').classList.toggle('active', mode === 'intransit');
+      
+      // Update status badge
+      const badge = document.getElementById('statusBadge');
+      const icon = document.getElementById('statusIcon');
+      const text = document.getElementById('statusText');
+      const resultMode = document.getElementById('resultMode');
+      
+      if (mode === 'onpremise') {
+        badge.className = 'status-badge on-premise';
+        icon.textContent = '🏭';
+        text.textContent = 'On Premise';
+        resultMode.className = 'status-badge on-premise';
+        resultMode.innerHTML = '🏭 On Premise';
+      } else {
+        badge.className = 'status-badge in-transit';
+        icon.textContent = '🚛';
+        text.textContent = 'In Transit';
+        resultMode.className = 'status-badge in-transit';
+        resultMode.innerHTML = '🚛 In Transit';
+      }
+      
+      updateOutput();
+    }
+
+    function parsePastedData() {
+      const pasteArea = document.getElementById('pasteArea');
+      const text = pasteArea.value.trim();
+      
+      if (!text) {
+        alert('Please paste some data first.');
+        return;
+      }
+      
+      const lines = text.split('\n').filter(line => line.trim());
+      trailerData = [];
+      
+      lines.forEach((line, index) => {
+        // Clean and split the line
+        const parts = line.trim().split(/[\t,\s]+/).filter(p => p);
+        
+        if (parts.length >= 2) {
+          let vrid = '';
+          let units = 0;
+          let cubeFeet = 0;
+          
+          // Check if first part is a VRID (contains letters) or a number
+          if (parts.length >= 3 && isNaN(parseFloat(parts[0]))) {
+            // Has VRID
+            vrid = parts[0];
+            units = parseFloat(parts[1]) || 0;
+            cubeFeet = parseFloat(parts[2]) || 0;
+          } else if (parts.length >= 2) {
+            // No VRID, just units and cube
+            vrid = `Trailer ${index + 1}`;
+            units = parseFloat(parts[0]) || 0;
+            cubeFeet = parseFloat(parts[1]) || 0;
+          }
+          
+          if (units > 0) {
+            trailerData.push({ vrid, units, cubeFeet });
+          }
+        }
+      });
+      
+      if (trailerData.length === 0) {
+        alert('Could not parse any valid data. Please check the format.');
+        return;
+      }
+      
+      updateResults();
+      updateOutput();
+    }
+
+    function calculateFromManual() {
+      trailerData = [];
+      const rows = document.querySelectorAll('#manualRows .manual-row');
+      
+      rows.forEach((row, index) => {
+        const vrid = row.querySelector('.vrid-input').value || `Trailer ${index + 1}`;
+        const units = parseFloat(row.querySelector('.units-input').value) || 0;
+        const cubeFeet = parseFloat(row.querySelector('.cube-input').value) || 0;
+        
+        if (units > 0) {
+          trailerData.push({ vrid, units, cubeFeet });
+        }
+      });
+      
+      updateResults();
+      updateOutput();
+    }
+
+    function addManualRow() {
+      const container = document.getElementById('manualRows');
+      const rowCount = container.children.length + 1;
+      
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'manual-row';
+      rowDiv.dataset.row = rowCount;
+      rowDiv.innerHTML = `
+        <input type="text" class="manual-input vrid-input" placeholder="e.g., VRID${rowCount}">
+        <input type="number" class="manual-input units-input" placeholder="Units" oninput="calculateFromManual()">
+        <input type="number" class="manual-input cube-input" placeholder="Cube Feet" step="0.01" oninput="calculateFromManual()">
+        <button class="btn-remove" onclick="removeRow(this)">✕</button>
+      `;
+      
+      container.appendChild(rowDiv);
+    }
+
+    function removeRow(btn) {
+      const row = btn.closest('.manual-row');
+      const container = document.getElementById('manualRows');
+      
+      if (container.children.length > 1) {
+        row.remove();
+        calculateFromManual();
+      }
+    }
+
+    function updateResults() {
+      const tbody = document.getElementById('resultsBody');
+      
+      if (trailerData.length === 0) {
+        tbody.innerHTML = '<tr class="no-data"><td colspan="4">No data yet. Paste or enter trailer information above.</td></tr>';
+        document.getElementById('totalUnits').textContent = '0';
+        document.getElementById('avgCube').textContent = '0.00';
+        document.getElementById('totalCubeFeet').textContent = '0';
+        document.getElementById('trailerCount').textContent = '0';
+        return;
+      }
+      
+      let totalUnits = 0;
+      let totalCubeFeet = 0;
+      
+      let html = '';
+      trailerData.forEach(item => {
+        const cubePerUnit = item.units > 0 ? (item.cubeFeet / item.units).toFixed(2) : '0.00';
+        totalUnits += item.units;
+        totalCubeFeet += item.cubeFeet;
+        
+        html += `
+          <tr>
+            <td>${item.vrid}</td>
+            <td class="units-value">${item.units.toLocaleString()}</td>
+            <td>${item.cubeFeet.toLocaleString()}</td>
+            <td class="cube-value">${cubePerUnit}</td>
+          </tr>
+        `;
+      });
+      
+      tbody.innerHTML = html;
+      
+      const avgCube = totalUnits > 0 ? (totalCubeFeet / totalUnits).toFixed(2) : '0.00';
+      
+      document.getElementById('totalUnits').textContent = totalUnits.toLocaleString();
+      document.getElementById('avgCube').textContent = avgCube;
+      document.getElementById('totalCubeFeet').textContent = Math.round(totalCubeFeet).toLocaleString();
+      document.getElementById('trailerCount').textContent = trailerData.length;
+    }
+
+    function updateOutput() {
+      const outputEl = document.getElementById('outputText');
+      
+      if (trailerData.length === 0) {
+        outputEl.textContent = 'No data to display.';
+        return;
+      }
+      
+      let totalUnits = 0;
+      let totalCubeFeet = 0;
+      
+      trailerData.forEach(item => {
+        totalUnits += item.units;
+        totalCubeFeet += item.cubeFeet;
+      });
+      
+      const avgCube = totalUnits > 0 ? (totalCubeFeet / totalUnits).toFixed(2) : '0.00';
+      const modeLabel = currentMode === 'onpremise' ? '🏭 ON PREMISE' : '🚛 IN TRANSIT';
+      
+      let output = `📦 CUBE CALCULATOR - ${modeLabel}\n`;
+      output += `━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      output += `📊 Total Units: ${totalUnits.toLocaleString()}\n`;
+      output += `📐 Total Cube Feet: ${Math.round(totalCubeFeet).toLocaleString()}\n`;
+      output += `📏 Average Cube: ${avgCube}\n`;
+      output += `🚛 Trailers: ${trailerData.length}\n`;
+      output += `━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+      
+      output += `Breakdown:\n`;
+      trailerData.forEach(item => {
+        const cubePerUnit = item.units > 0 ? (item.cubeFeet / item.units).toFixed(2) : '0.00';
+        output += `• ${item.vrid}: ${item.units.toLocaleString()} units (${cubePerUnit} cube)\n`;
+      });
+      
+      outputEl.textContent = output;
+    }
+
+    function copyOutput() {
+      const outputText = document.getElementById('outputText').textContent;
+      
+      if (outputText === 'No data to display.') {
+        alert('No data to copy.');
+        return;
+      }
+      
+      navigator.clipboard.writeText(outputText).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        btn.style.background = '#3FB950';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      });
+    }
+
+    function resetAll() {
+      if (!confirm('Reset all data?')) return;
+      
+      trailerData = [];
+      document.getElementById('pasteArea').value = '';
+      
+      // Reset manual rows to just one
+      const container = document.getElementById('manualRows');
+      container.innerHTML = `
+        <div class="manual-row" data-row="1">
+          <input type="text" class="manual-input vrid-input" placeholder="e.g., 1123MBDPH">
+          <input type="number" class="manual-input units-input" placeholder="Units" oninput="calculateFromManual()">
+          <input type="number" class="manual-input cube-input" placeholder="Cube Feet" step="0.01" oninput="calculateFromManual()">
+          <button class="btn-remove" onclick="removeRow(this)">✕</button>
+        </div>
+      `;
+      
+      updateResults();
+      updateOutput();
+    }
+  </script>
+</body>
+</html>
