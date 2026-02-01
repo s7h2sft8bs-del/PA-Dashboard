@@ -1944,16 +1944,19 @@ ${statusLine}`;
       calculateAll();
       updateLiveProgress();
       
-      // IMPORTANT: Save empty data to cloud to overwrite old data
-      saveAllData();
-      saveToCloud();
+      // IMPORTANT: Clear cloud data explicitly
+      clearCloud();
+      
+      // Also clear localStorage again
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('loadOutPlanData');
       
       // Update sync status
       const syncStatus = document.getElementById('syncStatus');
-      if (syncStatus) syncStatus.textContent = '☁️ Reset';
+      if (syncStatus) syncStatus.textContent = '☁️ Cleared';
       
       // Re-enable cloud load after delay
-      setTimeout(() => { preventCloudLoad = false; }, 3000);
+      setTimeout(() => { preventCloudLoad = false; }, 5000);
       
       alert('All data has been reset!');
     }
@@ -1986,6 +1989,22 @@ ${statusLine}`;
         showSyncStatus('saved');
       } catch (error) {
         console.error('Cloud save error:', error);
+      }
+    }
+
+    async function clearCloud() {
+      const emptyData = [
+        new Date().toISOString(),
+        PAGE_NAME_CLOUD,
+        '', '380', '09:00', '11:30', '3', '4', '', '', '', '', '', ''
+      ];
+      
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(emptyData))}`;
+        await fetch(url, { mode: 'no-cors' });
+        console.log('Cloud data cleared');
+      } catch (error) {
+        console.error('Cloud clear error:', error);
       }
     }
 
