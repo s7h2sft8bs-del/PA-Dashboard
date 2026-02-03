@@ -528,11 +528,9 @@
     <div class="hourly-section">
       <div class="card-header" style="border-bottom-color: var(--amazon-orange);">
         <div class="card-title" style="color: var(--amazon-orange);">📋 Hourly Update</div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <button class="btn btn-primary" onclick="copyHourlyUpdate()" style="font-size: 0.9rem;">📋 Copy Hourly Update</button>
-          <span class="copy-confirm" id="hourlyCopyConfirm">✓ Copied!</span>
-        </div>
+        <span class="copy-confirm" id="hourlyCopyConfirm">✓ Copied!</span>
       </div>
+      <!-- Row 1: Inducted / Stowed counts -->
       <div class="grid-4" style="margin-bottom: 0.75rem;">
         <div class="stat-box">
           <div class="stat-label">Inducted</div>
@@ -540,7 +538,7 @@
         </div>
         <div class="stat-box">
           <div class="stat-label">Left to Induct</div>
-          <div class="stat-value" id="hLeftInduct">0</div>
+          <div class="stat-value" id="hLeftInduct" style="color: var(--text-primary);">0</div>
         </div>
         <div class="stat-box">
           <div class="stat-label">Stowed</div>
@@ -551,37 +549,52 @@
           <div class="stat-value red" id="hDwells">0</div>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="stat-box" style="border: 2px solid var(--amazon-orange); border-radius: 8px;">
-          <div class="stat-label" style="color: var(--amazon-orange);">🎯 Induct Finish: <span id="hInductTarget">8:30 AM</span></div>
-          <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.25rem;">
-            <div>
-              <div class="stat-sub">Time Left</div>
-              <div class="stat-value orange" id="hInductTimeLeft" style="font-size: 1.25rem;">0:00</div>
-            </div>
-            <div>
-              <div class="stat-sub">Required Flow</div>
-              <div class="stat-value orange" id="hReqInductFlow" style="font-size: 1.25rem;">0</div>
-              <div class="stat-sub">TPH</div>
-            </div>
+      <!-- Row 2: INDUCT flow needed -->
+      <div style="background: rgba(255,153,0,0.1); border: 2px solid var(--amazon-orange); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <div style="font-size: 0.8rem; color: var(--amazon-orange); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">🎯 Induct Complete By: <span id="hInductTarget" style="font-size: 1rem;">8:30 AM</span></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Working Time Left: <span id="hInductTimeLeft" style="color: var(--amazon-orange); font-weight: 600;">0:00</span></div>
           </div>
-        </div>
-        <div class="stat-box" style="border: 2px solid var(--success); border-radius: 8px;">
-          <div class="stat-label" style="color: var(--success);">🎯 Stow Finish: <span id="hStowTarget">9:00 AM</span></div>
-          <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.25rem;">
-            <div>
-              <div class="stat-sub">Time Left</div>
-              <div class="stat-value green" id="hStowTimeLeft" style="font-size: 1.25rem;">0:00</div>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="text-align: center;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Current</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--amazon-teal);" id="hCurrentInductFlow">0</div>
+              <div style="font-size: 0.65rem; color: var(--text-muted);">TPH</div>
             </div>
-            <div>
-              <div class="stat-sub">Required Flow</div>
-              <div class="stat-value green" id="hReqStowFlow" style="font-size: 1.25rem;">0</div>
-              <div class="stat-sub">TPH</div>
+            <div style="font-size: 1.5rem; color: var(--text-muted);">→</div>
+            <div style="text-align: center; background: rgba(255,153,0,0.2); border-radius: 8px; padding: 0.5rem 1rem;">
+              <div style="font-size: 0.7rem; color: var(--amazon-orange); font-weight: 600;">NEEDED</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--amazon-orange);" id="hReqInductFlow">0</div>
+              <div style="font-size: 0.7rem; color: var(--amazon-orange); font-weight: 600;">TPH</div>
             </div>
           </div>
         </div>
       </div>
-      <button onclick="copyHourlyUpdate()" style="margin-top: 1rem; width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--amazon-orange) 0%, var(--amazon-orange-dark) 100%); border: none; border-radius: 8px; color: var(--amazon-blue); font-family: 'Barlow', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+      <!-- Row 3: STOW flow needed -->
+      <div style="background: rgba(63,185,80,0.08); border: 2px solid var(--success); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <div style="font-size: 0.8rem; color: var(--success); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">🎯 Stow Complete By: <span id="hStowTarget" style="font-size: 1rem;">9:00 AM</span></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Working Time Left: <span id="hStowTimeLeft" style="color: var(--success); font-weight: 600;">0:00</span></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="text-align: center;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Current</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--amazon-teal);" id="hCurrentStowFlow">0</div>
+              <div style="font-size: 0.65rem; color: var(--text-muted);">TPH</div>
+            </div>
+            <div style="font-size: 1.5rem; color: var(--text-muted);">→</div>
+            <div style="text-align: center; background: rgba(63,185,80,0.2); border-radius: 8px; padding: 0.5rem 1rem;">
+              <div style="font-size: 0.7rem; color: var(--success); font-weight: 600;">NEEDED</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--success);" id="hReqStowFlow">0</div>
+              <div style="font-size: 0.7rem; color: var(--success); font-weight: 600;">TPH</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Big Copy Button -->
+      <button onclick="copyHourlyUpdate()" style="margin-top: 0.5rem; width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--amazon-orange) 0%, var(--amazon-orange-dark) 100%); border: none; border-radius: 8px; color: var(--amazon-blue); font-family: 'Barlow', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
         📋 COPY HOURLY UPDATE TO CLIPBOARD
       </button>
     </div>
@@ -833,6 +846,10 @@
       document.getElementById('hReqInductFlow').textContent = reqInductFlow.toLocaleString();
       document.getElementById('hReqStowFlow').textContent = reqStowFlow.toLocaleString();
 
+      // Current flows from Station Command
+      document.getElementById('hCurrentInductFlow').textContent = document.getElementById('scInductFlow').textContent || '0';
+      document.getElementById('hCurrentStowFlow').textContent = document.getElementById('scStowFlow').textContent || '0';
+
       // Update induct complete panel if active
       if (inductComplete) updateICPanel();
     }
@@ -1062,13 +1079,16 @@
 
 ⏰ Induct Started: ${inductStartStr}
 ✅ Final Inducted: ${inductCompleteData.finalInducted.toLocaleString()}
-📦 Stowed: ${stowed.toLocaleString()} | Dwells: ${icLeftToStow.toLocaleString()}
+📦 Stowed: ${stowed.toLocaleString()}
+📦 Dwells (Left to Stow): ${icLeftToStow.toLocaleString()}
 🚫 Rolled/Crashed: ${crashed.toLocaleString()}
-⚡ Stow Flow: ${scStowFlow} TPH
+
+⚡ Current Stow Flow: ${scStowFlow} TPH
 📊 WIP: ${parseInt(scWIP).toLocaleString()} | Compliance: ${scWIPCompliance}
 
-🎯 Stow Finish: ${formatTime12(stowEnd)} | Working Time Left: ${formatHoursToStr(stowEffective)}
-⚡ Required Stow Flow: ${reqStowFlow.toLocaleString()} TPH`;
+🎯 Stow Finish: ${formatTime12(stowEnd)}
+⏱️ Working Time Left: ${formatHoursToStr(stowEffective)}
+🔥 REQUIRED STOW FLOW: ${reqStowFlow.toLocaleString()} TPH`;
       } else {
         const reqInductFlow = inductEffective > 0 ? Math.ceil(leftInduct / inductEffective) : 0;
         const reqStowFlow = stowEffective > 0 ? Math.ceil(leftStow / stowEffective) : 0;
@@ -1076,16 +1096,20 @@
         output = `📋 HOURLY UPDATE - ${timeStr}
 
 ⏰ Induct Started: ${inductStartStr}
-📦 Inducted: ${inducted.toLocaleString()} | Left: ${leftInduct.toLocaleString()}
+📦 Inducted: ${inducted.toLocaleString()} | Left to Induct: ${leftInduct.toLocaleString()}
 📦 Stowed: ${stowed.toLocaleString()} | Dwells: ${leftStow.toLocaleString()}
-⚡ Induct Flow: ${scInductFlow} TPH | Stow Flow: ${scStowFlow} TPH
+
+⚡ Current Induct Flow: ${scInductFlow} TPH
+⚡ Current Stow Flow: ${scStowFlow} TPH
 📊 WIP: ${parseInt(scWIP).toLocaleString()} | Compliance: ${scWIPCompliance}
 
-🎯 Induct Finish: ${formatTime12(inductEnd)} | Working Time: ${formatHoursToStr(inductEffective)}
-⚡ Required Induct Flow: ${reqInductFlow.toLocaleString()} TPH
+🎯 Induct Finish: ${formatTime12(inductEnd)}
+⏱️ Working Time Left: ${formatHoursToStr(inductEffective)}
+🔥 REQUIRED INDUCT FLOW: ${reqInductFlow.toLocaleString()} TPH
 
-🎯 Stow Finish: ${formatTime12(stowEnd)} | Working Time: ${formatHoursToStr(stowEffective)}
-⚡ Required Stow Flow: ${reqStowFlow.toLocaleString()} TPH`;
+🎯 Stow Finish: ${formatTime12(stowEnd)}
+⏱️ Working Time Left: ${formatHoursToStr(stowEffective)}
+🔥 REQUIRED STOW FLOW: ${reqStowFlow.toLocaleString()} TPH`;
       }
 
       navigator.clipboard.writeText(output).then(() => {
