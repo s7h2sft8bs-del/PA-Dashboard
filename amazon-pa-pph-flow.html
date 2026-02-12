@@ -25,7 +25,7 @@
     body { font-family: 'Barlow', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; }
     .header { background: linear-gradient(135deg, var(--amazon-blue), var(--amazon-blue-light)); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--amazon-orange); position: sticky; top: 0; z-index: 100; }
     .header-left { display: flex; align-items: center; gap: 1rem; }
-    .back-btn { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.25rem; }
+    .back-btn { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
     .back-btn:hover { color: var(--amazon-orange); }
     .logo { display: flex; align-items: center; gap: 0.5rem; }
     .logo-icon { width: 40px; height: 40px; background: var(--amazon-orange); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; color: var(--amazon-blue); }
@@ -33,40 +33,38 @@
     .logo-text span { color: var(--amazon-orange); }
     .header-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
     .clock { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--amazon-orange); }
-    .btn { padding: 0.4rem 0.75rem; border: none; border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+    .btn { padding: 0.4rem 0.75rem; border: none; border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
     .btn-primary { background: var(--amazon-orange); color: var(--amazon-blue); }
     .btn-danger { background: var(--danger); color: white; }
     .btn-success { background: var(--success); color: white; }
-    .btn-warning { background: var(--warning); color: var(--amazon-blue); }
     .btn-teal { background: var(--amazon-teal); color: white; }
     .btn:hover { opacity: 0.9; }
     .container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
     .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
     .card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 600; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
-    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
     .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
-    .stat { background: var(--bg-dark); border-radius: 8px; padding: 0.5rem; text-align: center; }
-    .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
-    .stat-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; font-weight: 700; }
-    .stat-value.orange { color: var(--amazon-orange); }
-    .stat-value.teal { color: var(--amazon-teal); }
-    .stat-value.green { color: var(--success); }
-    .stat-value.red { color: var(--danger); }
-    .stat-sub { font-size: 0.6rem; color: var(--text-muted); }
-    .input { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; color: var(--text-primary); font-family: 'Barlow', sans-serif; font-size: 0.9rem; width: 100%; }
-    .input:focus { outline: none; border-color: var(--amazon-orange); }
-    .input-orange { color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 600; text-align: center; }
-    .input-manual { border: 2px solid var(--warning) !important; }
+    .stat-item { text-align: center; padding: 0.5rem; }
+    .stat-item label { display: block; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+    .stat-item .value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; font-weight: 700; }
+    .stat-item .value.orange { color: var(--amazon-orange); }
+    .stat-item .value.teal { color: var(--amazon-teal); }
+    .stat-item .value.green { color: var(--success); }
+    .stat-item .value.red { color: var(--danger); }
+    .stat-item input[type="number"] { background: transparent; border: none; border-bottom: 2px solid var(--border-color); color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 600; text-align: center; width: 100%; padding: 0.25rem; }
+    .stat-item input[type="number"]:focus { outline: none; border-bottom-color: var(--amazon-orange); }
+    .stat-item input.manual { border-bottom-color: var(--warning); color: var(--warning); }
+    .stat-item .tag { font-size: 0.5rem; text-transform: uppercase; margin-top: 0.15rem; }
+    .stat-item .tag.parsed { color: var(--amazon-teal); }
+    .stat-item .tag.manual { color: var(--warning); }
     .time-input { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.35rem; color: var(--amazon-orange); font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; }
     .preshift-bar { background: linear-gradient(135deg, rgba(63,185,80,0.1), rgba(0,168,168,0.1)); border: 1px solid var(--success); border-radius: 10px; padding: 0.75rem; margin-bottom: 1rem; }
     .preshift-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
     .preshift-item { text-align: center; }
-    .preshift-label { font-size: 0.55rem; color: var(--success); text-transform: uppercase; }
-    .preshift-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 600; }
+    .preshift-item .lbl { font-size: 0.55rem; color: var(--success); text-transform: uppercase; }
+    .preshift-item .val { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 600; }
     .flow-section { background: var(--bg-card); border: 2px solid var(--amazon-orange); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
     .flow-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .flow-box { background: var(--bg-dark); border-radius: 10px; padding: 0.75rem; text-align: center; }
@@ -91,7 +89,7 @@
     .flow-needed-val.orange { color: var(--amazon-orange); }
     .flow-needed-val.green { color: var(--success); }
     .flow-needed-unit { font-size: 0.6rem; color: var(--text-muted); }
-    .copy-btn { width: 100%; padding: 0.85rem; margin-top: 0.75rem; background: linear-gradient(135deg, var(--amazon-orange), #E88B00); border: none; border-radius: 8px; color: var(--amazon-blue); font-family: 'Barlow', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .copy-btn { width: 100%; padding: 0.85rem; margin-top: 0.75rem; background: linear-gradient(135deg, var(--amazon-orange), #E88B00); border: none; border-radius: 8px; color: var(--amazon-blue); font-family: 'Barlow', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; }
     .copy-btn:hover { opacity: 0.9; }
     .copy-confirm { color: var(--success); font-weight: 600; display: none; margin-left: 0.5rem; }
     .copy-confirm.show { display: inline; }
@@ -99,18 +97,19 @@
     .ic-banner.show { display: block; }
     .ic-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
     .ic-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: var(--success); }
-    .breaks-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.4rem; align-items: center; }
-    .break-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; }
-    .break-item input[type="checkbox"] { accent-color: var(--amazon-orange); }
-    .break-time-input { width: 70px; font-size: 0.75rem; padding: 0.2rem 0.3rem; display: none; }
-    .break-time-input.show { display: inline-block; }
+    .breaks-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; align-items: center; }
+    .break-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+    .break-item input[type="checkbox"] { accent-color: var(--amazon-orange); width: 16px; height: 16px; }
+    .break-custom { display: none; align-items: center; gap: 0.25rem; }
+    .break-custom.show { display: flex; }
+    .break-custom input { width: 70px; font-size: 0.75rem; padding: 0.2rem; }
+    .section-divider { border-bottom: 1px dashed var(--border-color); margin: 0.75rem 0; padding-bottom: 0.5rem; }
+    .section-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
     .pph-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.3rem; }
     .pph-item { background: var(--bg-dark); border-radius: 6px; padding: 0.3rem 0.5rem; display: flex; justify-content: space-between; font-size: 0.75rem; }
     .pph-role { color: var(--text-secondary); }
     .pph-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; color: var(--amazon-orange); }
-    .manual-badge { font-size: 0.5rem; color: var(--warning); text-transform: uppercase; }
-    .parsed-badge { font-size: 0.5rem; color: var(--amazon-teal); text-transform: uppercase; }
-    @media (max-width: 768px) { .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .preshift-grid { grid-template-columns: 1fr 1fr; } .flow-row { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .grid-3, .grid-4, .grid-6, .preshift-grid { grid-template-columns: repeat(2, 1fr); } .flow-row { grid-template-columns: 1fr; } .breaks-row { flex-direction: column; align-items: flex-start; } }
   </style>
 </head>
 <body>
@@ -138,12 +137,12 @@
         <span id="psSource" style="font-size: 0.65rem; color: var(--text-muted);">Not loaded</span>
       </div>
       <div class="preshift-grid">
-        <div class="preshift-item"><div class="preshift-label">C1 Volume</div><div class="preshift-value" id="psVol">0</div></div>
-        <div class="preshift-item"><div class="preshift-label">FPH</div><div class="preshift-value" id="psFPH">0</div></div>
-        <div class="preshift-item"><div class="preshift-label">Planned HC</div><div class="preshift-value" id="psHC">0</div></div>
-        <div class="preshift-item"><div class="preshift-label">Target TPH</div><div class="preshift-value" id="psTPH">90</div></div>
-        <div class="preshift-item"><div class="preshift-label">Planned Hrs</div><div class="preshift-value" id="psPlanHrs">0</div></div>
-        <div class="preshift-item"><div class="preshift-label">Projected Hrs</div><div class="preshift-value" id="psProjHrs">0</div></div>
+        <div class="preshift-item"><div class="lbl">C1 Volume</div><div class="val" id="psVol">0</div></div>
+        <div class="preshift-item"><div class="lbl">FPH</div><div class="val" id="psFPH">0</div></div>
+        <div class="preshift-item"><div class="lbl">Planned HC</div><div class="val" id="psHC">0</div></div>
+        <div class="preshift-item"><div class="lbl">Target TPH</div><div class="val" id="psTPH">90</div></div>
+        <div class="preshift-item"><div class="lbl">Planned Hrs</div><div class="val" id="psPlanHrs">0</div></div>
+        <div class="preshift-item"><div class="lbl">Projected Hrs</div><div class="val" id="psProjHrs">0</div></div>
       </div>
     </div>
 
@@ -154,10 +153,10 @@
         <button class="btn btn-danger" onclick="undoIC()" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Undo</button>
       </div>
       <div class="grid-4">
-        <div class="stat"><div class="stat-label">Final Inducted</div><div class="stat-value green" id="icInd">0</div></div>
-        <div class="stat" style="border: 1px solid var(--danger);"><div class="stat-label" style="color: var(--danger);">Rolled/Crashed</div><input type="number" id="icCrash" class="input input-orange" style="color: var(--danger); margin-top: 0.2rem;" placeholder="0" oninput="updateIC()"></div>
-        <div class="stat"><div class="stat-label">Left to Stow</div><div class="stat-value orange" id="icLeft">0</div></div>
-        <div class="stat" style="border: 2px solid var(--success);"><div class="stat-label" style="color: var(--success);">Req Stow Flow</div><div class="stat-value green" id="icReq">0</div><div class="stat-sub">TPH</div></div>
+        <div class="stat-item"><label>Final Inducted</label><div class="value green" id="icInd">0</div></div>
+        <div class="stat-item"><label style="color: var(--danger);">Rolled/Crashed</label><input type="number" id="icCrash" placeholder="0" oninput="updateIC()"></div>
+        <div class="stat-item"><label>Left to Stow</label><div class="value orange" id="icLeft">0</div></div>
+        <div class="stat-item"><label style="color: var(--success);">Req Stow Flow</label><div class="value green" id="icReq">0</div><div class="tag" style="color: var(--text-muted);">TPH</div></div>
       </div>
     </div>
 
@@ -167,65 +166,26 @@
         <div class="card-title" style="color: var(--amazon-teal);">⚡ Station Command Quick Paste</div>
         <button class="btn btn-teal" onclick="parseStation()" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">Parse</button>
       </div>
-      <textarea id="scPaste" placeholder="Paste Station Command data here..." style="width: 100%; height: 50px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem; color: var(--text-primary); font-family: monospace; font-size: 0.75rem; resize: none; margin-bottom: 0.75rem;"></textarea>
+      <textarea id="scPaste" placeholder="Paste Station Command data here..." style="width: 100%; height: 50px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem; color: var(--text-primary); font-family: monospace; font-size: 0.75rem; resize: none; margin-bottom: 0.5rem;"></textarea>
       
-      <!-- Parsed Values Row -->
-      <div style="margin-bottom: 0.5rem;">
-        <div style="font-size: 0.65rem; color: var(--amazon-teal); margin-bottom: 0.3rem;">AUTO-PARSED FROM PASTE:</div>
-        <div class="grid-4">
-          <div class="stat">
-            <div class="stat-label">Inducted</div>
-            <div class="stat-value orange" id="scInducted">0</div>
-            <div class="parsed-badge">parsed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Induct Flow</div>
-            <div class="stat-value teal" id="scIndFlow">0</div>
-            <div class="parsed-badge">parsed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Stow Flow</div>
-            <div class="stat-value green" id="scStwFlow">0</div>
-            <div class="parsed-badge">parsed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">WIP Compliance</div>
-            <div class="stat-value" id="scWIPComp">--%</div>
-            <div class="parsed-badge">parsed</div>
-          </div>
-        </div>
+      <div class="section-label" style="color: var(--amazon-teal);">Auto-Parsed</div>
+      <div class="grid-4" style="margin-bottom: 0.5rem;">
+        <div class="stat-item"><label>Inducted</label><div class="value orange" id="scInducted">0</div><div class="tag parsed">parsed</div></div>
+        <div class="stat-item"><label>Induct Flow</label><div class="value teal" id="scIndFlow">0</div><div class="tag parsed">parsed</div></div>
+        <div class="stat-item"><label>Stow Flow</label><div class="value green" id="scStwFlow">0</div><div class="tag parsed">parsed</div></div>
+        <div class="stat-item"><label>WIP Compliance</label><div class="value" id="scWIPComp">--%</div><div class="tag parsed">parsed</div></div>
       </div>
       
-      <!-- Manual Entry Row -->
-      <div>
-        <div style="font-size: 0.65rem; color: var(--warning); margin-bottom: 0.3rem;">MANUAL ENTRY:</div>
-        <div class="grid-5">
-          <div class="stat" style="border: 2px solid var(--warning);">
-            <div class="stat-label" style="color: var(--warning);">Left to Induct</div>
-            <input type="number" id="scLeftInd" class="input input-orange input-manual" placeholder="0" oninput="updateFlow(); save();">
-            <div class="manual-badge">manual</div>
-          </div>
-          <div class="stat" style="border: 2px solid var(--warning);">
-            <div class="stat-label" style="color: var(--warning);">Stowed</div>
-            <input type="number" id="scStowed" class="input input-orange input-manual" placeholder="0" oninput="updateFlow(); save();">
-            <div class="manual-badge">manual</div>
-          </div>
-          <div class="stat" style="border: 2px solid var(--warning);">
-            <div class="stat-label" style="color: var(--warning);">Dwells</div>
-            <input type="number" id="scDwells" class="input input-orange input-manual" placeholder="0" style="color: var(--danger);" oninput="updateFlow(); save();">
-            <div class="manual-badge">manual</div>
-          </div>
-          <div class="stat" style="border: 2px solid var(--warning);">
-            <div class="stat-label" style="color: var(--warning);">Current WIP</div>
-            <input type="number" id="scWIP" class="input input-orange input-manual" placeholder="0" oninput="save();">
-            <div class="manual-badge">manual</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Induct Start</div>
-            <input type="time" id="indStart" class="time-input" style="width: 100%;" onchange="save()">
-            <div class="manual-badge">manual</div>
-          </div>
-        </div>
+      <div class="section-divider"></div>
+      
+      <div class="section-label" style="color: var(--warning);">Manual Entry</div>
+      <div class="grid-6">
+        <div class="stat-item"><label>Left to Induct</label><input type="number" id="scLeftInd" class="manual" placeholder="0" oninput="updateFlow(); save();"><div class="tag manual">manual</div></div>
+        <div class="stat-item"><label>Stowed</label><input type="number" id="scStowed" class="manual" placeholder="0" oninput="updateFlow(); save();"><div class="tag manual">manual</div></div>
+        <div class="stat-item"><label>Dwells</label><input type="number" id="scDwells" class="manual" placeholder="0" style="color: var(--danger); border-bottom-color: var(--danger);" oninput="updateFlow(); save();"><div class="tag manual">manual</div></div>
+        <div class="stat-item"><label>Current WIP</label><input type="number" id="scWIP" class="manual" placeholder="0" oninput="save();"><div class="tag manual">manual</div></div>
+        <div class="stat-item"><label>Induct Start</label><input type="time" id="indStart" class="time-input" style="width: 100%; border: none; border-bottom: 2px solid var(--warning); background: transparent; text-align: center;" onchange="save()"><div class="tag manual">manual</div></div>
+        <div class="stat-item"><label>Total Volume</label><div class="value orange" id="totalVol">0</div><div class="tag" style="color: var(--success);">from pre-shift</div></div>
       </div>
     </div>
 
@@ -233,90 +193,67 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">⏱ Belt Run Time</div>
-        <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; color: var(--success);">
-          Run Time: <span id="runTime">6:10</span>
-        </div>
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; color: var(--success);">Run Time: <span id="runTime">6:10</span></div>
       </div>
       <div class="grid-3" style="margin-bottom: 0.5rem;">
-        <div>
-          <label style="font-size: 0.65rem; color: var(--text-muted);">Shift Start</label>
-          <input type="time" id="shiftStart" class="time-input" value="01:20" onchange="calcRun()" style="width: 100%;">
-        </div>
-        <div>
-          <label style="font-size: 0.65rem; color: var(--text-muted);">Induct End (Belt Stop)</label>
-          <input type="time" id="indEnd" class="time-input" value="08:30" onchange="calcRun()" style="width: 100%;">
-        </div>
-        <div>
-          <label style="font-size: 0.65rem; color: var(--text-muted);">Stow Finish</label>
-          <input type="time" id="stwEnd" class="time-input" value="09:00" onchange="calcRun()" style="width: 100%;">
-        </div>
+        <div><label style="font-size: 0.65rem; color: var(--text-muted);">Shift Start</label><input type="time" id="shiftStart" class="time-input" value="01:20" onchange="calcRun()" style="width: 100%;"></div>
+        <div><label style="font-size: 0.65rem; color: var(--text-muted);">Induct End (Belt Stop)</label><input type="time" id="indEnd" class="time-input" value="08:30" onchange="calcRun()" style="width: 100%;"></div>
+        <div><label style="font-size: 0.65rem; color: var(--text-muted);">Stow Finish</label><input type="time" id="stwEnd" class="time-input" value="09:00" onchange="calcRun()" style="width: 100%;"></div>
       </div>
       <div class="breaks-row">
         <div class="break-item">
           <input type="checkbox" id="brk1" checked onchange="toggleBreak(1)">
           <span>1st Break</span>
-          <input type="time" id="brk1Start" class="time-input break-time-input" value="04:00" onchange="calcRun()">
-          <span id="brk1Time">(4:00-4:15)</span>
+          <span id="brk1Def">(4:00-4:15)</span>
+          <div id="brk1Custom" class="break-custom">
+            <input type="time" id="brk1Start" class="time-input" value="04:00" onchange="calcRun()">
+            <span>-</span>
+            <input type="time" id="brk1End" class="time-input" value="04:15" onchange="calcRun()">
+          </div>
         </div>
         <div class="break-item">
           <input type="checkbox" id="lunch" checked onchange="toggleBreak(2)">
           <span>Lunch</span>
-          <input type="time" id="lunchStart" class="time-input break-time-input" value="06:00" onchange="calcRun()">
-          <span id="lunchTime">(6:00-6:30)</span>
+          <span id="lunchDef">(6:00-6:30)</span>
+          <div id="lunchCustom" class="break-custom">
+            <input type="time" id="lunchStart" class="time-input" value="06:00" onchange="calcRun()">
+            <span>-</span>
+            <input type="time" id="lunchEnd" class="time-input" value="06:30" onchange="calcRun()">
+          </div>
         </div>
         <div class="break-item">
           <input type="checkbox" id="brk2" checked onchange="toggleBreak(3)">
           <span>2nd Break</span>
-          <input type="time" id="brk2Start" class="time-input break-time-input" value="08:45" onchange="calcRun()">
-          <span id="brk2Time">(8:45-9:00)</span>
+          <span id="brk2Def">(8:45-9:00)</span>
+          <div id="brk2Custom" class="break-custom">
+            <input type="time" id="brk2Start" class="time-input" value="08:45" onchange="calcRun()">
+            <span>-</span>
+            <input type="time" id="brk2End" class="time-input" value="09:00" onchange="calcRun()">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Hourly Update / Flow Section -->
+    <!-- Hourly Update -->
     <div class="flow-section">
-      <div style="text-align: center; margin-bottom: 0.75rem;">
-        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; color: var(--amazon-orange);">📋 HOURLY UPDATE</span>
-      </div>
+      <div style="text-align: center; margin-bottom: 0.75rem;"><span style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; color: var(--amazon-orange);">📋 HOURLY UPDATE</span></div>
       
-      <!-- Summary Stats -->
       <div class="grid-4" style="margin-bottom: 0.75rem;">
-        <div class="stat">
-          <div class="stat-label">Inducted</div>
-          <div class="stat-value orange" id="hInducted">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Left to Induct</div>
-          <div class="stat-value" id="hLeftInd">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Stowed</div>
-          <div class="stat-value green" id="hStowed">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Dwells (Left to Stow)</div>
-          <div class="stat-value red" id="hDwells">0</div>
-        </div>
+        <div class="stat-item"><label>Inducted</label><div class="value orange" id="hInducted">0</div></div>
+        <div class="stat-item"><label>Left to Induct</label><div class="value" id="hLeftInd">0</div></div>
+        <div class="stat-item"><label>Stowed</label><div class="value green" id="hStowed">0</div></div>
+        <div class="stat-item"><label>Dwells</label><div class="value red" id="hDwells">0</div></div>
       </div>
       
-      <!-- Flow Boxes -->
       <div class="flow-row">
         <div class="flow-box induct">
           <div class="flow-header">INDUCT</div>
           <div class="flow-target orange">Complete by <span id="indTarget">8:30 AM</span></div>
           <div class="flow-time">Working time left: <span id="indTimeLeft">0:00</span></div>
           <div class="flow-current">
-            <div>
-              <div style="font-size: 0.55rem; color: var(--text-muted);">CURRENT</div>
-              <div class="flow-current-val" id="hCurInd">0</div>
-              <div style="font-size: 0.55rem; color: var(--text-muted);">TPH</div>
-            </div>
+            <div><div style="font-size: 0.55rem; color: var(--text-muted);">CURRENT</div><div class="flow-current-val" id="hCurInd">0</div><div style="font-size: 0.55rem; color: var(--text-muted);">TPH</div></div>
             <div class="flow-arrow">→</div>
-            <div class="flow-needed">
-              <div class="flow-needed-label orange">NEEDED</div>
-              <div class="flow-needed-val orange" id="hReqInd">0</div>
-              <div class="flow-needed-unit">TPH</div>
-            </div>
+            <div class="flow-needed"><div class="flow-needed-label orange">NEEDED</div><div class="flow-needed-val orange" id="hReqInd">0</div><div class="flow-needed-unit">TPH</div></div>
           </div>
         </div>
         <div class="flow-box stow">
@@ -324,17 +261,9 @@
           <div class="flow-target green">Complete by <span id="stwTarget">9:00 AM</span></div>
           <div class="flow-time">Working time left: <span id="stwTimeLeft">0:00</span></div>
           <div class="flow-current">
-            <div>
-              <div style="font-size: 0.55rem; color: var(--text-muted);">CURRENT</div>
-              <div class="flow-current-val" id="hCurStw">0</div>
-              <div style="font-size: 0.55rem; color: var(--text-muted);">TPH</div>
-            </div>
+            <div><div style="font-size: 0.55rem; color: var(--text-muted);">CURRENT</div><div class="flow-current-val" id="hCurStw">0</div><div style="font-size: 0.55rem; color: var(--text-muted);">TPH</div></div>
             <div class="flow-arrow">→</div>
-            <div class="flow-needed green">
-              <div class="flow-needed-label green">NEEDED</div>
-              <div class="flow-needed-val green" id="hReqStw">0</div>
-              <div class="flow-needed-unit">TPH</div>
-            </div>
+            <div class="flow-needed green"><div class="flow-needed-label green">NEEDED</div><div class="flow-needed-val green" id="hReqStw">0</div><div class="flow-needed-unit">TPH</div></div>
           </div>
         </div>
       </div>
@@ -365,22 +294,34 @@
 
     let icComplete = false, icData = null;
 
-    // Toggle break - show time input when unchecked for early break
+    // Toggle break - show custom time inputs when unchecked
     function toggleBreak(num) {
       if (num === 1) {
-        const checked = document.getElementById('brk1').checked;
-        document.getElementById('brk1Start').classList.toggle('show', !checked);
-        document.getElementById('brk1Time').style.display = checked ? 'inline' : 'none';
+        const c = document.getElementById('brk1').checked;
+        document.getElementById('brk1Def').style.display = c ? 'inline' : 'none';
+        document.getElementById('brk1Custom').classList.toggle('show', !c);
       } else if (num === 2) {
-        const checked = document.getElementById('lunch').checked;
-        document.getElementById('lunchStart').classList.toggle('show', !checked);
-        document.getElementById('lunchTime').style.display = checked ? 'inline' : 'none';
+        const c = document.getElementById('lunch').checked;
+        document.getElementById('lunchDef').style.display = c ? 'inline' : 'none';
+        document.getElementById('lunchCustom').classList.toggle('show', !c);
       } else if (num === 3) {
-        const checked = document.getElementById('brk2').checked;
-        document.getElementById('brk2Start').classList.toggle('show', !checked);
-        document.getElementById('brk2Time').style.display = checked ? 'inline' : 'none';
+        const c = document.getElementById('brk2').checked;
+        document.getElementById('brk2Def').style.display = c ? 'inline' : 'none';
+        document.getElementById('brk2Custom').classList.toggle('show', !c);
       }
       calcRun();
+    }
+
+    // Get break duration in minutes
+    function getBreakMins(startId, endId, defaultMins) {
+      const start = document.getElementById(startId).value;
+      const end = document.getElementById(endId).value;
+      if (!start || !end) return defaultMins;
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      let mins = (eh * 60 + em) - (sh * 60 + sm);
+      if (mins < 0) mins += 1440;
+      return mins;
     }
 
     // Run time calc
@@ -390,57 +331,52 @@
       let mins = (eh * 60 + em) - (sh * 60 + sm);
       if (mins < 0) mins += 1440;
       
-      // Subtract breaks if checked
       if (document.getElementById('brk1').checked) mins -= 15;
-      if (document.getElementById('lunch').checked) mins -= 30;
-      if (document.getElementById('brk2').checked) mins -= 15;
+      else mins -= getBreakMins('brk1Start', 'brk1End', 15);
       
-      document.getElementById('runTime').textContent = Math.floor(mins / 60) + ':' + String(mins % 60).padStart(2, '0');
-      updateFlow();
-      save();
+      if (document.getElementById('lunch').checked) mins -= 30;
+      else mins -= getBreakMins('lunchStart', 'lunchEnd', 30);
+      
+      if (document.getElementById('brk2').checked) mins -= 15;
+      else mins -= getBreakMins('brk2Start', 'brk2End', 15);
+      
+      document.getElementById('runTime').textContent = Math.floor(Math.max(0, mins) / 60) + ':' + String(Math.max(0, mins) % 60).padStart(2, '0');
+      updateFlow(); save();
     }
 
-    // Get effective hours left considering breaks
+    // Get effective hours left
     function getEffHrs(now, tgt, type) {
       const [th, tm] = tgt.split(':').map(Number);
-      const t = new Date(now);
-      t.setHours(th, tm, 0, 0);
+      const t = new Date(now); t.setHours(th, tm, 0, 0);
       if (t <= now) t.setDate(t.getDate() + 1);
       const raw = Math.max(0, (t - now) / 3600000);
-      
       const cv = now.getHours() + now.getMinutes() / 60;
       let brkMins = 0;
-      
-      // 1st break - use custom time if unchecked, otherwise default 4:00-4:15
+
+      // 1st break
       if (document.getElementById('brk1').checked) {
         if (cv < 4.25) brkMins += 15;
       } else {
-        const brkStart = document.getElementById('brk1Start').value || '04:00';
-        const [bh, bm] = brkStart.split(':').map(Number);
-        const brkTime = bh + bm / 60;
-        if (cv < brkTime + 0.25) brkMins += 15;
+        const [beh, bem] = (document.getElementById('brk1End').value || '04:15').split(':').map(Number);
+        if (cv < beh + bem/60) brkMins += getBreakMins('brk1Start', 'brk1End', 15);
       }
-      
-      // Lunch - use custom time if unchecked, otherwise default 6:00-6:30
+
+      // Lunch
       if (document.getElementById('lunch').checked) {
         if (cv < 6.5) brkMins += 30;
       } else {
-        const lunchStart = document.getElementById('lunchStart').value || '06:00';
-        const [lh, lm] = lunchStart.split(':').map(Number);
-        const lunchTime = lh + lm / 60;
-        if (cv < lunchTime + 0.5) brkMins += 30;
+        const [leh, lem] = (document.getElementById('lunchEnd').value || '06:30').split(':').map(Number);
+        if (cv < leh + lem/60) brkMins += getBreakMins('lunchStart', 'lunchEnd', 30);
       }
-      
-      // 2nd break - use custom time if unchecked, otherwise default 8:45-9:00
+
+      // 2nd break
       if (document.getElementById('brk2').checked) {
         if (cv < 9 && (type === 'stw' || th >= 9)) brkMins += 15;
       } else {
-        const brk2Start = document.getElementById('brk2Start').value || '08:45';
-        const [b2h, b2m] = brk2Start.split(':').map(Number);
-        const brk2Time = b2h + b2m / 60;
-        if (cv < brk2Time + 0.25 && (type === 'stw' || th >= 9)) brkMins += 15;
+        const [b2eh, b2em] = (document.getElementById('brk2End').value || '09:00').split(':').map(Number);
+        if (cv < b2eh + b2em/60 && (type === 'stw' || th >= 9)) brkMins += getBreakMins('brk2Start', 'brk2End', 15);
       }
-      
+
       return Math.max(0, raw - brkMins / 60);
     }
 
@@ -454,53 +390,39 @@
       document.getElementById('psTPH').textContent = d.targetTPH || 90;
       document.getElementById('psPlanHrs').textContent = d.plannedHours || 0;
       document.getElementById('psProjHrs').textContent = d.projectedHours || 0;
+      document.getElementById('totalVol').textContent = (d.c1Volume || 0).toLocaleString();
       document.getElementById('psSource').textContent = '✓ Loaded';
       document.getElementById('psSource').style.color = 'var(--success)';
       save();
-      alert('✓ Pre-Shift data loaded!');
+      alert('✓ Pre-Shift data loaded! C1 Volume: ' + (d.c1Volume || 0).toLocaleString());
     }
 
     // Parse Station Command
     function parseStation() {
       const txt = document.getElementById('scPaste').value;
       if (!txt.trim()) { alert('Paste Station Command data first'); return; }
-      
-      // Parse inducted
       const m1 = txt.match(/inducted?\s*[:\-]?\s*([\d,]+)/i);
-      if (m1) document.getElementById('scInducted').textContent = parseInt(m1[1].replace(/,/g, '')).toLocaleString();
-      
-      // Parse induct flow
       const m2 = txt.match(/induct[^0-9]*(?:flow|rate|tph)\s*[:\-]?\s*([\d,]+)/i);
-      if (m2) document.getElementById('scIndFlow').textContent = parseInt(m2[1].replace(/,/g, '')).toLocaleString();
-      
-      // Parse stow flow
       const m3 = txt.match(/stow[^0-9]*(?:flow|rate|tph)\s*[:\-]?\s*([\d,]+)/i);
-      if (m3) document.getElementById('scStwFlow').textContent = parseInt(m3[1].replace(/,/g, '')).toLocaleString();
-      
-      // Parse WIP compliance
       const m4 = txt.match(/(?:wip)?[^0-9]*compliance\s*[:\-]?\s*([\d.]+%?)/i);
+      if (m1) document.getElementById('scInducted').textContent = parseInt(m1[1].replace(/,/g, '')).toLocaleString();
+      if (m2) document.getElementById('scIndFlow').textContent = parseInt(m2[1].replace(/,/g, '')).toLocaleString();
+      if (m3) document.getElementById('scStwFlow').textContent = parseInt(m3[1].replace(/,/g, '')).toLocaleString();
       if (m4) {
-        let comp = m4[1];
-        if (!comp.includes('%')) comp += '%';
-        document.getElementById('scWIPComp').textContent = comp;
-        const cv = parseFloat(comp);
-        const el = document.getElementById('scWIPComp');
-        el.style.color = cv >= 95 ? 'var(--success)' : cv >= 85 ? 'var(--warning)' : 'var(--danger)';
+        let c = m4[1]; if (!c.includes('%')) c += '%';
+        document.getElementById('scWIPComp').textContent = c;
+        const cv = parseFloat(c);
+        document.getElementById('scWIPComp').style.color = cv >= 95 ? 'var(--success)' : cv >= 85 ? 'var(--warning)' : 'var(--danger)';
       }
-      
       document.getElementById('scPaste').value = '';
-      document.getElementById('scPaste').placeholder = '✓ Parsed! Paste again to update...';
+      document.getElementById('scPaste').placeholder = '✓ Parsed!';
       setTimeout(() => document.getElementById('scPaste').placeholder = 'Paste Station Command data here...', 2000);
-      
-      updateFlow();
-      save();
+      updateFlow(); save();
     }
 
-    // Update flow calculations
+    // Update flow
     function updateFlow() {
       const now = new Date();
-      
-      // Get values from Station Command section
       const inducted = parseInt(document.getElementById('scInducted').textContent.replace(/,/g, '')) || 0;
       const leftInd = parseInt(document.getElementById('scLeftInd').value) || 0;
       const stowed = parseInt(document.getElementById('scStowed').value) || 0;
@@ -508,7 +430,6 @@
       const curIndFlow = document.getElementById('scIndFlow').textContent || '0';
       const curStwFlow = document.getElementById('scStwFlow').textContent || '0';
       
-      // Update hourly display
       document.getElementById('hInducted').textContent = inducted.toLocaleString();
       document.getElementById('hLeftInd').textContent = leftInd.toLocaleString();
       document.getElementById('hStowed').textContent = stowed.toLocaleString();
@@ -516,19 +437,16 @@
       document.getElementById('hCurInd').textContent = curIndFlow;
       document.getElementById('hCurStw').textContent = curStwFlow;
       
-      // Target times
       const indEnd = document.getElementById('indEnd').value || '08:30';
       const stwEnd = document.getElementById('stwEnd').value || '09:00';
       document.getElementById('indTarget').textContent = fmt12(indEnd);
       document.getElementById('stwTarget').textContent = fmt12(stwEnd);
       
-      // Calculate effective hours left
       const indHrs = getEffHrs(now, indEnd, 'ind');
       const stwHrs = getEffHrs(now, stwEnd, 'stw');
       document.getElementById('indTimeLeft').textContent = fmtHrs(indHrs);
       document.getElementById('stwTimeLeft').textContent = fmtHrs(stwHrs);
       
-      // Calculate required flows using MANUAL entries
       const reqInd = indHrs > 0 ? Math.ceil(leftInd / indHrs) : 0;
       const reqStw = stwHrs > 0 ? Math.ceil(dwells / stwHrs) : 0;
       document.getElementById('hReqInd').textContent = reqInd.toLocaleString();
@@ -541,26 +459,15 @@
     function markInductComplete() {
       const inducted = parseInt(document.getElementById('scInducted').textContent.replace(/,/g, '')) || 0;
       const stowed = parseInt(document.getElementById('scStowed').value) || 0;
-      const dwells = parseInt(document.getElementById('scDwells').value) || 0;
-      
-      if (!inducted) { alert('No inducted volume. Parse Station Command first or enter manually.'); return; }
-      
-      icData = { 
-        ind: inducted, 
-        stowed: stowed,
-        dwells: dwells,
-        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) 
-      };
+      if (!inducted) { alert('No inducted volume. Parse Station Command first.'); return; }
+      icData = { ind: inducted, stowed: stowed, time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) };
       icComplete = true;
-      
       document.getElementById('icBanner').classList.add('show');
       document.getElementById('icBtn').style.display = 'none';
       document.getElementById('icTime').textContent = icData.time;
       document.getElementById('icInd').textContent = inducted.toLocaleString();
       document.getElementById('icCrash').value = 0;
-      
-      updateIC();
-      save();
+      updateIC(); save();
     }
 
     function updateIC() {
@@ -568,29 +475,23 @@
       const stowed = parseInt(document.getElementById('scStowed').value) || 0;
       const crash = parseInt(document.getElementById('icCrash').value) || 0;
       const left = Math.max(0, icData.ind - stowed - crash);
-      
       document.getElementById('icLeft').textContent = left.toLocaleString();
-      
       const hrs = getEffHrs(new Date(), document.getElementById('stwEnd').value || '09:00', 'stw');
       document.getElementById('icReq').textContent = (hrs > 0 ? Math.ceil(left / hrs) : 0).toLocaleString();
       save();
     }
 
     function undoIC() {
-      icComplete = false;
-      icData = null;
+      icComplete = false; icData = null;
       document.getElementById('icBanner').classList.remove('show');
-      document.getElementById('icBtn').style.display = 'flex';
-      updateFlow();
-      save();
+      document.getElementById('icBtn').style.display = 'inline-block';
+      updateFlow(); save();
     }
 
-    // Copy hourly update
+    // Copy hourly
     function copyHourly() {
       const now = new Date();
       const t = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-      
-      // Get all values
       const inducted = parseInt(document.getElementById('scInducted').textContent.replace(/,/g, '')) || 0;
       const leftInd = parseInt(document.getElementById('scLeftInd').value) || 0;
       const stowed = parseInt(document.getElementById('scStowed').value) || 0;
@@ -601,13 +502,10 @@
       const wipComp = document.getElementById('scWIPComp').textContent || '--%';
       const indStart = document.getElementById('indStart').value;
       const indStartStr = indStart ? fmt12(indStart) : 'N/A';
-      
       const indEnd = document.getElementById('indEnd').value || '08:30';
       const stwEnd = document.getElementById('stwEnd').value || '09:00';
       const indHrs = getEffHrs(now, indEnd, 'ind');
       const stwHrs = getEffHrs(now, stwEnd, 'stw');
-      
-      // Use manual entries for required flow calc
       const reqInd = indHrs > 0 ? Math.ceil(leftInd / indHrs) : 0;
       const reqStw = stwHrs > 0 ? Math.ceil(dwells / stwHrs) : 0;
 
@@ -616,7 +514,6 @@
         const crash = parseInt(document.getElementById('icCrash').value) || 0;
         const icLeft = Math.max(0, icData.ind - stowed - crash);
         const icReq = stwHrs > 0 ? Math.ceil(icLeft / stwHrs) : 0;
-        
         out = `📋 HOURLY UPDATE - ${t}
 🏁 INDUCT COMPLETE
 
@@ -651,58 +548,42 @@
 ⏱️ Working Time Left: ${fmtHrs(stwHrs)}
 🔥 REQUIRED STOW FLOW: ${reqStw.toLocaleString()} TPH`;
       }
-      
       navigator.clipboard.writeText(out).then(() => {
-        const c = document.getElementById('copyConf');
-        c.classList.add('show');
-        setTimeout(() => c.classList.remove('show'), 2000);
+        document.getElementById('copyConf').classList.add('show');
+        setTimeout(() => document.getElementById('copyConf').classList.remove('show'), 2000);
       });
     }
 
-    // Helpers
-    function fmt12(t) {
-      if (!t) return 'N/A';
-      const [h, m] = t.split(':').map(Number);
-      return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
-    }
-    
-    function fmtHrs(h) {
-      return Math.floor(h) + ':' + String(Math.round((h % 1) * 60)).padStart(2, '0');
-    }
+    function fmt12(t) { if (!t) return 'N/A'; const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`; }
+    function fmtHrs(h) { return Math.floor(h) + ':' + String(Math.round((h % 1) * 60)).padStart(2, '0'); }
 
-    // Reset
     function resetAll() {
       if (!confirm('Reset all PPH Flow data?')) return;
-      icComplete = false;
-      icData = null;
+      icComplete = false; icData = null;
       document.getElementById('icBanner').classList.remove('show');
-      document.getElementById('icBtn').style.display = 'flex';
+      document.getElementById('icBtn').style.display = 'inline-block';
       document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
       document.getElementById('indStart').value = '';
       document.getElementById('shiftStart').value = '01:20';
       document.getElementById('indEnd').value = '08:30';
       document.getElementById('stwEnd').value = '09:00';
-      document.getElementById('brk1').checked = true;
-      document.getElementById('lunch').checked = true;
-      document.getElementById('brk2').checked = true;
-      document.getElementById('brk1Start').classList.remove('show');
-      document.getElementById('lunchStart').classList.remove('show');
-      document.getElementById('brk2Start').classList.remove('show');
-      document.getElementById('brk1Time').style.display = 'inline';
-      document.getElementById('lunchTime').style.display = 'inline';
-      document.getElementById('brk2Time').style.display = 'inline';
+      document.getElementById('brk1').checked = true; document.getElementById('lunch').checked = true; document.getElementById('brk2').checked = true;
+      document.getElementById('brk1Start').value = '04:00'; document.getElementById('brk1End').value = '04:15';
+      document.getElementById('lunchStart').value = '06:00'; document.getElementById('lunchEnd').value = '06:30';
+      document.getElementById('brk2Start').value = '08:45'; document.getElementById('brk2End').value = '09:00';
+      ['brk1Custom', 'lunchCustom', 'brk2Custom'].forEach(id => document.getElementById(id).classList.remove('show'));
+      ['brk1Def', 'lunchDef', 'brk2Def'].forEach(id => document.getElementById(id).style.display = 'inline');
       ['scInducted', 'scIndFlow', 'scStwFlow'].forEach(id => document.getElementById(id).textContent = '0');
       document.getElementById('scWIPComp').textContent = '--%';
+      document.getElementById('totalVol').textContent = '0';
       document.getElementById('psSource').textContent = 'Not loaded';
       document.getElementById('psSource').style.color = 'var(--text-muted)';
       ['psVol', 'psFPH', 'psHC', 'psPlanHrs', 'psProjHrs'].forEach(id => document.getElementById(id).textContent = '0');
       document.getElementById('psTPH').textContent = '90';
-      calcRun();
-      updateFlow();
+      calcRun(); updateFlow();
       localStorage.removeItem('pphFlowData');
     }
 
-    // Save/Load
     function save() {
       const d = {
         indStart: document.getElementById('indStart').value,
@@ -713,8 +594,11 @@
         lunch: document.getElementById('lunch').checked,
         brk2: document.getElementById('brk2').checked,
         brk1Start: document.getElementById('brk1Start').value,
+        brk1End: document.getElementById('brk1End').value,
         lunchStart: document.getElementById('lunchStart').value,
+        lunchEnd: document.getElementById('lunchEnd').value,
         brk2Start: document.getElementById('brk2Start').value,
+        brk2End: document.getElementById('brk2End').value,
         scLeftInd: document.getElementById('scLeftInd').value,
         scStowed: document.getElementById('scStowed').value,
         scDwells: document.getElementById('scDwells').value,
@@ -723,6 +607,7 @@
         scIndFlow: document.getElementById('scIndFlow').textContent,
         scStwFlow: document.getElementById('scStwFlow').textContent,
         scWIPComp: document.getElementById('scWIPComp').textContent,
+        totalVol: document.getElementById('totalVol').textContent,
         icComplete, icData,
         psVol: document.getElementById('psVol').textContent,
         psFPH: document.getElementById('psFPH').textContent,
@@ -738,7 +623,6 @@
     function load() {
       const d = JSON.parse(localStorage.getItem('pphFlowData') || '{}');
       if (d.ts && Date.now() - d.ts > 86400000) { localStorage.removeItem('pphFlowData'); return; }
-      
       if (d.indStart) document.getElementById('indStart').value = d.indStart;
       if (d.shiftStart) document.getElementById('shiftStart').value = d.shiftStart;
       if (d.indEnd) document.getElementById('indEnd').value = d.indEnd;
@@ -747,8 +631,11 @@
       if (d.lunch !== undefined) { document.getElementById('lunch').checked = d.lunch; toggleBreak(2); }
       if (d.brk2 !== undefined) { document.getElementById('brk2').checked = d.brk2; toggleBreak(3); }
       if (d.brk1Start) document.getElementById('brk1Start').value = d.brk1Start;
+      if (d.brk1End) document.getElementById('brk1End').value = d.brk1End;
       if (d.lunchStart) document.getElementById('lunchStart').value = d.lunchStart;
+      if (d.lunchEnd) document.getElementById('lunchEnd').value = d.lunchEnd;
       if (d.brk2Start) document.getElementById('brk2Start').value = d.brk2Start;
+      if (d.brk2End) document.getElementById('brk2End').value = d.brk2End;
       if (d.scLeftInd) document.getElementById('scLeftInd').value = d.scLeftInd;
       if (d.scStowed) document.getElementById('scStowed').value = d.scStowed;
       if (d.scDwells) document.getElementById('scDwells').value = d.scDwells;
@@ -757,6 +644,7 @@
       if (d.scIndFlow) document.getElementById('scIndFlow').textContent = d.scIndFlow;
       if (d.scStwFlow) document.getElementById('scStwFlow').textContent = d.scStwFlow;
       if (d.scWIPComp) document.getElementById('scWIPComp').textContent = d.scWIPComp;
+      if (d.totalVol) document.getElementById('totalVol').textContent = d.totalVol;
       if (d.psVol) document.getElementById('psVol').textContent = d.psVol;
       if (d.psFPH) document.getElementById('psFPH').textContent = d.psFPH;
       if (d.psHC) document.getElementById('psHC').textContent = d.psHC;
@@ -767,10 +655,8 @@
         document.getElementById('psSource').textContent = '✓ Loaded';
         document.getElementById('psSource').style.color = 'var(--success)';
       }
-      
       if (d.icComplete) {
-        icComplete = true;
-        icData = d.icData;
+        icComplete = true; icData = d.icData;
         document.getElementById('icBanner').classList.add('show');
         document.getElementById('icBtn').style.display = 'none';
         if (icData) {
@@ -779,14 +665,10 @@
           document.getElementById('icCrash').value = 0;
         }
       }
-      
-      calcRun();
-      updateFlow();
+      calcRun(); updateFlow();
     }
 
-    load();
-    calcRun();
-    updateFlow();
+    load(); calcRun(); updateFlow();
   </script>
 </body>
 </html>
