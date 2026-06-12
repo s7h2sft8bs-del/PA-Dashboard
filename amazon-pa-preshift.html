@@ -644,7 +644,11 @@ Pre-Shift Projected Hours = 0
 
     // Calculate all values
     function calculateAll() {
-      const c1Volume = parseFloat(document.getElementById('c1Volume').value) || 0;
+      const rts2 = parseFloat(document.getElementById('rts').value) || 0;
+      const mnr2 = parseFloat(document.getElementById('mnr').value) || 0;
+      const rolled2 = parseFloat(document.getElementById('rolled').value) || 0;
+      const schedule2 = parseFloat(document.getElementById('schedule').value) || 0;
+      const c1Volume = rts2 + mnr2 + rolled2 + schedule2;
       const targetTPH = parseFloat(document.getElementById('targetTPH').value) || 90;
       const indirectFactor = parseFloat(document.getElementById('indirectFactor').value) || 1.17;
       const hoursPerAA = parseFloat(document.getElementById('hoursPerAA').value) || 7.2;
