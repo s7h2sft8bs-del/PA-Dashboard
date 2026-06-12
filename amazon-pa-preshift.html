@@ -113,33 +113,6 @@
       gap: 1.5rem;
     }
 
-    .btn-sync {
-      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.25rem;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .btn-sync:hover {
-      background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
-      box-shadow: 0 4px 12px rgba(46, 160, 67, 0.4);
-    }
-
-    .sync-status {
-      font-size: 1.25rem;
-      padding: 0.5rem;
-      transition: color 0.3s;
-    }
-
     .header-time {
       text-align: right;
     }
@@ -196,83 +169,6 @@
       padding: 1.5rem;
       margin-bottom: 1.5rem;
       border: 1px solid var(--border-color);
-    }
-
-    .paste-section {
-      border: 2px solid var(--purple);
-    }
-
-    .paste-section .section-header {
-      border-bottom-color: var(--purple);
-    }
-
-    .paste-section .section-title::before {
-      background: var(--purple);
-    }
-
-    .paste-box-container {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .paste-box {
-      flex: 1;
-      min-width: 300px;
-      height: 150px;
-      background: var(--input-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1rem;
-      color: var(--text-primary);
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.9rem;
-      resize: vertical;
-    }
-
-    .paste-box:focus {
-      outline: none;
-      border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
-    }
-
-    .paste-box::placeholder {
-      color: var(--text-muted);
-    }
-
-    .btn-parse {
-      background: linear-gradient(135deg, var(--purple) 0%, #7C3AED 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 1rem 1.5rem;
-      font-family: 'Barlow', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .btn-parse:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-    }
-
-    .parse-confirm {
-      color: var(--success);
-      font-weight: 600;
-      font-size: 0.9rem;
-      opacity: 0;
-      transition: opacity 0.3s;
-      align-self: center;
-    }
-
-    .parse-confirm.show {
-      opacity: 1;
     }
 
     .section-header {
@@ -354,39 +250,6 @@
       padding: 1rem 1.25rem;
       border-color: var(--amazon-orange);
       color: var(--amazon-orange);
-    }
-
-    /* C1 Volume Display */
-    .c1-volume-display {
-      margin-top: 1.5rem;
-      padding: 1.5rem;
-      background: linear-gradient(135deg, rgba(255, 153, 0, 0.15) 0%, rgba(255, 153, 0, 0.05) 100%);
-      border: 3px solid var(--amazon-orange);
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .c1-label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--amazon-orange);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.5rem;
-    }
-
-    .c1-value {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 4rem;
-      font-weight: 800;
-      color: var(--amazon-orange);
-      line-height: 1;
-    }
-
-    .c1-formula {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
     }
 
     /* Calculated Results */
@@ -570,38 +433,7 @@
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-      }
-
-      .header-right {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .btn-sync {
-        padding: 0.5rem 0.75rem !important;
-        font-size: 0.75rem !important;
-      }
-
-      .sync-status {
-        font-size: 1rem;
-      }
-
-      .current-time {
-        font-size: 1.25rem;
-      }
-
-      .logo-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-      }
-
-      .logo-text {
-        font-size: 1rem;
+        gap: 1rem;
       }
 
       .input-grid {
@@ -617,55 +449,6 @@
         justify-content: center;
       }
     }
-
-    @media (max-width: 480px) {
-      .header {
-        padding: 0.5rem;
-        gap: 0.4rem;
-      }
-
-      .logo-icon {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-      }
-
-      .logo-text {
-        font-size: 0.85rem;
-      }
-
-      .back-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.65rem;
-      }
-
-      .btn-sync {
-        padding: 0.4rem 0.6rem !important;
-        font-size: 0.65rem !important;
-      }
-
-      .current-time {
-        font-size: 1rem;
-      }
-
-      .container {
-        padding: 0.5rem;
-      }
-
-      .section {
-        padding: 1rem;
-      }
-
-      .paste-box {
-        height: 100px;
-        font-size: 0.8rem;
-      }
-
-      .btn-parse {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -675,19 +458,12 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Home
+        Back
       </a>
       <div class="logo-icon">📋</div>
       <div class="logo-text">Pre-Shift <span>Planning</span></div>
     </div>
     <div class="header-right">
-      <button class="btn btn-sync" onclick="loadFromCloud()">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-        </svg>
-        SYNC
-      </button>
-      <span id="syncStatus" class="sync-status">☁️</span>
       <div class="header-time">
         <div class="live-indicator">Live</div>
         <div class="current-time" id="currentTime">--:--:--</div>
@@ -697,32 +473,6 @@
   </header>
 
   <div class="container">
-    <!-- Quick Paste Section -->
-    <div class="section paste-section">
-      <div class="section-header">
-        <h2 class="section-title">📋 Quick Paste from Slack</h2>
-      </div>
-      <div class="paste-box-container">
-        <textarea id="pasteBox" class="paste-box" placeholder="Paste your pre-shift data here...
-
-Example:
-Pre-shift 01/31/2026:
-
-RTS: 1000
-MNR: 2155
-Rolled: 0
-SLAM: 44563
-..." oninput="parsePreshiftPaste()"></textarea>
-        <button class="btn btn-parse" onclick="parsePreshiftPaste()">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-          </svg>
-          Auto-Fill Fields
-        </button>
-        <span class="parse-confirm" id="parseConfirm">✓ Fields populated!</span>
-      </div>
-    </div>
-
     <!-- Raw Data Entry -->
     <div class="section">
       <div class="section-header">
@@ -731,6 +481,10 @@ SLAM: 44563
       </div>
 
       <div class="input-grid">
+        <div class="input-item large">
+          <label>C1 Volume</label>
+          <input type="number" id="c1Volume" placeholder="0" oninput="calculateAll()">
+        </div>
         <div class="input-item">
           <label>RTS</label>
           <input type="number" id="rts" placeholder="0" oninput="calculateAll()">
@@ -771,13 +525,6 @@ SLAM: 44563
           <label>FPH</label>
           <input type="number" id="fph" placeholder="0" oninput="calculateAll()">
         </div>
-      </div>
-
-      <!-- C1 Volume Auto-Calculated -->
-      <div class="c1-volume-display">
-        <div class="c1-label">C1 Volume (Auto-Calculated)</div>
-        <div class="c1-value" id="c1Volume">0</div>
-        <div class="c1-formula">RTS + MNR + Rolled + SLAM + Sideline</div>
       </div>
     </div>
 
@@ -883,85 +630,9 @@ Pre-Shift Projected Hours = 0
     setInterval(updateTime, 1000);
     updateTime();
 
-    // Parse pasted pre-shift data
-    function parsePreshiftPaste() {
-      const pasteBox = document.getElementById('pasteBox');
-      const text = pasteBox.value;
-      
-      if (!text.trim()) return;
-      
-      // Parse each line looking for field: value patterns
-      const lines = text.split('\n');
-      let foundFields = 0;
-      
-      lines.forEach(line => {
-        // Match patterns like "RTS: 1000" or "C1 Volume: 48369"
-        const match = line.match(/^([A-Za-z0-9\s\(\)]+):\s*([\d.]+)/);
-        if (match) {
-          const fieldName = match[1].trim().toLowerCase();
-          const value = match[2];
-          
-          // Map field names to input IDs
-          if (fieldName === 'rts') {
-            document.getElementById('rts').value = value;
-            foundFields++;
-          } else if (fieldName === 'mnr') {
-            document.getElementById('mnr').value = value;
-            foundFields++;
-          } else if (fieldName === 'rolled') {
-            document.getElementById('rolled').value = value;
-            foundFields++;
-          } else if (fieldName === 'slam') {
-            document.getElementById('slam').value = value;
-            foundFields++;
-          } else if (fieldName === 'sideline') {
-            document.getElementById('sideline').value = value;
-            foundFields++;
-          } else if (fieldName === 'schedule') {
-            document.getElementById('schedule').value = value;
-            foundFields++;
-          } else if (fieldName === 'soft cap') {
-            document.getElementById('softCap').value = value;
-            foundFields++;
-          } else if (fieldName === 'lmcp') {
-            document.getElementById('lmcp').value = value;
-            foundFields++;
-          } else if (fieldName === 'cube') {
-            document.getElementById('cube').value = value;
-            foundFields++;
-          } else if (fieldName === 'fph') {
-            document.getElementById('fph').value = value;
-            foundFields++;
-          }
-        }
-      });
-      
-      if (foundFields > 0) {
-        // Trigger calculation
-        calculateAll();
-        
-        // Show confirmation
-        const confirm = document.getElementById('parseConfirm');
-        confirm.classList.add('show');
-        setTimeout(() => confirm.classList.remove('show'), 2000);
-        
-        // Save data
-        saveData();
-      }
-    }
-
     // Calculate all values
     function calculateAll() {
-      // Auto-calculate C1 Volume = RTS + MNR + Rolled + SLAM + Sideline
-      const rts = parseFloat(document.getElementById('rts').value) || 0;
-      const mnr = parseFloat(document.getElementById('mnr').value) || 0;
-      const rolled = parseFloat(document.getElementById('rolled').value) || 0;
-      const slam = parseFloat(document.getElementById('slam').value) || 0;
-      const sideline = parseFloat(document.getElementById('sideline').value) || 0;
-      
-      const c1Volume = rts + mnr + rolled + slam + sideline;
-      document.getElementById('c1Volume').textContent = c1Volume.toLocaleString();
-
+      const c1Volume = parseFloat(document.getElementById('c1Volume').value) || 0;
       const targetTPH = parseFloat(document.getElementById('targetTPH').value) || 90;
       const indirectFactor = parseFloat(document.getElementById('indirectFactor').value) || 1.17;
       const hoursPerAA = parseFloat(document.getElementById('hoursPerAA').value) || 7.2;
@@ -985,18 +656,6 @@ Pre-Shift Projected Hours = 0
       // Update TPH display
       document.getElementById('tphDisplay').textContent = targetTPH;
 
-      // Save to localStorage for PPH Flow to use
-      const preshiftData = {
-        c1Volume: c1Volume,
-        fph: parseFloat(document.getElementById('fph').value) || 0,
-        targetTPH: targetTPH,
-        plannedHC: plannedHC,
-        plannedHours: Math.round(plannedHours),
-        projectedHours: Math.round(projectedHours),
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem('preshiftData', JSON.stringify(preshiftData));
-
       // Update output preview
       updateOutput();
     }
@@ -1012,11 +671,9 @@ Pre-Shift Projected Hours = 0
       const softCap = document.getElementById('softCap').value || '0';
       const lmcp = document.getElementById('lmcp').value || '0';
       const cube = document.getElementById('cube').value || '0';
+      const c1Volume = document.getElementById('c1Volume').value || '0';
       const fph = document.getElementById('fph').value || '0';
       const targetTPH = document.getElementById('targetTPH').value || '90';
-      
-      // Get calculated C1 Volume (remove commas for output)
-      const c1Volume = document.getElementById('c1Volume').textContent.replace(/,/g, '');
       
       const plannedHC = document.getElementById('plannedHC').textContent;
       const plannedHours = document.getElementById('plannedHours').textContent;
@@ -1078,243 +735,19 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       setTimeout(() => confirm.classList.remove('show'), 2000);
     }
 
-    let preventCloudLoad = false;
-
-    // Clear all fields (now acts as Reset)
+    // Clear all fields
     function clearAll() {
-      if (!confirm('Are you sure you want to reset all data?')) return;
-      
-      preventCloudLoad = true;
-      
-      // Clear ALL localStorage
-      localStorage.removeItem('preshiftPageData');
-      localStorage.removeItem('preshiftData');
-      localStorage.removeItem('preShiftPlanData');
-      
-      // Explicitly clear each input field
-      document.getElementById('rts').value = '';
-      document.getElementById('mnr').value = '';
-      document.getElementById('rolled').value = '';
-      document.getElementById('slam').value = '';
-      document.getElementById('sideline').value = '';
-      document.getElementById('schedule').value = '';
-      document.getElementById('softCap').value = '';
-      document.getElementById('lmcp').value = '';
-      document.getElementById('cube').value = '';
-      document.getElementById('fph').value = '';
-      
-      // Clear paste box
-      const pasteBox = document.getElementById('pasteBox');
-      if (pasteBox) pasteBox.value = '';
-      
-      // Reset ALL display values - use correct element IDs
-      document.getElementById('c1Volume').textContent = '0';
-      document.getElementById('directHours').textContent = '0';
-      document.getElementById('plannedHours').textContent = '0';
-      document.getElementById('projectedHours').textContent = '0';
-      document.getElementById('plannedHC').textContent = '0';
-      document.getElementById('tphDisplay').textContent = '90';
-      
+      const inputs = document.querySelectorAll('input[type="number"]:not(.setting-item input)');
+      inputs.forEach(input => {
+        if (input.id !== 'targetTPH' && input.id !== 'indirectFactor' && input.id !== 'hoursPerAA') {
+          input.value = '';
+        }
+      });
       calculateAll();
-      
-      // IMPORTANT: Clear cloud data explicitly
-      clearCloud();
-      
-      // Also clear localStorage again
-      localStorage.removeItem('preshiftPageData');
-      localStorage.removeItem('preshiftData');
-      localStorage.removeItem('preShiftPlanData');
-      
-      // Update sync status
-      const syncStatus = document.getElementById('syncStatus');
-      if (syncStatus) syncStatus.textContent = '☁️ Cleared';
-      
-      // Re-enable cloud load after delay
-      setTimeout(() => { preventCloudLoad = false; }, 5000);
-      
-      alert('All data has been reset!');
-    }
-
-    // Save data to localStorage
-    function saveData() {
-      const data = {
-        rts: document.getElementById('rts').value,
-        mnr: document.getElementById('mnr').value,
-        rolled: document.getElementById('rolled').value,
-        slam: document.getElementById('slam').value,
-        sideline: document.getElementById('sideline').value,
-        schedule: document.getElementById('schedule').value,
-        softCap: document.getElementById('softCap').value,
-        lmcp: document.getElementById('lmcp').value,
-        cube: document.getElementById('cube').value,
-        fph: document.getElementById('fph').value,
-        targetTPH: document.getElementById('targetTPH').value,
-        indirectFactor: document.getElementById('indirectFactor').value,
-        hoursPerAA: document.getElementById('hoursPerAA').value,
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem('preshiftPageData', JSON.stringify(data));
-    }
-
-    // Load data from localStorage
-    function loadData() {
-      if (preventCloudLoad) {
-        console.log('Local load prevented after reset');
-        return;
-      }
-      
-      const saved = localStorage.getItem('preshiftPageData');
-      if (!saved) return;
-      
-      try {
-        const data = JSON.parse(saved);
-        
-        // Check if data is recent (within 24 hours)
-        if (data.timestamp) {
-          const savedTime = new Date(data.timestamp);
-          const hoursDiff = (new Date() - savedTime) / (1000 * 60 * 60);
-          if (hoursDiff > 24) return;
-        }
-        
-        if (data.rts) document.getElementById('rts').value = data.rts;
-        if (data.mnr) document.getElementById('mnr').value = data.mnr;
-        if (data.rolled) document.getElementById('rolled').value = data.rolled;
-        if (data.slam) document.getElementById('slam').value = data.slam;
-        if (data.sideline) document.getElementById('sideline').value = data.sideline;
-        if (data.schedule) document.getElementById('schedule').value = data.schedule;
-        if (data.softCap) document.getElementById('softCap').value = data.softCap;
-        if (data.lmcp) document.getElementById('lmcp').value = data.lmcp;
-        if (data.cube) document.getElementById('cube').value = data.cube;
-        if (data.fph) document.getElementById('fph').value = data.fph;
-        if (data.targetTPH) document.getElementById('targetTPH').value = data.targetTPH;
-        if (data.indirectFactor) document.getElementById('indirectFactor').value = data.indirectFactor;
-        if (data.hoursPerAA) document.getElementById('hoursPerAA').value = data.hoursPerAA;
-        
-        calculateAll();
-      } catch (e) {
-        console.error('Error loading data:', e);
-      }
-    }
-
-    // Auto-save on input
-    document.addEventListener('input', function() {
-      saveData();
-      debouncedCloudSave();
-    });
-
-    // ==================== GOOGLE SHEETS SYNC ====================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybFEFYa9c3mVSWo0PHROF3-fYNSjT0sJsQd5QEMwAH-ByFWP35_Vktvr40uQm8jsJ5Ag/exec';
-    const PAGE_NAME = 'preshift-planning';
-
-    async function saveToCloud() {
-      const data = [
-        new Date().toISOString(),
-        PAGE_NAME,
-        document.getElementById('rts').value || '',
-        document.getElementById('mnr').value || '',
-        document.getElementById('rolled').value || '',
-        document.getElementById('slam').value || '',
-        document.getElementById('sideline').value || '',
-        document.getElementById('schedule').value || '',
-        document.getElementById('softCap').value || '',
-        document.getElementById('lmcp').value || '',
-        document.getElementById('cube').value || '',
-        document.getElementById('fph').value || '',
-        document.getElementById('targetTPH').value || '90',
-        document.getElementById('indirectFactor').value || '1.17',
-        document.getElementById('hoursPerAA').value || '7.2'
-      ];
-      
-      try {
-        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(data))}`;
-        await fetch(url, { mode: 'no-cors' });
-        showSyncStatus('saved');
-      } catch (error) {
-        console.error('Cloud save error:', error);
-      }
-    }
-
-    async function clearCloud() {
-      const emptyData = [
-        new Date().toISOString(),
-        PAGE_NAME,
-        '', '', '', '', '', '', '', '', '', '', '90', '1.17', '7.2'
-      ];
-      
-      try {
-        const url = `${GOOGLE_SCRIPT_URL}?action=update&data=${encodeURIComponent(JSON.stringify(emptyData))}`;
-        await fetch(url, { mode: 'no-cors' });
-        console.log('Cloud data cleared');
-      } catch (error) {
-        console.error('Cloud clear error:', error);
-      }
-    }
-
-    async function loadFromCloud() {
-      if (preventCloudLoad) {
-        console.log('Cloud load prevented after reset');
-        return;
-      }
-      
-      try {
-        showSyncStatus('loading');
-        const url = `${GOOGLE_SCRIPT_URL}?action=getPage&page=${PAGE_NAME}`;
-        const response = await fetch(url);
-        const result = await response.json();
-        
-        if (result.success && result.data) {
-          const data = result.data;
-          if (data[2]) document.getElementById('rts').value = data[2];
-          if (data[3]) document.getElementById('mnr').value = data[3];
-          if (data[4]) document.getElementById('rolled').value = data[4];
-          if (data[5]) document.getElementById('slam').value = data[5];
-          if (data[6]) document.getElementById('sideline').value = data[6];
-          if (data[7]) document.getElementById('schedule').value = data[7];
-          if (data[8]) document.getElementById('softCap').value = data[8];
-          if (data[9]) document.getElementById('lmcp').value = data[9];
-          if (data[10]) document.getElementById('cube').value = data[10];
-          if (data[11]) document.getElementById('fph').value = data[11];
-          if (data[12]) document.getElementById('targetTPH').value = data[12];
-          if (data[13]) document.getElementById('indirectFactor').value = data[13];
-          if (data[14]) document.getElementById('hoursPerAA').value = data[14];
-          
-          calculateAll();
-          showSyncStatus('loaded');
-        } else {
-          showSyncStatus('empty');
-        }
-      } catch (error) {
-        console.error('Cloud load error:', error);
-        showSyncStatus('error');
-      }
-    }
-
-    function showSyncStatus(status) {
-      const indicator = document.getElementById('syncStatus');
-      if (!indicator) return;
-      
-      const colors = { saved: '#3FB950', loading: '#FF9900', loaded: '#3FB950', error: '#F85149', empty: '#8B949E' };
-      const labels = { saved: '☁️ Saved', loading: '☁️ Loading...', loaded: '☁️ Synced', error: '☁️ Offline', empty: '☁️ No data' };
-      
-      indicator.innerHTML = labels[status] || '☁️';
-      indicator.style.color = colors[status] || '#8B949E';
-      
-      setTimeout(() => {
-        indicator.innerHTML = '☁️';
-        indicator.style.color = '#8B949E';
-      }, 3000);
-    }
-
-    let saveTimeout;
-    function debouncedCloudSave() {
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(saveToCloud, 2000);
     }
 
     // Initialize
-    loadData();
     calculateAll();
-    loadFromCloud();
   </script>
 </body>
 </html>
