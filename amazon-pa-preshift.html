@@ -473,6 +473,18 @@
   </header>
 
   <div class="container">
+    <!-- Paste Zone -->
+    <div class="section" style="border-color: var(--amazon-teal);">
+      <div class="section-header" style="border-bottom-color: var(--amazon-teal);">
+        <h2 class="section-title" style="color: var(--amazon-teal);">&#x1F4CB; Paste Raw Data &mdash; Auto-Fill</h2>
+      </div>
+      <textarea id="rawPaste" placeholder="Paste your pre-shift data here..." style="width:100%;background:#0D1117;border:2px solid #30363D;border-radius:8px;color:#F0F6FC;font-family:'Courier New',monospace;font-size:0.9rem;padding:1rem;min-height:130px;resize:vertical;outline:none;margin-bottom:1rem;"></textarea>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn" onclick="parsePaste()" style="background:#00A8A8;color:#000;">&#x26A1; Fill Fields</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('rawPaste').value=''">Clear Paste</button>
+      </div>
+    </div>
+
     <!-- Raw Data Entry -->
     <div class="section">
       <div class="section-header">
@@ -744,6 +756,41 @@ Pre-Shift Projected Hours = ${projectedHours}`;
         }
       });
       calculateAll();
+    }
+
+
+    function parsePaste() {
+      const raw = document.getElementById('rawPaste').value;
+      const lines = raw.split('\n');
+      const map = {};
+      lines.forEach(line => {
+        const m = line.match(/^([^:=(]+?)(?:\s*\([^)]*\))?\s*[:=]\s*([\d.]+)/i);
+        if (m) {
+          const key = m[1].trim().toLowerCase().replace(/[\s\-]+/g, '');
+          map[key] = m[2].trim();
+        }
+      });
+      const setVal = (id, keys) => {
+        for (const k of keys) {
+          if (map[k] !== undefined) { document.getElementById(id).value = map[k]; return; }
+        }
+      };
+      setVal('rts', ['rts']);
+      setVal('mnr', ['mnr']);
+      setVal('rolled', ['rolled']);
+      setVal('slam', ['slam']);
+      setVal('sideline', ['sideline']);
+      setVal('schedule', ['schedule']);
+      setVal('softCap', ['softcap']);
+      setVal('lmcp', ['lmcp']);
+      setVal('cube', ['cube']);
+      setVal('fph', ['c1fph','fph']);
+      calculateAll();
+      const btn = document.querySelector('[onclick="parsePaste()"]');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Filled!';
+      btn.style.background = '#3FB950';
+      setTimeout(() => { btn.textContent = orig; btn.style.background = '#00A8A8'; }, 2000);
     }
 
     // Initialize
