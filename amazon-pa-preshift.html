@@ -809,7 +809,9 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       setVal('plannedHCInput', ['plannedhc','hc']);
       setVal('preShiftPlanned', ['preshiftplannedhours','plannedhours']);
       setVal('preShiftProjected', ['preshiftprojectedhours','projectedhours']);
-      calculateAll();
+      if (map['c1volume']) {
+        document.getElementById('c1Volume').textContent = map['c1volume'];
+      }
       const btn = document.querySelector('[onclick="parsePaste()"]');
       const orig = btn.textContent;
       btn.textContent = '✓ Filled!';
