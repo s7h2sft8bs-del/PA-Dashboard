@@ -4083,6 +4083,19 @@ ${dateStr}
         showVoiceToast('❓', `"${transcript}"`, 'Command not recognized - try "Waterspider 5"');
       }
     }
-  </script>
+  
+    // Load synced data from Pre-Shift
+    function loadFromPreShift() {
+      const raw = localStorage.getItem('preshiftSync');
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = data[id];
+      });
+    }
+    loadFromPreShift();
+    window.addEventListener('storage', loadFromPreShift);
+</script>
 </body>
 </html>

@@ -482,6 +482,7 @@
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
         <button class="btn" onclick="parsePaste()" style="background:#00A8A8;color:#000;">&#x26A1; Fill Fields</button>
         <button class="btn btn-secondary" onclick="document.getElementById('rawPaste').value=''">Clear Paste</button>
+        <button class="btn" id="syncBtn" onclick="syncToPPH()" style="background:#3b82f6;color:#fff;">🔄 Sync to PPH Flow</button>
       </div>
     </div>
 
@@ -781,6 +782,22 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       btn.textContent = '✓ Filled!';
       btn.style.background = '#3FB950';
       setTimeout(() => { btn.textContent = orig; btn.style.background = '#00A8A8'; }, 2000);
+    }
+
+
+    function syncToPPH() {
+      const data = {
+        preshiftVolume: document.getElementById('c1Volume').value,
+        preshiftFPH: document.getElementById('fph').value,
+        preshiftPlannedHC: document.getElementById('plannedHCInput').value,
+        preshiftPlannedHours: document.getElementById('preShiftPlanned').value,
+        preshiftProjectedHours: document.getElementById('preShiftProjected').value,
+      };
+      localStorage.setItem('preshiftSync', JSON.stringify(data));
+      const btn = document.getElementById('syncBtn');
+      btn.textContent = '✓ Synced to PPH Flow!';
+      btn.style.background = '#3FB950';
+      setTimeout(() => { btn.textContent = '🔄 Sync to PPH Flow'; btn.style.background = ''; }, 2000);
     }
 
     // Initialize
