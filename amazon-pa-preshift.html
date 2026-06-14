@@ -537,6 +537,22 @@
           <label>FPH</label>
           <input type="number" id="fph" placeholder="0" oninput="calculateAll()">
         </div>
+        <div class="input-item">
+          <label>SSD Volume</label>
+          <input type="number" id="ssdVolume" placeholder="0">
+        </div>
+        <div class="input-item">
+          <label>Planned HC</label>
+          <input type="number" id="plannedHCInput" placeholder="0">
+        </div>
+        <div class="input-item">
+          <label>Pre-Shift Planned Hours</label>
+          <input type="number" id="preShiftPlanned" placeholder="0">
+        </div>
+        <div class="input-item">
+          <label>Pre-Shift Projected Hours</label>
+          <input type="number" id="preShiftProjected" placeholder="0">
+        </div>
       </div>
     </div>
 
@@ -789,6 +805,10 @@ Pre-Shift Projected Hours = ${projectedHours}`;
       setVal('lmcp', ['lmcp']);
       setVal('cube', ['cube']);
       setVal('fph', ['c1fph','fph']);
+      setVal('ssdVolume', ['ssdvolume']);
+      setVal('plannedHCInput', ['plannedhc','hc']);
+      setVal('preShiftPlanned', ['preshiftplannedhours','plannedhours']);
+      setVal('preShiftProjected', ['preshiftprojectedhours','projectedhours']);
       calculateAll();
       const btn = document.querySelector('[onclick="parsePaste()"]');
       const orig = btn.textContent;
